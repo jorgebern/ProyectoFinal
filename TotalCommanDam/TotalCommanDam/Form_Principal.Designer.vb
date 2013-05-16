@@ -48,7 +48,7 @@ Partial Class Form_Principal
         Me.Lbl_derecha = New System.Windows.Forms.Label()
         Me.Tmr_Limpiar = New System.Windows.Forms.Timer(Me.components)
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
-        Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
+        Me.Ts_recargar = New System.Windows.Forms.ToolStripButton()
         Me.Sts_Bar.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
@@ -198,6 +198,8 @@ Partial Class Form_Principal
         'Ltb_izquierda
         '
         Me.Ltb_izquierda.AllowDrop = True
+        Me.Ltb_izquierda.BackColor = System.Drawing.SystemColors.Window
+        Me.Ltb_izquierda.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
         Me.Ltb_izquierda.FormattingEnabled = True
         Me.Ltb_izquierda.Location = New System.Drawing.Point(12, 80)
         Me.Ltb_izquierda.Name = "Ltb_izquierda"
@@ -208,6 +210,8 @@ Partial Class Form_Principal
         'Ltb_derecha
         '
         Me.Ltb_derecha.AllowDrop = True
+        Me.Ltb_derecha.BackColor = System.Drawing.SystemColors.Window
+        Me.Ltb_derecha.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
         Me.Ltb_derecha.Location = New System.Drawing.Point(287, 80)
         Me.Ltb_derecha.Name = "Ltb_derecha"
         Me.Ltb_derecha.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
@@ -230,21 +234,22 @@ Partial Class Form_Principal
         '
         'ToolStrip1
         '
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton1})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.Ts_recargar})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 24)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(566, 25)
         Me.ToolStrip1.TabIndex = 6
         Me.ToolStrip1.Text = "ToolStrip1"
         '
-        'ToolStripButton1
+        'Ts_recargar
         '
-        Me.ToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton1.Image = CType(resources.GetObject("ToolStripButton1.Image"), System.Drawing.Image)
-        Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton1.Name = "ToolStripButton1"
-        Me.ToolStripButton1.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton1.Text = "ToolStripButton1"
+        Me.Ts_recargar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.Ts_recargar.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.Ts_recargar.Image = CType(resources.GetObject("Ts_recargar.Image"), System.Drawing.Image)
+        Me.Ts_recargar.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.Ts_recargar.Name = "Ts_recargar"
+        Me.Ts_recargar.Size = New System.Drawing.Size(23, 22)
+        Me.Ts_recargar.Text = "Recargar"
         '
         'Form_Principal
         '
@@ -299,7 +304,7 @@ Partial Class Form_Principal
     Friend WithEvents ToolStripMenuItem3 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem2 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
-    Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
+    Friend WithEvents Ts_recargar As System.Windows.Forms.ToolStripButton
     Friend WithEvents InformaciónToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

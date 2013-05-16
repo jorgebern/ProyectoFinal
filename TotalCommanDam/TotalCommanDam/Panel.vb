@@ -10,9 +10,6 @@ Imports System.IO
 ''' <remarks></remarks>
 Public Class Panel
 
-    Dim f As New FileIOPermission(PermissionState.Unrestricted)
-
-
     Private _ruta As String
 
     ''' <summary>
@@ -21,8 +18,6 @@ Public Class Panel
     ''' <remarks></remarks>
     Public Sub New()
         _ruta = My.Computer.FileSystem.SpecialDirectories.Desktop
-
-
     End Sub
 
     ''' <summary>
@@ -94,24 +89,22 @@ Public Class Panel
     End Sub
 
 
-    'Public Function OrganizarDirectorios(archivos As List(Of String)) As List(Of String)
+    Public Function obtenerInformacion(fichero As String) As String
+        Dim informacion As String
 
-    '    For Each elemento As String In archivos
-    '        Dim atrib As String() = GetAttr(elemento).ToString().Split(CChar(","))
+        If My.Computer.FileSystem.FileExists(_ruta & "\" & fichero) Then
+            Dim info As FileInfo = My.Computer.FileSystem.GetFileInfo(_ruta & "\" & fichero)
 
-    '        For Each j As String In atrib
-    '            If j = "" Then
+            informacion = fichero & "Ä" & info.Extension & "Ä" & info.FullName & "Ä" & info.Length & "Ä" & info.CreationTime & "Ä" & info.LastWriteTime
 
-    '            End If
-    '        Next
+        Else
+            Dim info As DirectoryInfo = My.Computer.FileSystem.GetDirectoryInfo(_ruta & "\" & fichero)
 
+            informacion = fichero & "Ä" & "Carpeta de ficheros" & "Ä" & info.FullName & "Ä" & "0" & "Ä" & info.CreationTime & "Ä" & info.LastWriteTime
+        End If
 
-
-    '    Next
-
-    'End Function
-
-
+        Return informacion
+    End Function
 
 
     ''' <summary>
@@ -131,7 +124,6 @@ Public Class Panel
                 Else
                     _ruta = _ruta.Substring(0, _ruta.LastIndexOf("\"))
                 End If
-
             Else
                 _ruta = _ruta & "\" & value
             End If

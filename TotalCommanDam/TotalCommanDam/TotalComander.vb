@@ -102,6 +102,20 @@ Public Class TotalComander
 
     End Sub
 
+    Public Function obtenerInformacion(panel As String, fichero As String) As String()
+        Dim info As String()
+
+        If panel = "izquierda" Then
+            info = izquierda.obtenerInformacion(fichero).Split(CChar("Ä"))
+        Else
+            info = derecha.obtenerInformacion(fichero).Split(CChar("Ä"))
+        End If
+
+        Return info
+
+    End Function
+
+
 
 
 

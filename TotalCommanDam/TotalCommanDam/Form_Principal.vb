@@ -4,8 +4,8 @@
 ''' <remarks></remarks>
 Public Class Form_Principal
 
-    Private Const MARGEN_BORDE As Long = 60
-    Public total As TotalComander = New TotalComander()
+    Dim total As TotalComander = New TotalComander()
+    Dim informacio As informacion = New informacion()
 
     Private Sub Form_Principal_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -88,6 +88,28 @@ Public Class Form_Principal
     'IZQUIERDA
     '---------------------------------------------------------------------------------------------
 
+    Private Sub Ltb_izquierda_DrawItem(ByVal sender As Object, ByVal e As System.Windows.Forms.DrawItemEventArgs) Handles Ltb_izquierda.DrawItem
+
+        If e.Index <> -1 Then
+            e.DrawBackground()
+
+            'If Ltb_izquierda.Items(e.Index).ToString = "c" Then
+            '    e.Graphics.FillRectangle(Brushes.Red, e.Bounds)
+            'End If
+
+
+            If (e.State And DrawItemState.Selected) = DrawItemState.Selected Then
+                e.Graphics.FillRectangle(Brushes.LightGreen, e.Bounds)
+            End If
+            Using b As New SolidBrush(e.ForeColor)
+                e.Graphics.DrawString(Ltb_izquierda.GetItemText(Ltb_izquierda.Items(e.Index)), e.Font, b, e.Bounds)
+            End Using
+
+            e.DrawFocusRectangle()
+        End If
+    End Sub
+
+
     Private Sub Ltb_izquierda_MouseDown(sender As Object, e As MouseEventArgs) Handles Ltb_izquierda.MouseDown
 
         If e.Clicks = 2 Then
@@ -119,9 +141,11 @@ Public Class Form_Principal
 
         Lbl_derecha.BackColor = SystemColors.Control
         Lbl_derecha.ForeColor = Color.Black
+        Ltb_derecha.BackColor = Color.WhiteSmoke
 
         Lbl_izquierda.ForeColor = Color.White
         Lbl_izquierda.BackColor = SystemColors.Highlight
+        Ltb_izquierda.BackColor = Color.White
 
     End Sub
 
@@ -136,6 +160,28 @@ Public Class Form_Principal
     '---------------------------------------------------------------------------------------------
     'DERECHA
     '---------------------------------------------------------------------------------------------
+
+    Private Sub Ltb_derecha_DrawItem(ByVal sender As Object, ByVal e As System.Windows.Forms.DrawItemEventArgs) Handles Ltb_derecha.DrawItem
+        If e.Index <> -1 Then
+            e.DrawBackground()
+
+            'If Ltb_izquierda.Items(e.Index).ToString = "c" Then
+            '    e.Graphics.FillRectangle(Brushes.Red, e.Bounds)
+            'End If
+
+            If (e.State And DrawItemState.Selected) = DrawItemState.Selected Then
+                e.Graphics.FillRectangle(Brushes.LightGreen, e.Bounds)
+            End If
+            Using b As New SolidBrush(Color.Black)
+                e.Graphics.DrawString(Ltb_derecha.GetItemText(Ltb_derecha.Items(e.Index)), e.Font, b, e.Bounds)
+            End Using
+
+            e.DrawFocusRectangle()
+        End If
+
+    End Sub
+
+
     Private Sub Ltb_derecha_DoubleClick(sender As Object, e As EventArgs) Handles Ltb_derecha.DoubleClick
         If Ltb_derecha.Focused Then
             total.CambiarRuta("derecha", Ltb_derecha.SelectedItem.ToString)
@@ -173,9 +219,12 @@ Public Class Form_Principal
 
         Lbl_izquierda.BackColor = SystemColors.Control
         Lbl_izquierda.ForeColor = Color.Black
+        Ltb_izquierda.BackColor = Color.WhiteSmoke
 
         Lbl_derecha.ForeColor = Color.White
         Lbl_derecha.BackColor = SystemColors.Highlight
+        Ltb_derecha.BackColor = Color.White
+
 
     End Sub
 
@@ -197,8 +246,6 @@ Public Class Form_Principal
     'OTROS
     '---------------------------------------------------------------------------------------------
 
-
-
     Private Sub SalirToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SalirToolStripMenuItem.Click
         Me.Close()
     End Sub
@@ -213,6 +260,13 @@ Public Class Form_Principal
     End Sub
 
     Private Sub InformaciónToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InformaciónToolStripMenuItem.Click
+       
+        informacio.obtenerParametros(total.obtenerInformacion("izquierda", Ltb_izquierda.SelectedItem.ToString))
+        informacio.Show()
 
+    End Sub
+
+    Private Sub Ts_recargar_Click(sender As Object, e As EventArgs) Handles Ts_recargar.Click
+        Me.refrescarFormulario()
     End Sub
 End Class
