@@ -406,17 +406,25 @@ Public Class Form_Principal
     'OTROS
     '---------------------------------------------------------------------------------------------
 
+    ''' <summary>
+    ''' Accion de recargar al ejecutar el boton "Recargar"
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub Ts_recargar_Click(sender As Object, e As EventArgs) Handles Ts_recargar.Click
         Me.refrescarFormulario()
     End Sub
 
-    
-
-    
-    
     '--------------------------
     'Aspectos
     '--------------------------
+    ''' <summary>
+    ''' Carga el Aspecto "Cesped"
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub GrassToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GrassToolStripMenuItem.Click
 
         pintarVerde()
@@ -424,12 +432,24 @@ Public Class Form_Principal
 
     End Sub
 
+    ''' <summary>
+    ''' Carga el aspecto "cielo"
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub AzulToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AzulToolStripMenuItem.Click
 
         pintarAzul()
         refrescarFormulario()
     End Sub
 
+    ''' <summary>
+    ''' Carga el aspecto "Flores"
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub FlowersToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FlowersToolStripMenuItem.Click
 
         pintarRosa()
@@ -437,15 +457,17 @@ Public Class Form_Principal
 
     End Sub
 
+    ''' <summary>
+    ''' Carga el aspecto "plateado"
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub DarkToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DarkToolStripMenuItem.Click
 
         pintarPlata()
         refrescarFormulario()
     End Sub
-
-
-   
-
 
     '----------------------------------------------------
     'Opciones
@@ -454,16 +476,31 @@ Public Class Form_Principal
 
     'RENOMBRAR
     '---------------------------------------------------------
+    ''' <summary>
+    ''' Renombra los ficheros seleccionados
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub RenombrarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RenombrarToolStripMenuItem.Click
 
         Renombrar()
 
     End Sub
-
+    ''' <summary>
+    ''' Renombra los ficheros seleccionados
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub RenombrarToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles RenombrarToolStripMenuItem1.Click
         Renombrar()
     End Sub
 
+    ''' <summary>
+    ''' Accion de renombrar los ficheros seleccionados
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub Renombrar()
 
         Dim respuesta As String
@@ -499,6 +536,12 @@ Public Class Form_Principal
 
     'BORRAR
     '---------------------------------------------------------------------------
+    ''' <summary>
+    ''' Borra los ficheros seleccionados
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub BorrarToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles BorrarToolStripMenuItem1.Click
         Me.Borrar()
     End Sub
@@ -513,6 +556,10 @@ Public Class Form_Principal
         Me.Borrar()
     End Sub
 
+    ''' <summary>
+    ''' Accion de borrar los ficheros seleccionados
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub Borrar()
 
         Dim mensaje As String = "¿Está seguro de que desea eliminar el/los archivos?: "
@@ -546,7 +593,14 @@ Public Class Form_Principal
     '----------------------------------------------------------------------------
 
     'INFORMACION
-    '-----------------------------------------------------------------------------
+    '---------------------------------------------------------------------------
+
+    ''' <summary>
+    ''' Muestra el menu de informacion con la informacion del archivo seleccionado
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub InformaciónToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InformaciónToolStripMenuItem.Click
         informacio = New informacion()
 
@@ -560,6 +614,12 @@ Public Class Form_Principal
     End Sub
     '-----------------------------------------------------------------------------
 
+    ''' <summary>
+    ''' Opcion copiar del menu
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub CopiarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CopiarToolStripMenuItem.Click
         If panelEnFoco = 0 Then
             If Ltb_izquierda.SelectedIndex = -1 Then
@@ -577,25 +637,48 @@ Public Class Form_Principal
 
     End Sub
 
+    ''' <summary>
+    ''' Opcion salir, cierra el formulario
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub SalirToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SalirToolStripMenuItem.Click
         Me.Close()
     End Sub
 
+    ''' <summary>
+    ''' Opcion Acerca De, Muestra la ventana
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub AcercaDeTotalComanDamToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AcercaDeTotalComanDamToolStripMenuItem.Click
         acercaDe.ShowDialog()
     End Sub
 
+    ''' <summary>
+    ''' Limpia la barra de procesos
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub Tmr_Limpiar_Tick(sender As Object, e As EventArgs) Handles Tmr_Limpiar.Tick
 
         ToolStripProgressBar1.Value = 0
         Tmr_Limpiar.Stop()
     End Sub
 
-
+    ''' <summary>
+    ''' Opcion Comprimir
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
 
         Dim respuesta As String
-        Dim mensaje As String = "¿Está seguro de que desea eliminar el/los archivos?: "
+        Dim mensaje As String = "Comprimiendo carpeta: "
 
         respuesta = InputBox(mensaje, "Nuevo nombre: ")
         If respuesta <> "" Then
@@ -616,6 +699,12 @@ Public Class Form_Principal
     'RUTAS
     '---------------------------------------------------------------
 
+    ''' <summary>
+    ''' Carga la ruta de "mis favoritos" al escritorio
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub ToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem2.Click
         If panelEnFoco = 0 Then
             total.CambiarRutaEntera("izquierda", Environment.GetFolderPath(Environment.SpecialFolder.Desktop))
@@ -626,6 +715,12 @@ Public Class Form_Principal
         End If
     End Sub
 
+    ''' <summary>
+    ''' Carga la ruta de "mis favoritos" a Archivos de programax86
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub ArchivosDeProgramaToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ArchivosDeProgramaToolStripMenuItem.Click
         If panelEnFoco = 0 Then
             total.CambiarRutaEntera("izquierda", Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))
@@ -636,6 +731,12 @@ Public Class Form_Principal
         End If
     End Sub
 
+    ''' <summary>
+    ''' Carga la ruta de "mis favoritos" a Mis documentos
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub ToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem3.Click
         If panelEnFoco = 0 Then
             total.CambiarRutaEntera("izquierda", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments))
@@ -646,6 +747,12 @@ Public Class Form_Principal
         End If
     End Sub
 
+    ''' <summary>
+    ''' Accion que se ejecuta al presionar el boton, atras
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub ToolStripButton2_Click(sender As Object, e As EventArgs) Handles ToolStripButton2.Click
 
         If panelEnFoco = 0 Then
@@ -657,6 +764,12 @@ Public Class Form_Principal
         End If
     End Sub
 
+    ''' <summary>
+    ''' Descomprime un fichero
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
 
         If panelEnFoco = 0 Then
@@ -670,6 +783,12 @@ Public Class Form_Principal
 
     End Sub
 
+    ''' <summary>
+    ''' Guarda las preferencias en un fichero
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub Form_Principal_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
 
         Dim color As Integer
@@ -687,7 +806,10 @@ Public Class Form_Principal
         total.GuardarPreferencias(tutorial, color, tamanyoFuente)
     End Sub
 
-
+    ''' <summary>
+    ''' Pinta el el aspecto Sky
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub pintarAzul()
 
         GrassToolStripMenuItem.Checked = False
@@ -700,6 +822,10 @@ Public Class Form_Principal
         Me.color_Selected = Brushes.CadetBlue
     End Sub
 
+    ''' <summary>
+    ''' Pinta el aspecto grass
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub pintarVerde()
 
         GrassToolStripMenuItem.Checked = True
@@ -712,6 +838,10 @@ Public Class Form_Principal
         Me.color_Selected = Brushes.Chocolate
     End Sub
 
+    ''' <summary>
+    ''' Pinta el aspecto flowers
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub pintarRosa()
         GrassToolStripMenuItem.Checked = False
         AzulToolStripMenuItem.Checked = False
@@ -723,6 +853,10 @@ Public Class Form_Principal
         Me.color_Selected = Brushes.Violet
     End Sub
 
+    ''' <summary>
+    ''' Pinta el aspecto silver
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub pintarPlata()
 
         GrassToolStripMenuItem.Checked = False
@@ -735,7 +869,12 @@ Public Class Form_Principal
         Me.color_Selected = Brushes.Indigo
     End Sub
 
-
+    ''' <summary>
+    ''' Controla el tamaño de la letra pequeña
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub ToolStripMenuItem4_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem4.Click
         Lbl_izquierda.Font = New Font("Microsoft Sans Serif", 8.25)
         Ltb_izquierda.Font = New Font("Microsoft Sans Serif", 8.25)
@@ -754,6 +893,12 @@ Public Class Form_Principal
 
     End Sub
 
+    ''' <summary>
+    ''' Constrola el tamaño de la letra mediana
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub ToolStripMenuItem5_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem5.Click
         Lbl_izquierda.Font = New Font("Microsoft Sans Serif", 10)
         Ltb_izquierda.Font = New Font("Microsoft Sans Serif", 10)
@@ -773,6 +918,12 @@ Public Class Form_Principal
 
     End Sub
 
+    ''' <summary>
+    ''' Controla el tamaño de la letra grande
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub GrandeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GrandeToolStripMenuItem.Click
         Lbl_izquierda.Font = New Font("Microsoft Sans Serif", 12)
         Ltb_izquierda.Font = New Font("Microsoft Sans Serif", 12)

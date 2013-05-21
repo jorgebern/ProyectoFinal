@@ -149,6 +149,11 @@ Public Class Panel
         Return correcto
     End Function
 
+    ''' <summary>
+    ''' Borra los ficheros seleccionados
+    ''' </summary>
+    ''' <param name="ficheros"></param>
+    ''' <remarks></remarks>
     Public Sub Borrar(ficheros As System.Windows.Forms.ListBox.SelectedObjectCollection)
 
         For i As Integer = 0 To ficheros.Count - 1
@@ -167,7 +172,12 @@ Public Class Panel
     End Sub
 
 
-
+    ''' <summary>
+    ''' Renombra los ficheros seleccionados
+    ''' </summary>
+    ''' <param name="ficheros"></param>
+    ''' <param name="nuevoNombre"></param>
+    ''' <remarks></remarks>
     Public Sub RenombrarVarios(ficheros As System.Windows.Forms.ListBox.SelectedObjectCollection, nuevoNombre As String)
 
         Dim nombre As String
@@ -253,6 +263,11 @@ Public Class Panel
 
     End Sub
 
+    ''' <summary>
+    ''' Descomprime la carpeta
+    ''' </summary>
+    ''' <param name="fichero"></param>
+    ''' <remarks></remarks>
     Public Sub Descomprimir(fichero As String)
         Dim repeticiones As Integer = 0
 
@@ -307,6 +322,12 @@ Public Class Panel
         End Set
     End Property
 
+    ''' <summary>
+    ''' Permite cargar o escribir la ruta anterior
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Property RutaAnterior As String
         Get
             Return _rutaAnterior

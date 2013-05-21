@@ -2,7 +2,13 @@
 
 Public Class Preferencias
 
-
+    ''' <summary>
+    ''' Escribe las preferencias en un fichero
+    ''' </summary>
+    ''' <param name="tutorial"></param>
+    ''' <param name="color"></param>
+    ''' <param name="tamanyo"></param>
+    ''' <remarks></remarks>
     Public Sub EscribirPreferencias(tutorial As Boolean, color As Integer, tamanyo As Single)
 
         Dim swEscritor As StreamWriter
@@ -14,6 +20,11 @@ Public Class Preferencias
         swEscritor.Close()
     End Sub
 
+    ''' <summary>
+    ''' Lee las opciones predeterminadas
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Function ObtenerPreferencias() As String()
 
         Dim srLector As StreamReader = New StreamReader("pref.pre")

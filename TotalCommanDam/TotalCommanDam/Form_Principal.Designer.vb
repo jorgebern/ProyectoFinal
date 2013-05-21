@@ -389,7 +389,7 @@ Partial Class Form_Principal
         Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton2.Name = "ToolStripButton2"
         Me.ToolStripButton2.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton2.Text = "ToolStripButton2"
+        Me.ToolStripButton2.Text = "Atras"
         '
         'Ts_recargar
         '

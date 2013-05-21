@@ -133,6 +133,13 @@ Public Class TotalComander
 
     End Sub
 
+
+    ''' <summary>
+    ''' Manda a descomprimir los archivos dependiendo del panel
+    ''' </summary>
+    ''' <param name="panel"></param>
+    ''' <param name="fichero"></param>
+    ''' <remarks></remarks>
     Public Sub Descomprimir(panel As String, fichero As String)
         If Panel = "izquierda" Then
             izquierda.Descomprimir(fichero)
@@ -232,6 +239,11 @@ Public Class TotalComander
     End Function
 
 
+    ''' <summary>
+    ''' Carga la ruta anterior
+    ''' </summary>
+    ''' <param name="panel"></param>
+    ''' <remarks></remarks>
     Public Sub RutaAnterior(panel As String)
 
         If panel = "izquierda" Then
@@ -245,13 +257,24 @@ Public Class TotalComander
         End If
     End Sub
 
-
+    ''' <summary>
+    ''' Guarda las preferencias al cerrar el fichero
+    ''' </summary>
+    ''' <param name="tutorial"></param>
+    ''' <param name="color"></param>
+    ''' <param name="tamanyo"></param>
+    ''' <remarks></remarks>
     Public Sub GuardarPreferencias(tutorial As Boolean, color As Integer, tamanyo As Single)
 
         preferencias.EscribirPreferencias(tutorial, color, tamanyo)
 
     End Sub
 
+    ''' <summary>
+    ''' Carga las preferencias al iniciar el formulario
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Function CargarPreferencias() As String()
 
         Return preferencias.ObtenerPreferencias
