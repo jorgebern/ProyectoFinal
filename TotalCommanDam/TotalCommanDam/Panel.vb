@@ -1,6 +1,7 @@
 ﻿Imports System.Security.Permissions
 Imports System.Security
 Imports System.IO
+Imports System.IO.Compression
 
 ''' <summary>
 ''' Clase que se encarga de controlar cada panel, cogiendo, moviendo y definiendo rutas, ficheros y directorios
@@ -89,6 +90,12 @@ Public Class Panel
     End Sub
 
 
+    ''' <summary>
+    ''' Obtiene la informacion de un fichero o directorio devolviendola como un String separando los parametros por el token Ä
+    ''' </summary>
+    ''' <param name="fichero">Fichero del que se obtendra la informacion</param>
+    ''' <returns>Devuelve un String separando los parametros con el token Ä</returns>
+    ''' <remarks></remarks>
     Public Function obtenerInformacion(fichero As String) As String
         Dim informacion As String
 
@@ -105,6 +112,98 @@ Public Class Panel
 
         Return informacion
     End Function
+
+    ''' <summary>
+    ''' Copia un archivo o directorio pasado por parametro
+    ''' </summary>
+    ''' <param name="fichero">Fichero que sera copiado</param>
+    ''' <param name="destino">Ruta de destino del fichero</param>
+    ''' <returns>Devuelve True si se copia bien, False si salta una excepcion</returns>
+    ''' <remarks></remarks>
+    Public Function Copiar(fichero As String, destino As String) As Boolean
+
+        Dim correcto As Boolean = False
+        If My.Computer.FileSystem.DirectoryExists(_ruta & "\" & fichero) Then
+            Try
+                My.Computer.FileSystem.CopyDirectory(_ruta & "\" & fichero, destino & "\" & fichero)
+                correcto = True
+            Catch ex As Exception
+                correcto = False
+            End Try
+        Else
+            Try
+                My.Computer.FileSystem.CopyFile(_ruta & "\" & fichero, destino & "\" & fichero)
+                correcto = True
+            Catch ex As Exception
+                correcto = False
+            End Try
+
+        End If
+        
+        Return correcto
+    End Function
+
+    ''' <summary>
+    ''' Borra el archivo o directorio seleccionado
+    ''' </summary>
+    ''' <param name="fichero"></param>
+    ''' <remarks></remarks>
+    Public Sub Borrar(fichero As String)
+
+        If My.Computer.FileSystem.FileExists(_ruta & "\" & fichero) Then
+            My.Computer.FileSystem.DeleteFile(_ruta & "\" & fichero)
+        End If
+
+        If My.Computer.FileSystem.DirectoryExists(_ruta & "\" & fichero) Then
+            My.Computer.FileSystem.DeleteDirectory(_ruta & "\" & fichero,FileIO.DeleteDirectoryOption.DeleteAllContents)
+        End If
+
+    End Sub
+
+    ''' <summary>
+    ''' Renombra el directorio o el archivo indicado
+    ''' </summary>
+    ''' <param name="fichero"></param>
+    ''' <param name="nuevoNombre"></param>
+    ''' <remarks></remarks>
+    Public Sub Renombrar(fichero As String, nuevoNombre As String)
+        If My.Computer.FileSystem.FileExists(_ruta & "\" & fichero) Then
+            My.Computer.FileSystem.RenameFile(_ruta & "\" & fichero, nuevoNombre)
+        End If
+
+        If My.Computer.FileSystem.DirectoryExists(_ruta & "\" & fichero) Then
+            My.Computer.FileSystem.RenameDirectory(_ruta & "\" & fichero, nuevoNombre)
+        End If
+    End Sub
+
+    Public Sub RenombrarVarios(ficheros As System.Windows.Forms.ListBox.SelectedObjectCollection, nuevoNombre As String)
+        Dim nombre As String = nuevoNombre.Substring(0, nuevoNombre.LastIndexOf("."))
+
+
+
+
+        For i As Integer = 0 To ficheros.Count - 1
+
+            Dim info As FileInfo = My.Computer.FileSystem.GetFileInfo(_ruta & "\" & ficheros.Item(i).ToString)
+
+            My.Computer.FileSystem.RenameFile(_ruta & "\" & ficheros.Item(i).ToString, nombre & "(" & i & ")" & info.Extension)
+        Next
+
+    End Sub
+
+
+    ''' <summary>
+    ''' Comprime la carpeta indicada(Solo carpetas)
+    ''' </summary>
+    ''' <param name="fichero"></param>
+    ''' <remarks></remarks>
+    Public Sub Comprimir(fichero As String)
+
+        If My.Computer.FileSystem.DirectoryExists(_ruta & "\" & fichero) Then
+            ZipFile.CreateFromDirectory(_ruta & "\" & fichero, _ruta & "\" & "comprimirdo.zip")
+        End If
+
+    End Sub
 
 
     ''' <summary>
@@ -128,6 +227,22 @@ Public Class Panel
                 _ruta = _ruta & "\" & value
             End If
 
+        End Set
+    End Property
+
+
+    ''' <summary>
+    ''' propiedad que define la ruta entera, implementada para los marcadores
+    ''' </summary>
+    ''' <value>Valor nuevo</value>
+    ''' <returns>Ruta</returns>
+    ''' <remarks></remarks>
+    Public Property RutaEntera As String
+        Get
+            Return _ruta
+        End Get
+        Set(value As String)
+            _ruta = value
         End Set
     End Property
 

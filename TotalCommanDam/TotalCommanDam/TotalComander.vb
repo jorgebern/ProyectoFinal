@@ -43,10 +43,16 @@ Public Class TotalComander
             Next
 
         Else
-            archivos = derecha.obtenerdirectorios()
+            For Each elemento As String In derecha.obtenerdirectorios()
+
+                Dim partido As String() = elemento.Split(CChar("\"))
+                archivos.Add(partido(partido.Length - 1))
+            Next
+
 
             For Each elemento As String In derecha.obtenerArchivos()
-                archivos.Add(elemento)
+                Dim partido As String() = elemento.Split(CChar("\"))
+                archivos.Add(partido(partido.Length - 1))
             Next
 
         End If
@@ -76,6 +82,76 @@ Public Class TotalComander
     End Function
 
     ''' <summary>
+    ''' Borra elementos seleccionados de un panel
+    ''' </summary>
+    ''' <param name="panel"></param>
+    ''' <param name="fichero"></param>
+    ''' <remarks></remarks>
+    Public Sub Borrar(panel As String, fichero As String)
+
+        If panel = "izquierda" Then
+            izquierda.Borrar(fichero)
+        Else
+            derecha.Borrar(fichero)
+        End If
+
+
+    End Sub
+
+    ''' <summary>
+    ''' Renombra los ficheros seleccionados
+    ''' </summary>
+    ''' <param name="panel"></param>
+    ''' <param name="fichero"></param>
+    ''' <param name="nuevoNombre"></param>
+    ''' <remarks></remarks>
+    Public Sub Renombrar(panel As String, fichero As String, nuevoNombre As String)
+
+        If panel = "izquierda" Then
+            izquierda.Renombrar(fichero, nuevoNombre)
+        Else
+            derecha.Renombrar(fichero, nuevoNombre)
+        End If
+
+    End Sub
+
+
+    ''' <summary>
+    ''' Renombra los ficheros seleccionados
+    ''' </summary>
+    ''' <param name="panel"></param>
+    ''' <param name="nuevoNombre"></param>
+    ''' <remarks></remarks>
+    Public Sub RenombrarVarios(panel As String, ficheros As System.Windows.Forms.ListBox.SelectedObjectCollection, nuevoNombre As String)
+
+
+
+        If panel = "izquierda" Then
+            izquierda.RenombrarVarios(ficheros, nuevoNombre)
+        Else
+            derecha.RenombrarVarios(ficheros, nuevoNombre)
+        End If
+
+    End Sub
+
+
+    ''' <summary>
+    ''' Comprime las carpetas seleccionadas
+    ''' </summary>
+    ''' <param name="panel"></param>
+    ''' <param name="fichero"></param>
+    ''' <remarks></remarks>
+    Public Sub Comprimir(panel As String, fichero As String)
+        If Panel = "izquierda" Then
+            izquierda.Comprimir(fichero)
+        Else
+            derecha.Comprimir(fichero)
+        End If
+
+    End Sub
+
+
+    ''' <summary>
     ''' Cambia la ruta a la que acceden los paneles
     ''' </summary>
     ''' <param name="panel">Panel al que se va a acceder</param>
@@ -83,8 +159,6 @@ Public Class TotalComander
     ''' <remarks></remarks>
     Public Sub CambiarRuta(panel As String, ruta As String)
         If panel = "izquierda" Then
-
-            'If My.Computer.FileSystem.SpecialDirectories.
             izquierda.Ruta = ruta
         Else
             derecha.Ruta = ruta
@@ -92,6 +166,27 @@ Public Class TotalComander
 
     End Sub
 
+    ''' <summary>
+    ''' Cambia la ruta entera, sirve para cargar los favoritos
+    ''' </summary>
+    ''' <param name="panel">Panel al que afecta</param>
+    ''' <param name="ruta">Nueva ruta</param>
+    ''' <remarks></remarks>
+    Public Sub CambiarRutaEntera(panel As String, ruta As String)
+        If panel = "izquierda" Then
+            izquierda.RutaEntera = ruta
+        Else
+            derecha.RutaEntera = ruta
+        End If
+
+    End Sub
+
+    ''' <summary>
+    ''' Ejecuta un fichero seleccionado
+    ''' </summary>
+    ''' <param name="panel">Panel al que afectara</param>
+    ''' <param name="ruta">Fichero al que se abrira</param>
+    ''' <remarks></remarks>
     Public Sub ejecutarFichero(panel As String, ruta As String)
 
         If panel = "izquierda" Then
@@ -102,6 +197,13 @@ Public Class TotalComander
 
     End Sub
 
+    ''' <summary>
+    ''' Obtiene informacion de un fichero o directorio seleccionado
+    ''' </summary>
+    ''' <param name="panel">Panel al que afecta</param>
+    ''' <param name="fichero">Fichero que obtendra la informacion</param>
+    ''' <returns>Devuelve la informacion en forma de array de String</returns>
+    ''' <remarks></remarks>
     Public Function obtenerInformacion(panel As String, fichero As String) As String()
         Dim info As String()
 
@@ -115,8 +217,27 @@ Public Class TotalComander
 
     End Function
 
+    ''' <summary>
+    ''' Copia un fichero al panel incativo
+    ''' </summary>
+    ''' <param name="panel">Panel al que afectara</param>
+    ''' <param name="f">Ficheor que va a copiarse</param>
+    ''' <returns>Devuelve true si se copio bien, False si se copio mal</returns>
+    ''' <remarks></remarks>
+    Public Function Copiar(panel As String, f As String) As Boolean
 
+        Dim correcto As Boolean
 
+        If panel = "izquierda" Then
 
+            izquierda.Copiar(f, derecha.Ruta)
+
+        Else
+
+            derecha.Copiar(f, izquierda.Ruta)
+
+        End If
+        Return correcto
+    End Function
 
 End Class

@@ -7,8 +7,6 @@
     Dim creacion As String
     Dim modificado As String
 
-
-
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Txb_nombre.Text = nombre
@@ -17,8 +15,6 @@
         Lbl_tamanyo.Text = tamanyo & " bytes"
         Lbl_creacion.Text = creacion
         Lbl_modificado.Text = modificado
-
-
 
     End Sub
 
@@ -31,9 +27,7 @@
         modificado = informacion(5)
     End Sub
 
-
-
-    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox1.CheckedChanged
+    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles Cbx_atributos.CheckedChanged
         Btn_aplicar.Enabled = True
     End Sub
 
@@ -44,5 +38,13 @@
         End If
 
 
+    End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Btn_cancelar.Click
+        Me.Close()
+    End Sub
+
+    Private Sub Btn_aceptar_Click(sender As Object, e As EventArgs) Handles Btn_aceptar.Click
+        Me.Close()
     End Sub
 End Class
