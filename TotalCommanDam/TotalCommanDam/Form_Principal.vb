@@ -145,7 +145,7 @@ Public Class Form_Principal
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub Ltb_izquierda_DoubleClick(sender As Object, e As EventArgs) Handles Ltb_izquierda.DoubleClick
-        If Ltb_izquierda.Focused Then
+        If panelEnFoco = 0 Then
             If Ltb_izquierda.SelectedIndex >= 0 Then
                 If My.Computer.FileSystem.DirectoryExists(total.obtenerRuta("izquierda") & "\" & Ltb_izquierda.SelectedItem.ToString) Then
                     total.CambiarRuta("izquierda", Ltb_izquierda.SelectedItem.ToString)
@@ -184,7 +184,6 @@ Public Class Form_Principal
         End If
 
         If index >= 0 Then
-            ToolStripTextBox1.Text = Ltb_izquierda.Items(index).ToString
             Dim dde1 As DragDropEffects = Ltb_izquierda.DoDragDrop(Ltb_izquierda.Items(index).ToString, DragDropEffects.All)
 
         End If
@@ -205,7 +204,7 @@ Public Class Form_Principal
             Ntf_Icon.ShowBalloonTip(10)
             Ltb_izquierda.Items.Add(str)
             Tmr_Limpiar.Start()
-            total.Copiar("derecha", Ltb_derecha.SelectedItem.ToString)
+            total.Copiar("derecha", Ltb_derecha.SelectedItems)
         End If
     End Sub
 
@@ -234,7 +233,7 @@ Public Class Form_Principal
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub Ltb_izquierda_DragOver(sender As Object, e As DragEventArgs) Handles Ltb_izquierda.DragOver
-        If Ltb_izquierda.Focused Then
+        If panelEnFoco = 0 Then
             e.Effect = Nothing
         Else
             e.Effect = DragDropEffects.All
@@ -280,7 +279,7 @@ Public Class Form_Principal
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub Ltb_derecha_DoubleClick(sender As Object, e As EventArgs) Handles Ltb_derecha.DoubleClick
-        If Ltb_derecha.Focused Then
+        If panelEnFoco = 1 Then
             If Ltb_derecha.SelectedIndex >= 0 Then
                 If My.Computer.FileSystem.DirectoryExists(total.obtenerRuta("derecha") & "\" & Ltb_derecha.SelectedItem.ToString) Then
                     total.CambiarRuta("derecha", Ltb_derecha.SelectedItem.ToString)
@@ -316,8 +315,8 @@ Public Class Form_Principal
 
 
         If index >= 0 Then
-            ToolStripTextBox1.Text = Ltb_derecha.SelectedItem.ToString
-            Dim dde1 As DragDropEffects = Ltb_derecha.DoDragDrop(Ltb_derecha.Items(index).ToString, DragDropEffects.All)
+
+            Dim dde1 As DragDropEffects = Ltb_derecha.DoDragDrop(Ltb_derecha.SelectedItems, DragDropEffects.All)
 
         End If
     End Sub
@@ -341,7 +340,7 @@ Public Class Form_Principal
             Ntf_Icon.ShowBalloonTip(10)
             Ltb_derecha.Items.Add(str)
             Tmr_Limpiar.Start()
-            total.Copiar("izquierda", Ltb_izquierda.SelectedItem.ToString)
+            total.Copiar("izquierda", Ltb_izquierda.SelectedItems)
         End If
     End Sub
 
@@ -373,7 +372,7 @@ Public Class Form_Principal
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub Ltb_derecha_DragOver(sender As Object, e As DragEventArgs) Handles Ltb_derecha.DragOver
-        If Ltb_derecha.Focused Then
+        If panelEnFoco = 1 Then
             e.Effect = Nothing
         Else
             e.Effect = DragDropEffects.All
@@ -389,27 +388,9 @@ Public Class Form_Principal
         Me.refrescarFormulario()
     End Sub
 
-    Private Sub ToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem3.Click
-        If Ltb_izquierda.Focused Then
-            total.CambiarRutaEntera("izquierda", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments))
-            Me.refrescarFormulario()
-        Else
-            total.CambiarRutaEntera("derecha", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments))
-            Me.refrescarFormulario()
-        End If
-    End Sub
+    
 
-    Private Sub CopiarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CopiarToolStripMenuItem.Click
-        If Ltb_izquierda.Focused Then
-            If Ltb_izquierda.SelectedIndex = -1 Then
-                MsgBox("Selecciona un archivo")
-            Else
-                total.Copiar("izquierda", Ltb_izquierda.SelectedItem.ToString)
-            End If
-        Else
-            total.Copiar("derecha", Ltb_derecha.SelectedItem.ToString)
-        End If
-    End Sub
+    
     
     '--------------------------
     'Aspectos
@@ -470,24 +451,7 @@ Public Class Form_Principal
     End Sub
 
 
-    Private Sub RenombrarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RenombrarToolStripMenuItem.Click
-
-        Dim respuesta As String
-
-
-        If Ltb_izquierda.Focused Then
-
-            respuesta = InputBox("Introduzca un nuevo nombre para """ & Ltb_izquierda.SelectedItem.ToString & """", "Nuevo nombre: ")
-
-            If respuesta <> "" Or respuesta <> Nothing Then
-                total.Renombrar("izquierda", Ltb_izquierda.SelectedItem.ToString, respuesta)
-            End If
-
-        End If
-
-
-
-    End Sub
+   
 
 
     '----------------------------------------------------
@@ -497,29 +461,46 @@ Public Class Form_Principal
 
     'RENOMBRAR
     '---------------------------------------------------------
-    Private Sub ToolStripTextBox1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles ToolStripTextBox1.KeyPress
-        If e.KeyChar = Convert.ToChar(Keys.Return) Then
-            If panelEnFoco = 0 Then
-                total.Renombrar("izquierda", Ltb_izquierda.SelectedItem.ToString, ToolStripTextBox1.Text)
-                refrescarFormulario()
-            ElseIf panelEnFoco = 1 Then
-                total.Renombrar("derecha", Ltb_derecha.SelectedItem.ToString, ToolStripTextBox1.Text)
-                refrescarFormulario()
-            End If
-        End If
+    Private Sub RenombrarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RenombrarToolStripMenuItem.Click
+
+        Renombrar()
+
     End Sub
 
-    Private Sub ToolStripButton2_Click(sender As Object, e As EventArgs) Handles ToolStripButton2.Click
+    Private Sub RenombrarToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles RenombrarToolStripMenuItem1.Click
+        Renombrar()
+    End Sub
+
+    Public Sub Renombrar()
+
+        Dim respuesta As String
+        Dim mensaje As String = "¿Está seguro de que desea renombrar el/los archivos?: "
 
         If panelEnFoco = 0 Then
-            total.Renombrar("izquierda", Ltb_izquierda.SelectedItem.ToString, ToolStripTextBox1.Text)
-            refrescarFormulario()
+            For Each elemento As String In Ltb_izquierda.SelectedItems
+                mensaje = mensaje & vbCrLf & vbTab & "- " & elemento
+            Next
+            respuesta = InputBox(mensaje, "Nuevo nombre: ")
+
+            If respuesta <> "" Then
+                total.RenombrarVarios("izquierda", Ltb_izquierda.SelectedItems, respuesta)
+            End If
+
         ElseIf panelEnFoco = 1 Then
-            total.Renombrar("derecha", Ltb_derecha.SelectedItem.ToString, ToolStripTextBox1.Text)
-            refrescarFormulario()
+            For Each elemento As String In Ltb_derecha.SelectedItems
+                mensaje = mensaje & vbCrLf & vbTab & "- " & elemento
+            Next
+            respuesta = InputBox(mensaje, "Nuevo nombre: ")
+
+            If respuesta <> "" Then
+                total.RenombrarVarios("derecha", Ltb_derecha.SelectedItems, respuesta)
+            End If
 
         End If
+        refrescarFormulario()
     End Sub
+
+
     '----------------------------------------------------------------------------
 
 
@@ -540,14 +521,28 @@ Public Class Form_Principal
     End Sub
 
     Public Sub Borrar()
-        If Ltb_izquierda.Focused Then
-            If MsgBox("¿Está seguro de que desea eliminar el archivo "" " & Ltb_izquierda.SelectedItem.ToString & """?", MsgBoxStyle.YesNo, "Borrar") = MsgBoxResult.Yes Then
-                total.Borrar("izquierda", Ltb_izquierda.SelectedItem.ToString)
+
+        Dim mensaje As String = "¿Está seguro de que desea eliminar el/los archivos?: "
+        
+
+        If panelEnFoco = 0 Then
+
+            For Each elemento As String In Ltb_izquierda.SelectedItems
+                mensaje = mensaje & vbCrLf & vbTab & "- " & elemento
+            Next
+
+            If MsgBox(mensaje, MsgBoxStyle.YesNo, "Borrar") = MsgBoxResult.Yes Then
+                total.Borrar("izquierda", Ltb_izquierda.SelectedItems)
                 Me.refrescarFormulario()
             End If
-        ElseIf Ltb_derecha.Focused Then
-            If MsgBox("¿Está seguro de que desea eliminar el archivo "" " & Ltb_derecha.SelectedItem.ToString & """?", MsgBoxStyle.YesNo, "Borrar") = MsgBoxResult.Yes Then
-                total.Borrar("derecha", Ltb_derecha.SelectedItem.ToString)
+        ElseIf panelEnFoco = 1 Then
+
+            For Each elemento As String In Ltb_derecha.SelectedItems
+                mensaje = mensaje & vbCrLf & vbTab & "- " & elemento
+            Next
+
+            If MsgBox(mensaje, MsgBoxStyle.YesNo, "Borrar") = MsgBoxResult.Yes Then
+                total.Borrar("derecha", Ltb_derecha.SelectedItems)
                 Me.refrescarFormulario()
             End If
         End If
@@ -562,16 +557,32 @@ Public Class Form_Principal
     Private Sub InformaciónToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InformaciónToolStripMenuItem.Click
         informacio = New informacion()
 
-        If Ltb_izquierda.Focused Then
+        If panelEnFoco = 0 Then
             informacio.obtenerParametros(total.obtenerInformacion("izquierda", Ltb_izquierda.SelectedItem.ToString))
             informacio.Show()
-        Else
+        ElseIf panelEnFoco = 1 Then
             informacio.obtenerParametros(total.obtenerInformacion("derecha", Ltb_derecha.SelectedItem.ToString))
             informacio.Show()
         End If
     End Sub
     '-----------------------------------------------------------------------------
 
+    Private Sub CopiarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CopiarToolStripMenuItem.Click
+        If panelEnFoco = 0 Then
+            If Ltb_izquierda.SelectedIndex = -1 Then
+                MsgBox("Selecciona un archivo")
+            Else
+                total.Copiar("izquierda", Ltb_izquierda.SelectedItems)
+            End If
+        ElseIf panelEnFoco = 1 Then
+            If Ltb_derecha.SelectedIndex = -1 Then
+                MsgBox("Selecciona un archivo")
+            Else
+                total.Copiar("derecha", Ltb_derecha.SelectedItems)
+            End If
+        End If
+
+    End Sub
 
     Private Sub SalirToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SalirToolStripMenuItem.Click
         Me.Close()
@@ -592,37 +603,39 @@ Public Class Form_Principal
         total.Comprimir("izquierda", Ltb_izquierda.SelectedItem.ToString)
     End Sub
 
+
+    '---------------------------------------------------------------
+    'RUTAS
+    '---------------------------------------------------------------
+
     Private Sub ToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem2.Click
-        If Ltb_izquierda.Focused Then
+        If panelEnFoco = 0 Then
             total.CambiarRutaEntera("izquierda", Environment.GetFolderPath(Environment.SpecialFolder.Desktop))
             Me.refrescarFormulario()
-        Else
+        ElseIf panelEnFoco = 1 Then
             total.CambiarRutaEntera("derecha", Environment.GetFolderPath(Environment.SpecialFolder.Desktop))
             Me.refrescarFormulario()
         End If
     End Sub
 
     Private Sub ArchivosDeProgramaToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ArchivosDeProgramaToolStripMenuItem.Click
-        If Ltb_izquierda.Focused Then
+        If panelEnFoco = 0 Then
             total.CambiarRutaEntera("izquierda", Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))
             Me.refrescarFormulario()
-        Else
+        ElseIf panelEnFoco = 1 Then
             total.CambiarRutaEntera("derecha", Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))
             Me.refrescarFormulario()
         End If
     End Sub
 
-
-    Private Sub RenombrarVariosToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RenombrarVariosToolStripMenuItem.Click
+    Private Sub ToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem3.Click
         If panelEnFoco = 0 Then
-            total.RenombrarVarios("izquierda", Ltb_izquierda.SelectedItems, ToolStripTextBox1.Text)
-            refrescarFormulario()
+            total.CambiarRutaEntera("izquierda", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments))
+            Me.refrescarFormulario()
         ElseIf panelEnFoco = 1 Then
-            total.Renombrar("derecha", Ltb_derecha.SelectedItem.ToString, ToolStripTextBox1.Text)
-            refrescarFormulario()
-
+            total.CambiarRutaEntera("derecha", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments))
+            Me.refrescarFormulario()
         End If
     End Sub
 
-    
 End Class

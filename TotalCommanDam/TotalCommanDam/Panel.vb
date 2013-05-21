@@ -116,77 +116,108 @@ Public Class Panel
     ''' <summary>
     ''' Copia un archivo o directorio pasado por parametro
     ''' </summary>
-    ''' <param name="fichero">Fichero que sera copiado</param>
+    ''' <param name="ficheros">Fichero que sera copiado</param>
     ''' <param name="destino">Ruta de destino del fichero</param>
     ''' <returns>Devuelve True si se copia bien, False si salta una excepcion</returns>
     ''' <remarks></remarks>
-    Public Function Copiar(fichero As String, destino As String) As Boolean
+    Public Function Copiar(ficheros As System.Windows.Forms.ListBox.SelectedObjectCollection, destino As String) As Boolean
 
         Dim correcto As Boolean = False
-        If My.Computer.FileSystem.DirectoryExists(_ruta & "\" & fichero) Then
-            Try
-                My.Computer.FileSystem.CopyDirectory(_ruta & "\" & fichero, destino & "\" & fichero)
-                correcto = True
-            Catch ex As Exception
-                correcto = False
-            End Try
-        Else
-            Try
-                My.Computer.FileSystem.CopyFile(_ruta & "\" & fichero, destino & "\" & fichero)
-                correcto = True
-            Catch ex As Exception
-                correcto = False
-            End Try
 
-        End If
-        
+        For i As Integer = 0 To ficheros.Count - 1
+
+            If My.Computer.FileSystem.DirectoryExists(_ruta & "\" & ficheros.Item(i).ToString) Then
+                Try
+                    My.Computer.FileSystem.CopyDirectory(_ruta & "\" & ficheros.Item(i).ToString, destino & "\" & ficheros.Item(i).ToString)
+                    correcto = True
+                Catch ex As Exception
+                    correcto = False
+                End Try
+            ElseIf My.Computer.FileSystem.FileExists(_ruta & "\" & ficheros.Item(i).ToString) Then
+                Try
+                    My.Computer.FileSystem.CopyFile(_ruta & "\" & ficheros.Item(i).ToString, destino & "\" & ficheros.Item(i).ToString)
+                    correcto = True
+                Catch ex As Exception
+                    correcto = False
+                End Try
+
+            End If
+        Next
+
         Return correcto
     End Function
 
-    ''' <summary>
-    ''' Borra el archivo o directorio seleccionado
-    ''' </summary>
-    ''' <param name="fichero"></param>
-    ''' <remarks></remarks>
-    Public Sub Borrar(fichero As String)
+    Public Sub Borrar(ficheros As System.Windows.Forms.ListBox.SelectedObjectCollection)
 
-        If My.Computer.FileSystem.FileExists(_ruta & "\" & fichero) Then
-            My.Computer.FileSystem.DeleteFile(_ruta & "\" & fichero)
-        End If
+        For i As Integer = 0 To ficheros.Count - 1
+            If My.Computer.FileSystem.FileExists(_ruta & "\" & ficheros.Item(i).ToString) Then
+                My.Computer.FileSystem.DeleteFile(_ruta & "\" & ficheros.Item(i).ToString)
+            End If
 
-        If My.Computer.FileSystem.DirectoryExists(_ruta & "\" & fichero) Then
-            My.Computer.FileSystem.DeleteDirectory(_ruta & "\" & fichero,FileIO.DeleteDirectoryOption.DeleteAllContents)
-        End If
+            If My.Computer.FileSystem.DirectoryExists(_ruta & "\" & ficheros.Item(i).ToString) Then
+                My.Computer.FileSystem.DeleteDirectory(_ruta & "\" & ficheros.Item(i).ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
+            End If
+        Next
+
+
+        
 
     End Sub
 
-    ''' <summary>
-    ''' Renombra el directorio o el archivo indicado
-    ''' </summary>
-    ''' <param name="fichero"></param>
-    ''' <param name="nuevoNombre"></param>
-    ''' <remarks></remarks>
-    Public Sub Renombrar(fichero As String, nuevoNombre As String)
-        If My.Computer.FileSystem.FileExists(_ruta & "\" & fichero) Then
-            My.Computer.FileSystem.RenameFile(_ruta & "\" & fichero, nuevoNombre)
-        End If
 
-        If My.Computer.FileSystem.DirectoryExists(_ruta & "\" & fichero) Then
-            My.Computer.FileSystem.RenameDirectory(_ruta & "\" & fichero, nuevoNombre)
-        End If
-    End Sub
 
     Public Sub RenombrarVarios(ficheros As System.Windows.Forms.ListBox.SelectedObjectCollection, nuevoNombre As String)
-        Dim nombre As String = nuevoNombre.Substring(0, nuevoNombre.LastIndexOf("."))
 
+        Dim nombre As String
+        Dim info As FileInfo
+        Dim ficherosRepetidos As Integer = 0
+        Dim carpetasRepetidas As Integer = 0
 
+        If nuevoNombre.LastIndexOf(".") >= 0 Then
+            nombre = nuevoNombre.Substring(0, nuevoNombre.LastIndexOf("."))
+
+        Else
+            nombre = nuevoNombre
+
+        End If
 
 
         For i As Integer = 0 To ficheros.Count - 1
 
-            Dim info As FileInfo = My.Computer.FileSystem.GetFileInfo(_ruta & "\" & ficheros.Item(i).ToString)
+            info = My.Computer.FileSystem.GetFileInfo(_ruta & "\" & ficheros.Item(i).ToString)
 
-            My.Computer.FileSystem.RenameFile(_ruta & "\" & ficheros.Item(i).ToString, nombre & "(" & i & ")" & info.Extension)
+            If My.Computer.FileSystem.FileExists(_ruta & "\" & nombre & info.Extension) Then
+                ficherosRepetidos = ficherosRepetidos + 1
+            End If
+
+
+            If My.Computer.FileSystem.FileExists(_ruta & "\" & ficheros.Item(i).ToString) Then
+                If ficherosRepetidos = 0 Then
+                    My.Computer.FileSystem.RenameFile(_ruta & "\" & ficheros.Item(i).ToString, nombre & info.Extension)
+                Else
+                    While (My.Computer.FileSystem.FileExists(_ruta & "\" & nombre & "(" & ficherosRepetidos & ")" & info.Extension))
+                        ficherosRepetidos = ficherosRepetidos + 1
+                    End While
+                    My.Computer.FileSystem.RenameFile(_ruta & "\" & ficheros.Item(i).ToString, nombre & "(" & ficherosRepetidos & ")" & info.Extension)
+                End If
+
+            End If
+
+            If My.Computer.FileSystem.DirectoryExists(_ruta & "\" & nombre) Then
+                carpetasRepetidas = carpetasRepetidas + 1
+            End If
+
+            If My.Computer.FileSystem.DirectoryExists(_ruta & "\" & ficheros.Item(i).ToString) Then
+                If carpetasRepetidas = 0 Then
+                    My.Computer.FileSystem.RenameDirectory(_ruta & "\" & ficheros.Item(i).ToString, nombre)
+                Else
+                    While (My.Computer.FileSystem.DirectoryExists(_ruta & "\" & nombre & "(" & carpetasRepetidas & ")"))
+                        carpetasRepetidas = carpetasRepetidas + 1
+                    End While
+                    My.Computer.FileSystem.RenameDirectory(_ruta & "\" & ficheros.Item(i).ToString, nombre & "(" & carpetasRepetidas & ")")
+                End If
+                carpetasRepetidas = carpetasRepetidas + 1
+            End If
         Next
 
     End Sub
