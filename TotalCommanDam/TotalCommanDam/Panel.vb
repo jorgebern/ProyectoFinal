@@ -12,6 +12,7 @@ Imports System.IO.Compression
 Public Class Panel
 
     Private _ruta As String
+    Private _rutaAnterior As String
 
     ''' <summary>
     ''' Constructor de la clase en el que definimos la ruta predeterminada, en mi caso he elegido el escritorio.
@@ -19,6 +20,7 @@ Public Class Panel
     ''' <remarks></remarks>
     Public Sub New()
         _ruta = My.Computer.FileSystem.SpecialDirectories.Desktop
+        _rutaAnterior = My.Computer.FileSystem.SpecialDirectories.MyDocuments
     End Sub
 
     ''' <summary>
@@ -82,7 +84,7 @@ Public Class Panel
                 p.StartInfo = s
                 p.Start()
             Catch ex As Exception
-                MessageBox.Show("not found")
+                Return
             End Try
 
         End If
@@ -228,10 +230,53 @@ Public Class Panel
     ''' </summary>
     ''' <param name="fichero"></param>
     ''' <remarks></remarks>
-    Public Sub Comprimir(fichero As String)
+    Public Sub Comprimir(fichero As String, nombre As String)
+
+        Dim repeticiones As Integer = 0
 
         If My.Computer.FileSystem.DirectoryExists(_ruta & "\" & fichero) Then
-            ZipFile.CreateFromDirectory(_ruta & "\" & fichero, _ruta & "\" & "comprimirdo.zip")
+
+            If (My.Computer.FileSystem.FileExists(_ruta & "\" & nombre & ".zip")) Then
+                repeticiones = repeticiones + 1
+            End If
+
+            If repeticiones = 0 Then
+                ZipFile.CreateFromDirectory(_ruta & "\" & fichero, _ruta & "\" & nombre & ".zip")
+            Else
+                While (My.Computer.FileSystem.FileExists(_ruta & "\" & nombre & "(" & repeticiones & ").zip"))
+                    repeticiones = repeticiones + 1
+                End While
+                ZipFile.CreateFromDirectory(_ruta & "\" & fichero, _ruta & "\" & nombre & "(" & repeticiones & ").zip")
+            End If
+
+        End If
+
+    End Sub
+
+    Public Sub Descomprimir(fichero As String)
+        Dim repeticiones As Integer = 0
+
+        If My.Computer.FileSystem.FileExists(_ruta & "\" & fichero) Then
+
+            Dim info As FileInfo = My.Computer.FileSystem.GetFileInfo(_ruta & "\" & fichero)
+
+            If info.Extension = ".zip" Then
+
+                If (My.Computer.FileSystem.DirectoryExists(_ruta & "\" & fichero.Substring(0, fichero.LastIndexOf(".")))) Then
+                    repeticiones = repeticiones + 1
+                End If
+
+                If repeticiones = 0 Then
+                    ZipFile.ExtractToDirectory(_ruta & "\" & fichero, _ruta & "\" & fichero.Substring(0, fichero.LastIndexOf(".")))
+                Else
+                    While (My.Computer.FileSystem.DirectoryExists(_ruta & "\" & fichero.Substring(0, fichero.LastIndexOf(".")) & "(" & repeticiones & ")"))
+                        repeticiones = repeticiones + 1
+                    End While
+                    ZipFile.ExtractToDirectory(_ruta & "\" & fichero, _ruta & "\" & fichero.Substring(0, fichero.LastIndexOf(".")) & "(" & repeticiones & ")")
+
+                End If
+
+            End If
         End If
 
     End Sub
@@ -248,6 +293,7 @@ Public Class Panel
             Return _ruta
         End Get
         Set(value As String)
+            RutaAnterior = _ruta
             If value = "\.." Then
                 If _ruta.LastIndexOf("\") = 2 Then
                     _ruta = _ruta.Substring(0, _ruta.LastIndexOf("\")) & "\"
@@ -260,6 +306,18 @@ Public Class Panel
 
         End Set
     End Property
+
+    Public Property RutaAnterior As String
+        Get
+            Return _rutaAnterior
+        End Get
+        Set(value As String)
+           
+            _rutaAnterior = value
+
+        End Set
+    End Property
+
 
 
     ''' <summary>

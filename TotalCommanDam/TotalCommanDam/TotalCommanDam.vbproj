@@ -142,6 +142,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Panel.vb" />
+    <Compile Include="Preferencias.vb" />
     <Compile Include="TotalComander.vb" />
   </ItemGroup>
   <ItemGroup>

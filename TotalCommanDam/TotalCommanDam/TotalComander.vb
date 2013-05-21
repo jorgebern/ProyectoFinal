@@ -6,6 +6,7 @@ Public Class TotalComander
 
     Dim izquierda As Panel
     Dim derecha As Panel
+    Dim preferencias As Preferencias
 
     ''' <summary>
     ''' Constructor de la clase
@@ -15,6 +16,7 @@ Public Class TotalComander
 
         izquierda = New Panel()
         derecha = New Panel()
+        preferencias = New Preferencias()
 
     End Sub
 
@@ -122,13 +124,21 @@ Public Class TotalComander
     ''' <param name="panel"></param>
     ''' <param name="fichero"></param>
     ''' <remarks></remarks>
-    Public Sub Comprimir(panel As String, fichero As String)
-        If Panel = "izquierda" Then
-            izquierda.Comprimir(fichero)
+    Public Sub Comprimir(panel As String, fichero As String, nombre As String)
+        If panel = "izquierda" Then
+            izquierda.Comprimir(fichero, nombre)
         Else
-            derecha.Comprimir(fichero)
+            derecha.Comprimir(fichero, nombre)
         End If
 
+    End Sub
+
+    Public Sub Descomprimir(panel As String, fichero As String)
+        If Panel = "izquierda" Then
+            izquierda.Descomprimir(fichero)
+        Else
+            derecha.Descomprimir(fichero)
+        End If
     End Sub
 
 
@@ -219,6 +229,32 @@ Public Class TotalComander
 
         End If
         Return correcto
+    End Function
+
+
+    Public Sub RutaAnterior(panel As String)
+
+        If panel = "izquierda" Then
+
+            izquierda.RutaEntera = izquierda.RutaAnterior
+
+        Else
+
+            derecha.RutaEntera = derecha.RutaAnterior
+
+        End If
+    End Sub
+
+
+    Public Sub GuardarPreferencias(tutorial As Boolean, color As Integer, tamanyo As Single)
+
+        preferencias.EscribirPreferencias(tutorial, color, tamanyo)
+
+    End Sub
+
+    Public Function CargarPreferencias() As String()
+
+        Return preferencias.ObtenerPreferencias
     End Function
 
 End Class

@@ -10,6 +10,9 @@ Public Class Form_Principal
     '1 = derecha
     Dim panelEnFoco As Integer
 
+    Dim tutorial As Boolean = False
+    Dim tamanyoFuente As Single = 8.25
+
     Dim color_Items As Brush
     Dim color_Selected As Brush
     Dim color_fondo As Color
@@ -22,9 +25,21 @@ Public Class Form_Principal
     ''' <remarks></remarks>
     Private Sub Form_Principal_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        color_Items = Brushes.LightBlue
-        color_Selected = Brushes.CadetBlue
-        color_fondo = Color.PowderBlue
+        Dim pref As String() = total.CargarPreferencias
+
+        tutorial = CBool(pref(0))
+        If pref(1) = "0" Then
+            pintarVerde()
+        ElseIf pref(1) = "1" Then
+            pintarAzul()
+        ElseIf pref(1) = "2" Then
+            pintarRosa()
+        ElseIf pref(1) = "3" Then
+            pintarPlata()
+        End If
+        tamanyoFuente = CSng(pref(2))
+
+        Ts_favoritos.DropDownItems.Add("pito")
 
         Ltb_derecha.AllowDrop = True
         Ltb_izquierda.AllowDrop = True
@@ -101,6 +116,13 @@ Public Class Form_Principal
             End If
             Ltb_derecha.Items.Add(elemento)
         Next
+
+        If panelEnFoco = 0 Then
+            Ltb_izquierda.Focus()
+        Else
+            Ltb_derecha.Focus()
+        End If
+
 
     End Sub
 
@@ -397,56 +419,27 @@ Public Class Form_Principal
     '--------------------------
     Private Sub GrassToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GrassToolStripMenuItem.Click
 
-        GrassToolStripMenuItem.Checked = True
-        AzulToolStripMenuItem.Checked = False
-        FlowersToolStripMenuItem.Checked = False
-
-        Me.color_fondo = Color.LimeGreen
-        Me.color_Items = Brushes.LightGreen
-        Me.color_Selected = Brushes.Chocolate
+        pintarVerde()
         refrescarFormulario()
 
     End Sub
 
     Private Sub AzulToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AzulToolStripMenuItem.Click
 
-        GrassToolStripMenuItem.Checked = False
-        AzulToolStripMenuItem.Checked = True
-        FlowersToolStripMenuItem.Checked = False
-        DarkToolStripMenuItem.Checked = False
-
-        Me.color_fondo = Color.PowderBlue
-        Me.color_Items = Brushes.LightBlue
-        Me.color_Selected = Brushes.CadetBlue
+        pintarAzul()
         refrescarFormulario()
     End Sub
 
     Private Sub FlowersToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FlowersToolStripMenuItem.Click
 
-        GrassToolStripMenuItem.Checked = False
-        AzulToolStripMenuItem.Checked = False
-        FlowersToolStripMenuItem.Checked = True
-        DarkToolStripMenuItem.Checked = False
-
-
-        Me.color_fondo = Color.Plum
-        Me.color_Items = Brushes.LightPink
-        Me.color_Selected = Brushes.Violet
+        pintarRosa()
         refrescarFormulario()
 
     End Sub
 
     Private Sub DarkToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DarkToolStripMenuItem.Click
 
-        GrassToolStripMenuItem.Checked = False
-        AzulToolStripMenuItem.Checked = False
-        FlowersToolStripMenuItem.Checked = False
-        DarkToolStripMenuItem.Checked = True
-
-
-        Me.color_fondo = Color.Silver
-        Me.color_Items = Brushes.LightGray
-        Me.color_Selected = Brushes.Indigo
+        pintarPlata()
         refrescarFormulario()
     End Sub
 
@@ -474,7 +467,7 @@ Public Class Form_Principal
     Public Sub Renombrar()
 
         Dim respuesta As String
-        Dim mensaje As String = "¿Está seguro de que desea renombrar el/los archivos?: "
+        Dim mensaje As String = "Usted va a renombrar los siguientes archivos: "
 
         If panelEnFoco = 0 Then
             For Each elemento As String In Ltb_izquierda.SelectedItems
@@ -600,7 +593,22 @@ Public Class Form_Principal
 
 
     Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
-        total.Comprimir("izquierda", Ltb_izquierda.SelectedItem.ToString)
+
+        Dim respuesta As String
+        Dim mensaje As String = "¿Está seguro de que desea eliminar el/los archivos?: "
+
+        respuesta = InputBox(mensaje, "Nuevo nombre: ")
+        If respuesta <> "" Then
+            If panelEnFoco = 0 Then
+                total.Comprimir("izquierda", Ltb_izquierda.SelectedItem.ToString, respuesta)
+                refrescarFormulario()
+            ElseIf panelEnFoco = 1 Then
+                total.Comprimir("derecha", Ltb_derecha.SelectedItem.ToString, respuesta)
+                refrescarFormulario()
+            End If
+
+        End If
+
     End Sub
 
 
@@ -638,4 +646,149 @@ Public Class Form_Principal
         End If
     End Sub
 
+    Private Sub ToolStripButton2_Click(sender As Object, e As EventArgs) Handles ToolStripButton2.Click
+
+        If panelEnFoco = 0 Then
+            total.RutaAnterior("izquierda")
+            Me.refrescarFormulario()
+        ElseIf panelEnFoco = 1 Then
+            total.RutaAnterior("derecha")
+            Me.refrescarFormulario()
+        End If
+    End Sub
+
+    Private Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
+
+        If panelEnFoco = 0 Then
+            total.Descomprimir("izquierda", Ltb_izquierda.SelectedItem.ToString)
+            Me.refrescarFormulario()
+        ElseIf panelEnFoco = 1 Then
+            total.Descomprimir("derecha", Ltb_derecha.SelectedItem.ToString)
+            Me.refrescarFormulario()
+        End If
+
+
+    End Sub
+
+    Private Sub Form_Principal_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+
+        Dim color As Integer
+
+        If GrassToolStripMenuItem.Checked Then
+            color = 0
+        ElseIf AzulToolStripMenuItem.Checked Then
+            color = 1
+        ElseIf FlowersToolStripMenuItem.Checked Then
+            color = 2
+        ElseIf DarkToolStripMenuItem.Checked Then
+            color = 3
+        End If
+
+        total.GuardarPreferencias(tutorial, color, tamanyoFuente)
+    End Sub
+
+
+    Public Sub pintarAzul()
+
+        GrassToolStripMenuItem.Checked = False
+        AzulToolStripMenuItem.Checked = True
+        FlowersToolStripMenuItem.Checked = False
+        DarkToolStripMenuItem.Checked = False
+
+        Me.color_fondo = Color.PowderBlue
+        Me.color_Items = Brushes.LightBlue
+        Me.color_Selected = Brushes.CadetBlue
+    End Sub
+
+    Public Sub pintarVerde()
+
+        GrassToolStripMenuItem.Checked = True
+        AzulToolStripMenuItem.Checked = False
+        FlowersToolStripMenuItem.Checked = False
+        DarkToolStripMenuItem.Checked = False
+
+        Me.color_fondo = Color.LimeGreen
+        Me.color_Items = Brushes.LightGreen
+        Me.color_Selected = Brushes.Chocolate
+    End Sub
+
+    Public Sub pintarRosa()
+        GrassToolStripMenuItem.Checked = False
+        AzulToolStripMenuItem.Checked = False
+        FlowersToolStripMenuItem.Checked = True
+        DarkToolStripMenuItem.Checked = False
+
+        Me.color_fondo = Color.Plum
+        Me.color_Items = Brushes.LightPink
+        Me.color_Selected = Brushes.Violet
+    End Sub
+
+    Public Sub pintarPlata()
+
+        GrassToolStripMenuItem.Checked = False
+        AzulToolStripMenuItem.Checked = False
+        FlowersToolStripMenuItem.Checked = False
+        DarkToolStripMenuItem.Checked = True
+
+        Me.color_fondo = Color.Silver
+        Me.color_Items = Brushes.LightGray
+        Me.color_Selected = Brushes.Indigo
+    End Sub
+
+
+    Private Sub ToolStripMenuItem4_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem4.Click
+        Lbl_izquierda.Font = New Font("Microsoft Sans Serif", 8.25)
+        Ltb_izquierda.Font = New Font("Microsoft Sans Serif", 8.25)
+        Ltb_izquierda.ItemHeight = 13
+
+        Lbl_derecha.Font = New Font("Microsoft Sans Serif", 8.25)
+        Ltb_derecha.Font = New Font("Microsoft Sans Serif", 8.25)
+        Ltb_derecha.ItemHeight = 13
+
+        Mns_menu.Font = New Font("Microsoft Sans Serif", 8.25)
+
+        ToolStripMenuItem4.Checked = True
+        ToolStripMenuItem5.Checked = False
+        GrandeToolStripMenuItem.Checked = False
+        tamanyoFuente = 8.25
+
+    End Sub
+
+    Private Sub ToolStripMenuItem5_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem5.Click
+        Lbl_izquierda.Font = New Font("Microsoft Sans Serif", 10)
+        Ltb_izquierda.Font = New Font("Microsoft Sans Serif", 10)
+        Ltb_izquierda.ItemHeight = 15
+
+        Lbl_derecha.Font = New Font("Microsoft Sans Serif", 10)
+        Ltb_derecha.Font = New Font("Microsoft Sans Serif", 10)
+        Ltb_derecha.ItemHeight = 15
+
+        Mns_menu.Font = New Font("Microsoft Sans Serif", 10)
+
+
+        ToolStripMenuItem4.Checked = False
+        ToolStripMenuItem5.Checked = True
+        GrandeToolStripMenuItem.Checked = False
+        tamanyoFuente = 10
+
+    End Sub
+
+    Private Sub GrandeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GrandeToolStripMenuItem.Click
+        Lbl_izquierda.Font = New Font("Microsoft Sans Serif", 12)
+        Ltb_izquierda.Font = New Font("Microsoft Sans Serif", 12)
+        Ltb_izquierda.ItemHeight = 20
+
+        Lbl_derecha.Font = New Font("Microsoft Sans Serif", 12)
+        Ltb_derecha.Font = New Font("Microsoft Sans Serif", 12)
+        Ltb_derecha.ItemHeight = 20
+
+
+        Mns_menu.Font = New Font("Microsoft Sans Serif", 12)
+
+        ToolStripMenuItem4.Checked = False
+        ToolStripMenuItem5.Checked = False
+        GrandeToolStripMenuItem.Checked = True
+        tamanyoFuente = 12
+
+    End Sub
 End Class
