@@ -27,14 +27,73 @@ Public Class Preferencias
     ''' <remarks></remarks>
     Public Function ObtenerPreferencias() As String()
 
-        Dim srLector As StreamReader = New StreamReader("pref.pre")
         Dim Linea As String
         Dim ContadorLin As Integer = 1
-        Linea = srLector.ReadLine()
+
+        Try
+
+        
+        Dim srLector As StreamReader = New StreamReader("pref.pre")
+
+            Linea = srLector.ReadLine()
+            srLector.Close()
+        Catch ex As Exception
+            Linea = "trueÄ1Ä8.25"
+        End Try
 
         Return Linea.Split(CChar("Ä"))
 
     End Function
 
+
+
+    Public Sub EscribirFavoritos(usuario As String, ruta As String, nombre As String)
+
+        Dim swEscritor As StreamWriter
+
+        swEscritor = New StreamWriter("favoritos.fav", True)
+
+        swEscritor.WriteLine(usuario & "Ä" & ruta & "Ä" & nombre)
+
+        swEscritor.Close()
+    End Sub
+
+
+    Public Function ObtenerFavoritos(usuario As String) As String()
+
+        Dim ContadorLin As Integer = 1
+        Dim favoritos As List(Of String) = New List(Of String)
+        Dim srLector As StreamReader
+
+        Try
+            srLector = New StreamReader("favoritos.fav")
+
+            Dim Linea As String
+
+
+
+            Linea = srLector.ReadLine()
+
+            Do While Not (Linea Is Nothing)
+
+                Dim datos As String() = Linea.Split(CChar("Ä"))
+
+                If datos(0) = usuario Then
+                    favoritos.Add(datos(1) & "Ä" & datos(2))
+                End If
+
+                Linea = srLector.ReadLine()
+
+            Loop
+            srLector.Close()
+        Catch ex As Exception
+
+        Finally
+
+        End Try
+
+        Return favoritos.ToArray
+
+    End Function
 
 End Class

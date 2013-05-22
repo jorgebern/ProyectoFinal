@@ -166,9 +166,6 @@ Public Class Panel
             End If
         Next
 
-
-        
-
     End Sub
 
 
@@ -297,6 +294,56 @@ Public Class Panel
     End Sub
 
 
+    Public Sub CrearCarpeta(nombre As String)
+
+        Dim repeticiones As Integer = 1
+
+        If My.Computer.FileSystem.DirectoryExists(Ruta & "\" & nombre) Then
+
+            While My.Computer.FileSystem.DirectoryExists(Ruta & "\" & nombre & "(" & repeticiones & ")")
+                repeticiones += 1
+            End While
+            My.Computer.FileSystem.CreateDirectory(Ruta & "\" & nombre & "(" & repeticiones & ")")
+        Else
+            My.Computer.FileSystem.CreateDirectory(Ruta & "\" & nombre)
+        End If
+
+    End Sub
+
+    Public Sub CrearFichero(nombre As String)
+
+        Dim repeticiones As Integer = 1
+        Dim swEscritor As StreamWriter
+
+        If nombre.LastIndexOf(".") >= 0 Then
+            nombre = nombre.Substring(0, nombre.LastIndexOf("."))
+        End If
+
+
+        If My.Computer.FileSystem.FileExists(Ruta & "\" & nombre & ".txt") Then
+
+            While My.Computer.FileSystem.FileExists(Ruta & "\" & nombre & "(" & repeticiones & ").txt")
+                repeticiones += 1
+            End While
+
+
+
+            swEscritor = New StreamWriter(_ruta & "\" & nombre & "(" & repeticiones & ").txt")
+
+        Else
+
+            swEscritor = New StreamWriter(_ruta & "\" & nombre & ".txt")
+
+
+        End If
+
+        swEscritor.Close()
+
+
+
+
+    End Sub
+
     ''' <summary>
     ''' Propiedad que devuelve y asigna la ruta del panel
     ''' </summary>
@@ -340,7 +387,6 @@ Public Class Panel
     End Property
 
 
-
     ''' <summary>
     ''' propiedad que define la ruta entera, implementada para los marcadores
     ''' </summary>
@@ -355,7 +401,5 @@ Public Class Panel
             _ruta = value
         End Set
     End Property
-
-
 
 End Class

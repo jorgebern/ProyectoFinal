@@ -280,4 +280,72 @@ Public Class TotalComander
         Return preferencias.ObtenerPreferencias
     End Function
 
+
+    Public Function CargarFavoritos(usuario As String) As String()
+
+        Return preferencias.ObtenerFavoritos(usuario)
+    End Function
+
+
+    Public Sub GuardarFavoritos(usuario As String, panel As String, nombre As String)
+
+        If panel = "izquierda" Then
+            If nombre = "" Then
+                nombre = izquierda.Ruta
+            End If
+            preferencias.EscribirFavoritos(usuario, izquierda.Ruta, nombre)
+        Else
+            If nombre = "" Then
+                nombre = derecha.Ruta
+            End If
+            preferencias.EscribirFavoritos(usuario, derecha.Ruta, nombre)
+        End If
+    End Sub
+
+
+    Public Sub crearCarpeta(panel As String, nombre As String)
+
+        If panel = "izquierda" Then
+            izquierda.CrearCarpeta(nombre)
+        Else
+            derecha.CrearCarpeta(nombre)
+        End If
+
+    End Sub
+
+    Public Sub crearfichero(panel As String, nombre As String)
+
+
+        If panel = "izquierda" Then
+            izquierda.CrearFichero(nombre)
+        Else
+            derecha.CrearFichero(nombre)
+        End If
+
+    End Sub
+
+
+    Public Function obtenerInformacionPc() As String()
+
+        Dim datos As List(Of String) = New List(Of String)
+
+
+        datos.Add(Environment.UserName)
+        datos.Add(Environment.MachineName)
+        datos.Add(My.Computer.Info.OSFullName)
+        datos.Add(Environment.OSVersion.ServicePack.ToString)
+        datos.Add(Environment.ProcessorCount.ToString)
+        datos.Add(Environment.TickCount.ToString)
+
+        datos.Add(My.Computer.Info.TotalPhysicalMemory.ToString)
+        datos.Add(My.Computer.Clock.LocalTime.ToString())
+
+
+        Return datos.ToArray
+
+
+    End Function
+
+
+
 End Class

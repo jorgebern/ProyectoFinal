@@ -6,9 +6,11 @@
     Dim tamanyo As String
     Dim creacion As String
     Dim modificado As String
+    Dim tamanyoLetra As Single
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        Me.Font = New Font("Microsoft Sans Serif", tamanyoLetra)
         Txb_nombre.Text = nombre
         Lbl_extension.Text = extension
         Lbl_ubicacion.Text = ruta
@@ -18,13 +20,14 @@
 
     End Sub
 
-    Public Sub obtenerParametros(informacion As String())
+    Public Sub obtenerParametros(informacion As String(), tamanyo As Single)
         nombre = informacion(0)
         extension = informacion(1)
         ruta = informacion(2)
-        tamanyo = informacion(3)
+        Me.tamanyo = informacion(3)
         creacion = informacion(4)
         modificado = informacion(5)
+        tamanyoLetra = tamanyo
     End Sub
 
     Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles Cbx_atributos.CheckedChanged
@@ -35,6 +38,8 @@
 
         If Txb_nombre.Text <> nombre Then
             Btn_aplicar.Enabled = True
+        Else
+            Btn_aplicar.Enabled = False
         End If
 
 
@@ -46,5 +51,9 @@
 
     Private Sub Btn_aceptar_Click(sender As Object, e As EventArgs) Handles Btn_aceptar.Click
         Me.Close()
+    End Sub
+
+    Private Sub Btn_aplicar_Click(sender As Object, e As EventArgs) Handles Btn_aplicar.Click
+
     End Sub
 End Class

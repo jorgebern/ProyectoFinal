@@ -48,7 +48,7 @@ Partial Class informacion
         '
         'Txb_nombre
         '
-        Me.Txb_nombre.Location = New System.Drawing.Point(117, 27)
+        Me.Txb_nombre.Location = New System.Drawing.Point(120, 12)
         Me.Txb_nombre.Name = "Txb_nombre"
         Me.Txb_nombre.Size = New System.Drawing.Size(227, 20)
         Me.Txb_nombre.TabIndex = 3
@@ -77,7 +77,7 @@ Partial Class informacion
         Me.ShapeContainer1.Margin = New System.Windows.Forms.Padding(0)
         Me.ShapeContainer1.Name = "ShapeContainer1"
         Me.ShapeContainer1.Shapes.AddRange(New Microsoft.VisualBasic.PowerPacks.Shape() {Me.LineShape4, Me.LineShape3, Me.LineShape2, Me.LineShape1})
-        Me.ShapeContainer1.Size = New System.Drawing.Size(372, 443)
+        Me.ShapeContainer1.Size = New System.Drawing.Size(356, 405)
         Me.ShapeContainer1.TabIndex = 5
         Me.ShapeContainer1.TabStop = False
         '
@@ -86,10 +86,10 @@ Partial Class informacion
         Me.LineShape4.BorderColor = System.Drawing.SystemColors.ControlDark
         Me.LineShape4.Enabled = False
         Me.LineShape4.Name = "LineShape4"
-        Me.LineShape4.X1 = 16
-        Me.LineShape4.X2 = 340
-        Me.LineShape4.Y1 = 278
-        Me.LineShape4.Y2 = 278
+        Me.LineShape4.X1 = 15
+        Me.LineShape4.X2 = 339
+        Me.LineShape4.Y1 = 286
+        Me.LineShape4.Y2 = 286
         '
         'LineShape3
         '

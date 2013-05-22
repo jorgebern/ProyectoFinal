@@ -6,6 +6,8 @@ Public Class Form_Principal
 
     Dim total As TotalComander = New TotalComander()
     Dim informacio As informacion
+    Dim infoPc As InformacionPc
+
     '0 = izquierda
     '1 = derecha
     Dim panelEnFoco As Integer
@@ -28,6 +30,7 @@ Public Class Form_Principal
         Dim pref As String() = total.CargarPreferencias
 
         tutorial = CBool(pref(0))
+
         If pref(1) = "0" Then
             pintarVerde()
         ElseIf pref(1) = "1" Then
@@ -37,9 +40,18 @@ Public Class Form_Principal
         ElseIf pref(1) = "3" Then
             pintarPlata()
         End If
-        tamanyoFuente = CSng(pref(2))
 
-        Ts_favoritos.DropDownItems.Add("pito")
+        If pref(2) = "8.25" Then
+            TamanyoPequenyo()
+        ElseIf pref(2) = "10" Then
+            TamanyoMediano()
+        ElseIf pref(2) = "12" Then
+            tamanyoGrande()
+        End If
+
+
+        CargarFavoritos()
+
 
         Ltb_derecha.AllowDrop = True
         Ltb_izquierda.AllowDrop = True
@@ -507,23 +519,32 @@ Public Class Form_Principal
         Dim mensaje As String = "Usted va a renombrar los siguientes archivos: "
 
         If panelEnFoco = 0 Then
-            For Each elemento As String In Ltb_izquierda.SelectedItems
-                mensaje = mensaje & vbCrLf & vbTab & "- " & elemento
-            Next
-            respuesta = InputBox(mensaje, "Nuevo nombre: ")
+            If Ltb_izquierda.SelectedIndex = -1 Then
+                MsgBox("Seleccione un archivo")
+            Else
+                For Each elemento As String In Ltb_izquierda.SelectedItems
+                    mensaje = mensaje & vbCrLf & vbTab & "- " & elemento
+                Next
+                respuesta = InputBox(mensaje, "Nuevo nombre: ")
 
-            If respuesta <> "" Then
-                total.RenombrarVarios("izquierda", Ltb_izquierda.SelectedItems, respuesta)
+                If respuesta <> "" Then
+                    total.RenombrarVarios("izquierda", Ltb_izquierda.SelectedItems, respuesta)
+                End If
             End If
+            
 
         ElseIf panelEnFoco = 1 Then
-            For Each elemento As String In Ltb_derecha.SelectedItems
-                mensaje = mensaje & vbCrLf & vbTab & "- " & elemento
-            Next
-            respuesta = InputBox(mensaje, "Nuevo nombre: ")
+            If Ltb_derecha.SelectedIndex = -1 Then
+                MsgBox("Seleccione un archivo")
+            Else
+                For Each elemento As String In Ltb_derecha.SelectedItems
+                    mensaje = mensaje & vbCrLf & vbTab & "- " & elemento
+                Next
+                respuesta = InputBox(mensaje, "Nuevo nombre: ")
 
-            If respuesta <> "" Then
-                total.RenombrarVarios("derecha", Ltb_derecha.SelectedItems, respuesta)
+                If respuesta <> "" Then
+                    total.RenombrarVarios("derecha", Ltb_derecha.SelectedItems, respuesta)
+                End If
             End If
 
         End If
@@ -566,24 +587,31 @@ Public Class Form_Principal
         
 
         If panelEnFoco = 0 Then
+            If Ltb_izquierda.SelectedIndex = -1 Then
+                MsgBox("Seleccione un archivo")
+            Else
+                For Each elemento As String In Ltb_izquierda.SelectedItems
+                    mensaje = mensaje & vbCrLf & vbTab & "- " & elemento
+                Next
 
-            For Each elemento As String In Ltb_izquierda.SelectedItems
-                mensaje = mensaje & vbCrLf & vbTab & "- " & elemento
-            Next
-
-            If MsgBox(mensaje, MsgBoxStyle.YesNo, "Borrar") = MsgBoxResult.Yes Then
-                total.Borrar("izquierda", Ltb_izquierda.SelectedItems)
-                Me.refrescarFormulario()
+                If MsgBox(mensaje, MsgBoxStyle.YesNo, "Borrar") = MsgBoxResult.Yes Then
+                    total.Borrar("izquierda", Ltb_izquierda.SelectedItems)
+                    Me.refrescarFormulario()
+                End If
             End If
+            
         ElseIf panelEnFoco = 1 Then
+            If Ltb_derecha.SelectedIndex = -1 Then
+                MsgBox("Seleccione un archivo")
+            Else
+                For Each elemento As String In Ltb_derecha.SelectedItems
+                    mensaje = mensaje & vbCrLf & vbTab & "- " & elemento
+                Next
 
-            For Each elemento As String In Ltb_derecha.SelectedItems
-                mensaje = mensaje & vbCrLf & vbTab & "- " & elemento
-            Next
-
-            If MsgBox(mensaje, MsgBoxStyle.YesNo, "Borrar") = MsgBoxResult.Yes Then
-                total.Borrar("derecha", Ltb_derecha.SelectedItems)
-                Me.refrescarFormulario()
+                If MsgBox(mensaje, MsgBoxStyle.YesNo, "Borrar") = MsgBoxResult.Yes Then
+                    total.Borrar("derecha", Ltb_derecha.SelectedItems)
+                    Me.refrescarFormulario()
+                End If
             End If
         End If
     End Sub
@@ -602,15 +630,29 @@ Public Class Form_Principal
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub InformaciónToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InformaciónToolStripMenuItem.Click
-        informacio = New informacion()
+
+       
+            informacio = New informacion()
 
         If panelEnFoco = 0 Then
-            informacio.obtenerParametros(total.obtenerInformacion("izquierda", Ltb_izquierda.SelectedItem.ToString))
-            informacio.Show()
+            If Ltb_izquierda.SelectedIndex = -1 Then
+                MsgBox("Seleccione un archivo")
+            Else
+                informacio.obtenerParametros(total.obtenerInformacion("izquierda", Ltb_izquierda.SelectedItem.ToString), tamanyoFuente)
+                informacio.Show()
+            End If
+           
         ElseIf panelEnFoco = 1 Then
-            informacio.obtenerParametros(total.obtenerInformacion("derecha", Ltb_derecha.SelectedItem.ToString))
-            informacio.Show()
-        End If
+            If Ltb_derecha.SelectedIndex = -1 Then
+                MsgBox("Seleccione un archivo")
+            Else
+                informacio.obtenerParametros(total.obtenerInformacion("derecha", Ltb_derecha.SelectedItem.ToString), tamanyoFuente)
+                informacio.Show()
+            End If
+            End If
+
+
+
     End Sub
     '-----------------------------------------------------------------------------
 
@@ -621,19 +663,7 @@ Public Class Form_Principal
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub CopiarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CopiarToolStripMenuItem.Click
-        If panelEnFoco = 0 Then
-            If Ltb_izquierda.SelectedIndex = -1 Then
-                MsgBox("Selecciona un archivo")
-            Else
-                total.Copiar("izquierda", Ltb_izquierda.SelectedItems)
-            End If
-        ElseIf panelEnFoco = 1 Then
-            If Ltb_derecha.SelectedIndex = -1 Then
-                MsgBox("Selecciona un archivo")
-            Else
-                total.Copiar("derecha", Ltb_derecha.SelectedItems)
-            End If
-        End If
+        Copiar()
 
     End Sub
 
@@ -876,6 +906,10 @@ Public Class Form_Principal
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub ToolStripMenuItem4_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem4.Click
+        TamanyoPequenyo()
+    End Sub
+
+    Public Sub TamanyoPequenyo()
         Lbl_izquierda.Font = New Font("Microsoft Sans Serif", 8.25)
         Ltb_izquierda.Font = New Font("Microsoft Sans Serif", 8.25)
         Ltb_izquierda.ItemHeight = 13
@@ -893,6 +927,7 @@ Public Class Form_Principal
 
     End Sub
 
+
     ''' <summary>
     ''' Constrola el tamaño de la letra mediana
     ''' </summary>
@@ -900,6 +935,10 @@ Public Class Form_Principal
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub ToolStripMenuItem5_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem5.Click
+        TamanyoMediano()
+    End Sub
+
+    Public Sub TamanyoMediano()
         Lbl_izquierda.Font = New Font("Microsoft Sans Serif", 10)
         Ltb_izquierda.Font = New Font("Microsoft Sans Serif", 10)
         Ltb_izquierda.ItemHeight = 15
@@ -918,6 +957,7 @@ Public Class Form_Principal
 
     End Sub
 
+
     ''' <summary>
     ''' Controla el tamaño de la letra grande
     ''' </summary>
@@ -925,6 +965,11 @@ Public Class Form_Principal
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub GrandeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GrandeToolStripMenuItem.Click
+        tamanyoGrande()
+
+    End Sub
+
+    Public Sub TamanyoGrande()
         Lbl_izquierda.Font = New Font("Microsoft Sans Serif", 12)
         Ltb_izquierda.Font = New Font("Microsoft Sans Serif", 12)
         Ltb_izquierda.ItemHeight = 20
@@ -940,6 +985,158 @@ Public Class Form_Principal
         ToolStripMenuItem5.Checked = False
         GrandeToolStripMenuItem.Checked = True
         tamanyoFuente = 12
+    End Sub
+
+
+    Public Sub CargarFavoritos()
+
+        Dim anyadir As Boolean
+
+        For Each elemento As String In total.CargarFavoritos(Environment.UserName)
+            anyadir = True
+
+            Dim datos As String() = elemento.Split(CChar("Ä"))
+
+            For i As Integer = 0 To Ts_favoritos.DropDownItems.Count - 1
+                If datos(1) = Ts_favoritos.DropDownItems(i).Text Then
+                    anyadir = False
+                End If
+            Next
+
+            If anyadir Then
+                Ts_favoritos.DropDownItems.Add(datos(1))
+                Ts_favoritos.DropDownItems(Ts_favoritos.DropDownItems.Count - 1).Tag = datos(0)
+            End If
+
+
+        Next
 
     End Sub
+
+
+    Private Sub ToolStripButton4_Click(sender As Object, e As EventArgs) Handles ToolStripButton4.Click
+
+        Dim respuesta As String
+        Dim mensaje As String = "Nombre: "
+
+        respuesta = InputBox(mensaje, "Nuevo nombre: ")
+
+        If panelEnFoco = 0 Then
+            total.GuardarFavoritos(Environment.UserName, "izquierda", respuesta)
+
+        Else
+            total.GuardarFavoritos(Environment.UserName, "derecha", respuesta)
+        End If
+        CargarFavoritos()
+
+    End Sub
+
+    Private Sub Ts_favoritos_DropDownItemClicked(sender As Object, e As ToolStripItemClickedEventArgs) Handles Ts_favoritos.DropDownItemClicked
+
+
+        If e.ClickedItem.Text = "Mis documentos" Or e.ClickedItem.Text = "Escritorio" Or e.ClickedItem.Text = "Archivos de programa(x86)" Then
+            Return
+        End If
+
+        If panelEnFoco = 0 Then
+            total.CambiarRutaEntera("izquierda", e.ClickedItem.Tag.ToString)
+        Else
+            total.CambiarRutaEntera("derecha", e.ClickedItem.Tag.ToString)
+        End If
+
+        refrescarFormulario()
+
+    End Sub
+
+    Private Sub ToolStripButton5_Click(sender As Object, e As EventArgs) Handles ToolStripButton5.Click
+        CrearCarpeta()
+    End Sub
+
+
+    Public Sub CrearCarpeta()
+        Dim respuesta As String
+        Dim mensaje As String = "Nombre: "
+
+        respuesta = InputBox(mensaje, "Nuevo nombre: ", "Nueva carpeta")
+
+        If respuesta <> "" Then
+            If panelEnFoco = 0 Then
+                total.crearCarpeta("izquierda", respuesta)
+
+            Else
+                total.crearCarpeta("derecha", respuesta)
+            End If
+        End If
+        refrescarFormulario()
+
+    End Sub
+
+
+    Public Sub CrearFichero()
+        Dim respuesta As String
+        Dim mensaje As String = "Nombre: "
+
+        respuesta = InputBox(mensaje, "Nuevo nombre: ", "Nuevo fichero.txt")
+
+        If respuesta <> "" Then
+            If panelEnFoco = 0 Then
+                total.crearfichero("izquierda", respuesta)
+
+            Else
+                total.crearfichero("derecha", respuesta)
+            End If
+        End If
+        refrescarFormulario()
+    End Sub
+
+
+    Private Sub ToolStripButton6_Click(sender As Object, e As EventArgs) Handles ToolStripButton6.Click
+        CrearFichero()
+    End Sub
+
+    Private Sub CarpetaToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles CarpetaToolStripMenuItem1.Click
+        CrearCarpeta()
+    End Sub
+
+    Private Sub CarpetaToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CarpetaToolStripMenuItem.Click
+        CrearCarpeta()
+    End Sub
+
+    Private Sub DocumentoDeTextotxtToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DocumentoDeTextotxtToolStripMenuItem.Click
+        CrearFichero()
+    End Sub
+
+    Private Sub DocumentoDeTextotxtToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles DocumentoDeTextotxtToolStripMenuItem1.Click
+        CrearFichero()
+    End Sub
+
+    Private Sub InformaciónDelPCToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InformaciónDelPCToolStripMenuItem.Click
+        infoPc = New InformacionPc()
+        infoPc.obtenerParametros(total.obtenerInformacionPc, tamanyoFuente)
+
+        infoPc.Show()
+
+    End Sub
+
+    Private Sub CopiarToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles CopiarToolStripMenuItem1.Click
+        Copiar()
+    End Sub
+
+    Public Sub Copiar()
+        If panelEnFoco = 0 Then
+            If Ltb_izquierda.SelectedIndex = -1 Then
+                MsgBox("Selecciona un archivo")
+            Else
+                total.Copiar("izquierda", Ltb_izquierda.SelectedItems)
+            End If
+        ElseIf panelEnFoco = 1 Then
+            If Ltb_derecha.SelectedIndex = -1 Then
+                MsgBox("Selecciona un archivo")
+            Else
+                total.Copiar("derecha", Ltb_derecha.SelectedItems)
+            End If
+        End If
+        refrescarFormulario()
+    End Sub
+
 End Class
