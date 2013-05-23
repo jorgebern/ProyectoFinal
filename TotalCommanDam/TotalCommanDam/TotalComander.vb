@@ -124,14 +124,15 @@ Public Class TotalComander
     ''' <param name="panel"></param>
     ''' <param name="fichero"></param>
     ''' <remarks></remarks>
-    Public Sub Comprimir(panel As String, fichero As String, nombre As String)
+    Public Function Comprimir(panel As String, fichero As String, nombre As String) As Boolean
+        Dim correcto As Boolean = False
         If panel = "izquierda" Then
-            izquierda.Comprimir(fichero, nombre)
+            correcto = izquierda.Comprimir(fichero, nombre)
         Else
-            derecha.Comprimir(fichero, nombre)
+            correcto = derecha.Comprimir(fichero, nombre)
         End If
-
-    End Sub
+        Return correcto
+    End Function
 
 
     ''' <summary>
@@ -140,13 +141,18 @@ Public Class TotalComander
     ''' <param name="panel"></param>
     ''' <param name="fichero"></param>
     ''' <remarks></remarks>
-    Public Sub Descomprimir(panel As String, fichero As String)
-        If Panel = "izquierda" Then
-            izquierda.Descomprimir(fichero)
+    Public Function Descomprimir(panel As String, fichero As String) As Boolean
+        Dim correcto As Boolean = False
+
+        If panel = "izquierda" Then
+            correcto = izquierda.Descomprimir(fichero)
         Else
-            derecha.Descomprimir(fichero)
+            correcto = derecha.Descomprimir(fichero)
         End If
-    End Sub
+
+        Return correcto
+
+    End Function
 
 
     ''' <summary>
@@ -281,6 +287,10 @@ Public Class TotalComander
     End Function
 
 
+    Public Sub EliminarFavorito(panel As String)
+        preferencias.eliminarFavoritos(Environment.UserName, izquierda.Ruta)
+    End Sub
+
     Public Function CargarFavoritos(usuario As String) As String()
 
         Return preferencias.ObtenerFavoritos(usuario)
@@ -346,6 +356,48 @@ Public Class TotalComander
 
     End Function
 
+    Public Sub cambiarExtension(panel As String, nombre As String, extension As String)
+
+
+        If panel = "izquierda" Then
+            izquierda.CambiarExtension(nombre, extension)
+        Else
+            derecha.CambiarExtension(nombre, extension)
+        End If
+
+    End Sub
+
+    Public Function filtrar(panel As String, palabra As String) As String()
+        Dim ficheros As String()
+
+        If panel = "izquierda" Then
+            ficheros = izquierda.filtrar(palabra)
+        Else
+            ficheros = derecha.filtrar(palabra)
+        End If
+
+        Return ficheros
+    End Function
+
+
+    Public Function mover(panel As String, f As System.Windows.Forms.ListBox.SelectedObjectCollection) As Boolean
+
+        Dim correcto As Boolean
+
+        If panel = "izquierda" Then
+
+            izquierda.mover(f, derecha.Ruta)
+
+        Else
+
+            derecha.mover(f, izquierda.Ruta)
+
+        End If
+        Return correcto
+
+
+
+    End Function
 
 
 End Class

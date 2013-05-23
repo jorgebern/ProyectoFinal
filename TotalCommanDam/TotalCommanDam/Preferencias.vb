@@ -96,4 +96,53 @@ Public Class Preferencias
 
     End Function
 
+    Public Sub eliminarFavoritos(usuario As String, favoritos As String)
+        Dim ContadorLin As Integer = 1
+        Dim srLector As StreamReader
+        Dim fav As List(Of String) = New List(Of String)
+
+
+        Try
+            srLector = New StreamReader("favoritos.fav")
+
+            Dim Linea As String
+
+
+
+            Linea = srLector.ReadLine()
+
+            Do While Not (Linea Is Nothing)
+
+                Dim datos As String() = Linea.Split(CChar("Ä"))
+
+                If datos(0) = usuario And (datos(1) = favoritos Or datos(2) = favoritos) Then
+                    'Borrado
+                Else
+                    fav.Add(Linea)
+                End If
+
+                Linea = srLector.ReadLine()
+
+            Loop
+            srLector.Close()
+        Catch ex As Exception
+
+        Finally
+
+        End Try
+
+
+        Dim swEscritor As StreamWriter
+
+        swEscritor = New StreamWriter("favoritos.fav",False)
+
+        For Each elemento As String In fav
+            swEscritor.WriteLine(elemento)
+        Next
+
+        swEscritor.Close()
+
+
+    End Sub
+
 End Class

@@ -125,20 +125,41 @@ Public Class Panel
     Public Function Copiar(ficheros As System.Windows.Forms.ListBox.SelectedObjectCollection, destino As String) As Boolean
 
         Dim correcto As Boolean = False
+        Dim repeticiones As Integer = 0
 
         For i As Integer = 0 To ficheros.Count - 1
 
             If My.Computer.FileSystem.DirectoryExists(_ruta & "\" & ficheros.Item(i).ToString) Then
                 Try
-                    My.Computer.FileSystem.CopyDirectory(_ruta & "\" & ficheros.Item(i).ToString, destino & "\" & ficheros.Item(i).ToString)
-                    correcto = True
+                    If My.Computer.FileSystem.DirectoryExists(destino & "\" & ficheros.Item(i).ToString) Then
+                        While My.Computer.FileSystem.DirectoryExists(destino & "\" & ficheros.Item(i).ToString & "(" & repeticiones & ")")
+                            repeticiones += 1
+                        End While
+                        My.Computer.FileSystem.CopyDirectory(_ruta & "\" & ficheros.Item(i).ToString, destino & "\" & ficheros.Item(i).ToString & "(" & repeticiones & ")", FileIO.UIOption.AllDialogs)
+                        correcto = True
+                    Else
+                        My.Computer.FileSystem.CopyDirectory(_ruta & "\" & ficheros.Item(i).ToString, destino & "\" & ficheros.Item(i).ToString, FileIO.UIOption.AllDialogs)
+                        correcto = True
+                    End If
+                    
                 Catch ex As Exception
                     correcto = False
                 End Try
             ElseIf My.Computer.FileSystem.FileExists(_ruta & "\" & ficheros.Item(i).ToString) Then
                 Try
-                    My.Computer.FileSystem.CopyFile(_ruta & "\" & ficheros.Item(i).ToString, destino & "\" & ficheros.Item(i).ToString)
-                    correcto = True
+                    If My.Computer.FileSystem.FileExists(destino & "\" & ficheros.Item(i).ToString) Then
+                        Dim info As DirectoryInfo = My.Computer.FileSystem.GetDirectoryInfo(_ruta & "\" & ficheros.Item(i).ToString)
+
+                        While My.Computer.FileSystem.FileExists(destino & "\" & ficheros.Item(i).ToString.Substring(0, ficheros.Item(i).ToString.LastIndexOf(".")) & "(" & repeticiones & ")" & info.Extension)
+                            repeticiones += 1
+                        End While
+                        My.Computer.FileSystem.CopyFile(_ruta & "\" & ficheros.Item(i).ToString, destino & "\" & ficheros.Item(i).ToString.Substring(0, ficheros.Item(i).ToString.LastIndexOf(".")) & "(" & repeticiones & ")" & info.Extension)
+                        correcto = True
+                    Else
+                        My.Computer.FileSystem.CopyFile(_ruta & "\" & ficheros.Item(i).ToString, destino & "\" & ficheros.Item(i).ToString)
+                        correcto = True
+                    End If
+                    
                 Catch ex As Exception
                     correcto = False
                 End Try
@@ -175,7 +196,8 @@ Public Class Panel
     ''' <param name="ficheros"></param>
     ''' <param name="nuevoNombre"></param>
     ''' <remarks></remarks>
-    Public Sub RenombrarVarios(ficheros As System.Windows.Forms.ListBox.SelectedObjectCollection, nuevoNombre As String)
+    Public Function RenombrarVarios(ficheros As System.Windows.Forms.ListBox.SelectedObjectCollection, nuevoNombre As String) As Boolean
+        Dim correcto As Boolean = False
 
         Dim nombre As String
         Dim info As FileInfo
@@ -190,7 +212,6 @@ Public Class Panel
 
         End If
 
-
         For i As Integer = 0 To ficheros.Count - 1
 
             info = My.Computer.FileSystem.GetFileInfo(_ruta & "\" & ficheros.Item(i).ToString)
@@ -203,11 +224,13 @@ Public Class Panel
             If My.Computer.FileSystem.FileExists(_ruta & "\" & ficheros.Item(i).ToString) Then
                 If ficherosRepetidos = 0 Then
                     My.Computer.FileSystem.RenameFile(_ruta & "\" & ficheros.Item(i).ToString, nombre & info.Extension)
+                    correcto = True
                 Else
                     While (My.Computer.FileSystem.FileExists(_ruta & "\" & nombre & "(" & ficherosRepetidos & ")" & info.Extension))
                         ficherosRepetidos = ficherosRepetidos + 1
                     End While
                     My.Computer.FileSystem.RenameFile(_ruta & "\" & ficheros.Item(i).ToString, nombre & "(" & ficherosRepetidos & ")" & info.Extension)
+                    correcto = True
                 End If
 
             End If
@@ -219,17 +242,20 @@ Public Class Panel
             If My.Computer.FileSystem.DirectoryExists(_ruta & "\" & ficheros.Item(i).ToString) Then
                 If carpetasRepetidas = 0 Then
                     My.Computer.FileSystem.RenameDirectory(_ruta & "\" & ficheros.Item(i).ToString, nombre)
+                    correcto = True
                 Else
                     While (My.Computer.FileSystem.DirectoryExists(_ruta & "\" & nombre & "(" & carpetasRepetidas & ")"))
                         carpetasRepetidas = carpetasRepetidas + 1
                     End While
                     My.Computer.FileSystem.RenameDirectory(_ruta & "\" & ficheros.Item(i).ToString, nombre & "(" & carpetasRepetidas & ")")
+                    correcto = True
                 End If
                 carpetasRepetidas = carpetasRepetidas + 1
             End If
         Next
 
-    End Sub
+        Return correcto
+    End Function
 
 
     ''' <summary>
@@ -237,8 +263,8 @@ Public Class Panel
     ''' </summary>
     ''' <param name="fichero"></param>
     ''' <remarks></remarks>
-    Public Sub Comprimir(fichero As String, nombre As String)
-
+    Public Function Comprimir(fichero As String, nombre As String) As Boolean
+        Dim correcto As Boolean = False
         Dim repeticiones As Integer = 0
 
         If My.Computer.FileSystem.DirectoryExists(_ruta & "\" & fichero) Then
@@ -249,23 +275,27 @@ Public Class Panel
 
             If repeticiones = 0 Then
                 ZipFile.CreateFromDirectory(_ruta & "\" & fichero, _ruta & "\" & nombre & ".zip")
+                correcto = True
             Else
                 While (My.Computer.FileSystem.FileExists(_ruta & "\" & nombre & "(" & repeticiones & ").zip"))
                     repeticiones = repeticiones + 1
                 End While
                 ZipFile.CreateFromDirectory(_ruta & "\" & fichero, _ruta & "\" & nombre & "(" & repeticiones & ").zip")
+                correcto = True
             End If
 
         End If
 
-    End Sub
+        Return correcto
+    End Function
 
     ''' <summary>
     ''' Descomprime la carpeta
     ''' </summary>
     ''' <param name="fichero"></param>
     ''' <remarks></remarks>
-    Public Sub Descomprimir(fichero As String)
+    Public Function Descomprimir(fichero As String) As Boolean
+        Dim correcto As Boolean = False
         Dim repeticiones As Integer = 0
 
         If My.Computer.FileSystem.FileExists(_ruta & "\" & fichero) Then
@@ -280,18 +310,21 @@ Public Class Panel
 
                 If repeticiones = 0 Then
                     ZipFile.ExtractToDirectory(_ruta & "\" & fichero, _ruta & "\" & fichero.Substring(0, fichero.LastIndexOf(".")))
+                    correcto = True
                 Else
                     While (My.Computer.FileSystem.DirectoryExists(_ruta & "\" & fichero.Substring(0, fichero.LastIndexOf(".")) & "(" & repeticiones & ")"))
                         repeticiones = repeticiones + 1
                     End While
                     ZipFile.ExtractToDirectory(_ruta & "\" & fichero, _ruta & "\" & fichero.Substring(0, fichero.LastIndexOf(".")) & "(" & repeticiones & ")")
+                    correcto = True
 
                 End If
 
             End If
         End If
 
-    End Sub
+        Return correcto
+    End Function
 
 
     Public Sub CrearCarpeta(nombre As String)
@@ -325,24 +358,95 @@ Public Class Panel
             While My.Computer.FileSystem.FileExists(Ruta & "\" & nombre & "(" & repeticiones & ").txt")
                 repeticiones += 1
             End While
-
-
-
             swEscritor = New StreamWriter(_ruta & "\" & nombre & "(" & repeticiones & ").txt")
 
         Else
-
             swEscritor = New StreamWriter(_ruta & "\" & nombre & ".txt")
-
-
         End If
 
         swEscritor.Close()
+    End Sub
 
+    Public Sub CambiarExtension(fichero As String, extension As String)
 
+        If My.Computer.FileSystem.FileExists(_ruta & "\" & fichero) Then
+            Dim repeticiones As Integer = 0
+            Dim nombre As String = fichero.Substring(0, fichero.LastIndexOf("."))
 
+            If My.Computer.FileSystem.FileExists(_ruta & "\" & nombre & extension) Then
+                While My.Computer.FileSystem.FileExists(_ruta & "\" & nombre & "(" & repeticiones & ")" & extension)
+                    repeticiones += 1
+                End While
+                My.Computer.FileSystem.RenameFile(_ruta & "\" & fichero, nombre & "(" & repeticiones & ")" & extension)
+
+            Else
+                My.Computer.FileSystem.RenameFile(_ruta & "\" & fichero, nombre & extension)
+            End If
+        End If
 
     End Sub
+
+    Public Function filtrar(palabra As String) As String()
+
+        'TODO
+        Dim ficheros As List(Of String)
+
+        ficheros = Directory.GetDirectories(_ruta & "\", "*" & palabra & "*", SearchOption.TopDirectoryOnly).ToList
+        For Each elemento As String In Directory.GetFiles(_ruta & "\", "*" & palabra & "*", SearchOption.TopDirectoryOnly)
+            ficheros.Add(elemento)
+        Next
+        Return ficheros.ToArray
+
+    End Function
+
+
+    Public Function mover(ficheros As System.Windows.Forms.ListBox.SelectedObjectCollection, destino As String) As Boolean
+        Dim correcto As Boolean = False
+        Dim repeticiones As Integer = 0
+
+        For i As Integer = 0 To ficheros.Count - 1
+
+            If My.Computer.FileSystem.DirectoryExists(_ruta & "\" & ficheros.Item(i).ToString) Then
+                Try
+                    If My.Computer.FileSystem.DirectoryExists(destino & "\" & ficheros.Item(i).ToString) Then
+                        While My.Computer.FileSystem.DirectoryExists(destino & "\" & ficheros.Item(i).ToString & "(" & repeticiones & ")")
+                            repeticiones += 1
+                        End While
+                        My.Computer.FileSystem.MoveDirectory(_ruta & "\" & ficheros.Item(i).ToString, destino & "\" & ficheros.Item(i).ToString & "(" & repeticiones & ")", FileIO.UIOption.AllDialogs)
+                        correcto = True
+                    Else
+                        My.Computer.FileSystem.MoveDirectory(_ruta & "\" & ficheros.Item(i).ToString, destino & "\" & ficheros.Item(i).ToString, FileIO.UIOption.AllDialogs)
+                        correcto = True
+                    End If
+
+                Catch ex As Exception
+                    correcto = False
+                End Try
+            ElseIf My.Computer.FileSystem.FileExists(_ruta & "\" & ficheros.Item(i).ToString) Then
+                Try
+                    If My.Computer.FileSystem.FileExists(destino & "\" & ficheros.Item(i).ToString) Then
+                        Dim info As DirectoryInfo = My.Computer.FileSystem.GetDirectoryInfo(_ruta & "\" & ficheros.Item(i).ToString)
+
+                        While My.Computer.FileSystem.FileExists(destino & "\" & ficheros.Item(i).ToString.Substring(0, ficheros.Item(i).ToString.LastIndexOf(".")) & "(" & repeticiones & ")" & info.Extension)
+                            repeticiones += 1
+                        End While
+                        My.Computer.FileSystem.MoveFile(_ruta & "\" & ficheros.Item(i).ToString, destino & "\" & ficheros.Item(i).ToString.Substring(0, ficheros.Item(i).ToString.LastIndexOf(".")) & "(" & repeticiones & ")" & info.Extension)
+                        correcto = True
+                    Else
+                        My.Computer.FileSystem.MoveFile(_ruta & "\" & ficheros.Item(i).ToString, destino & "\" & ficheros.Item(i).ToString)
+                        correcto = True
+                    End If
+
+                Catch ex As Exception
+                    correcto = False
+                End Try
+
+            End If
+        Next
+
+        Return correcto
+    End Function
+
 
     ''' <summary>
     ''' Propiedad que devuelve y asigna la ruta del panel

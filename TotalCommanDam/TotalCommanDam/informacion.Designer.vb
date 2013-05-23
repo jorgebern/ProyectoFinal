@@ -23,7 +23,6 @@ Partial Class informacion
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(informacion))
-        Me.Txb_nombre = New System.Windows.Forms.TextBox()
         Me.Lbl_tipo = New System.Windows.Forms.Label()
         Me.Lbl_extension = New System.Windows.Forms.Label()
         Me.ShapeContainer1 = New Microsoft.VisualBasic.PowerPacks.ShapeContainer()
@@ -44,14 +43,8 @@ Partial Class informacion
         Me.Btn_aplicar = New System.Windows.Forms.Button()
         Me.Cbx_atributos = New System.Windows.Forms.CheckBox()
         Me.Lbl_atributos_1 = New System.Windows.Forms.Label()
+        Me.Lbl_nombre = New System.Windows.Forms.Label()
         Me.SuspendLayout()
-        '
-        'Txb_nombre
-        '
-        Me.Txb_nombre.Location = New System.Drawing.Point(120, 12)
-        Me.Txb_nombre.Name = "Txb_nombre"
-        Me.Txb_nombre.Size = New System.Drawing.Size(227, 20)
-        Me.Txb_nombre.TabIndex = 3
         '
         'Lbl_tipo
         '
@@ -241,6 +234,16 @@ Partial Class informacion
         Me.Lbl_atributos_1.TabIndex = 11
         Me.Lbl_atributos_1.Text = "Atributos: "
         '
+        'Lbl_nombre
+        '
+        Me.Lbl_nombre.AutoSize = True
+        Me.Lbl_nombre.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Lbl_nombre.Location = New System.Drawing.Point(120, 13)
+        Me.Lbl_nombre.Name = "Lbl_nombre"
+        Me.Lbl_nombre.Size = New System.Drawing.Size(51, 17)
+        Me.Lbl_nombre.TabIndex = 17
+        Me.Lbl_nombre.Text = "Label1"
+        '
         'informacion
         '
         Me.AcceptButton = Me.Btn_aceptar
@@ -248,6 +251,7 @@ Partial Class informacion
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Btn_cancelar
         Me.ClientSize = New System.Drawing.Size(356, 405)
+        Me.Controls.Add(Me.Lbl_nombre)
         Me.Controls.Add(Me.Lbl_atributos_1)
         Me.Controls.Add(Me.Cbx_atributos)
         Me.Controls.Add(Me.Btn_aplicar)
@@ -263,7 +267,6 @@ Partial Class informacion
         Me.Controls.Add(Me.Lbl_ubicacion_1)
         Me.Controls.Add(Me.Lbl_extension)
         Me.Controls.Add(Me.Lbl_tipo)
-        Me.Controls.Add(Me.Txb_nombre)
         Me.Controls.Add(Me.ShapeContainer1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -276,7 +279,6 @@ Partial Class informacion
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents Txb_nombre As System.Windows.Forms.TextBox
     Friend WithEvents Lbl_tipo As System.Windows.Forms.Label
     Friend WithEvents Lbl_extension As System.Windows.Forms.Label
     Friend WithEvents ShapeContainer1 As Microsoft.VisualBasic.PowerPacks.ShapeContainer
@@ -297,4 +299,5 @@ Partial Class informacion
     Friend WithEvents LineShape4 As Microsoft.VisualBasic.PowerPacks.LineShape
     Friend WithEvents Cbx_atributos As System.Windows.Forms.CheckBox
     Friend WithEvents Lbl_atributos_1 As System.Windows.Forms.Label
+    Friend WithEvents Lbl_nombre As System.Windows.Forms.Label
 End Class

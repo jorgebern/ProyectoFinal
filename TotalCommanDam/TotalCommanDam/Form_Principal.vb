@@ -1,4 +1,6 @@
-﻿''' <summary>
+﻿Imports System.Threading
+
+''' <summary>
 ''' 
 ''' </summary>
 ''' <remarks></remarks>
@@ -7,6 +9,9 @@ Public Class Form_Principal
     Dim total As TotalComander = New TotalComander()
     Dim informacio As informacion
     Dim infoPc As InformacionPc
+
+    Dim background As Thread
+    Delegate Sub Set_ListBox(ByVal [valor] As Integer)
 
     '0 = izquierda
     '1 = derecha
@@ -27,9 +32,24 @@ Public Class Form_Principal
     ''' <remarks></remarks>
     Private Sub Form_Principal_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        'hilos
+        CheckForIllegalCrossThreadCalls = False
+
+
         Dim pref As String() = total.CargarPreferencias
 
         tutorial = CBool(pref(0))
+
+        If tutorial Then
+
+            Tutorial1.ShowDialog()
+
+            tutorial = False
+
+
+        End If
+
+
 
         If pref(1) = "0" Then
             pintarVerde()
@@ -46,7 +66,7 @@ Public Class Form_Principal
         ElseIf pref(2) = "10" Then
             TamanyoMediano()
         ElseIf pref(2) = "12" Then
-            tamanyoGrande()
+            TamanyoGrande()
         End If
 
 
@@ -138,7 +158,7 @@ Public Class Form_Principal
 
     End Sub
 
-    
+
 
     '---------------------------------------------------------------------------------------------
     'IZQUIERDA
@@ -193,7 +213,7 @@ Public Class Form_Principal
 
     End Sub
 
-    
+
 
     ''' <summary>
     ''' Controla el click con el mouse, seleccionando asi el elemento i preparandolo para el Drag and Drop
@@ -236,9 +256,9 @@ Public Class Form_Principal
             Ntf_Icon.BalloonTipTitle = "Copia"
             Ntf_Icon.BalloonTipText = "Archivo copiado correctamente"
             Ntf_Icon.ShowBalloonTip(10)
-            Ltb_izquierda.Items.Add(str)
             Tmr_Limpiar.Start()
             total.Copiar("derecha", Ltb_derecha.SelectedItems)
+            refrescarFormulario()
         End If
     End Sub
 
@@ -372,9 +392,9 @@ Public Class Form_Principal
             Ntf_Icon.BalloonTipTitle = "Copia"
             Ntf_Icon.BalloonTipText = "Archivo copiado correctamente"
             Ntf_Icon.ShowBalloonTip(10)
-            Ltb_derecha.Items.Add(str)
             Tmr_Limpiar.Start()
             total.Copiar("izquierda", Ltb_izquierda.SelectedItems)
+            refrescarFormulario()
         End If
     End Sub
 
@@ -531,7 +551,7 @@ Public Class Form_Principal
                     total.RenombrarVarios("izquierda", Ltb_izquierda.SelectedItems, respuesta)
                 End If
             End If
-            
+
 
         ElseIf panelEnFoco = 1 Then
             If Ltb_derecha.SelectedIndex = -1 Then
@@ -564,7 +584,9 @@ Public Class Form_Principal
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub BorrarToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles BorrarToolStripMenuItem1.Click
-        Me.Borrar()
+
+        background = New Thread(AddressOf Me.Borrar)
+        background.Start()
     End Sub
 
     ''' <summary>
@@ -574,7 +596,9 @@ Public Class Form_Principal
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub BorrarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BorrarToolStripMenuItem.Click
-        Me.Borrar()
+
+        background = New Thread(AddressOf Me.Borrar)
+        background.Start()
     End Sub
 
     ''' <summary>
@@ -584,7 +608,7 @@ Public Class Form_Principal
     Public Sub Borrar()
 
         Dim mensaje As String = "¿Está seguro de que desea eliminar el/los archivos?: "
-        
+
 
         If panelEnFoco = 0 Then
             If Ltb_izquierda.SelectedIndex = -1 Then
@@ -599,7 +623,7 @@ Public Class Form_Principal
                     Me.refrescarFormulario()
                 End If
             End If
-            
+
         ElseIf panelEnFoco = 1 Then
             If Ltb_derecha.SelectedIndex = -1 Then
                 MsgBox("Seleccione un archivo")
@@ -614,6 +638,8 @@ Public Class Form_Principal
                 End If
             End If
         End If
+
+        background.Abort()
     End Sub
 
 
@@ -631,8 +657,8 @@ Public Class Form_Principal
     ''' <remarks></remarks>
     Private Sub InformaciónToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InformaciónToolStripMenuItem.Click
 
-       
-            informacio = New informacion()
+
+        informacio = New informacion()
 
         If panelEnFoco = 0 Then
             If Ltb_izquierda.SelectedIndex = -1 Then
@@ -641,7 +667,7 @@ Public Class Form_Principal
                 informacio.obtenerParametros(total.obtenerInformacion("izquierda", Ltb_izquierda.SelectedItem.ToString), tamanyoFuente)
                 informacio.Show()
             End If
-           
+
         ElseIf panelEnFoco = 1 Then
             If Ltb_derecha.SelectedIndex = -1 Then
                 MsgBox("Seleccione un archivo")
@@ -649,7 +675,7 @@ Public Class Form_Principal
                 informacio.obtenerParametros(total.obtenerInformacion("derecha", Ltb_derecha.SelectedItem.ToString), tamanyoFuente)
                 informacio.Show()
             End If
-            End If
+        End If
 
 
 
@@ -663,7 +689,10 @@ Public Class Form_Principal
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub CopiarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CopiarToolStripMenuItem.Click
-        Copiar()
+        background = New Thread(AddressOf Me.Copiar)
+
+        background.Start()
+
 
     End Sub
 
@@ -706,75 +735,43 @@ Public Class Form_Principal
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
+        Comprimir()
 
+
+    End Sub
+
+    ''' <summary>
+    ''' Accion de comprimir una carpeta
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Sub Comprimir()
+        Dim correcto As Boolean
         Dim respuesta As String
         Dim mensaje As String = "Comprimiendo carpeta: "
 
         respuesta = InputBox(mensaje, "Nuevo nombre: ")
         If respuesta <> "" Then
             If panelEnFoco = 0 Then
-                total.Comprimir("izquierda", Ltb_izquierda.SelectedItem.ToString, respuesta)
+                correcto = total.Comprimir("izquierda", Ltb_izquierda.SelectedItem.ToString, respuesta)
                 refrescarFormulario()
             ElseIf panelEnFoco = 1 Then
-                total.Comprimir("derecha", Ltb_derecha.SelectedItem.ToString, respuesta)
+                correcto = total.Comprimir("derecha", Ltb_derecha.SelectedItem.ToString, respuesta)
                 refrescarFormulario()
+            End If
+
+            If correcto Then
+                Ntf_Icon.BalloonTipTitle = "Comprimir"
+                Ntf_Icon.BalloonTipText = "Archivo comprimido correctamente"
+                Ntf_Icon.ShowBalloonTip(10)
+            Else
+                Ntf_Icon.BalloonTipTitle = "Comprimir"
+                Ntf_Icon.BalloonTipText = "Algo no funciono bien, vuelva a intentarlo"
+                Ntf_Icon.ShowBalloonTip(10)
             End If
 
         End If
 
-    End Sub
 
-
-    '---------------------------------------------------------------
-    'RUTAS
-    '---------------------------------------------------------------
-
-    ''' <summary>
-    ''' Carga la ruta de "mis favoritos" al escritorio
-    ''' </summary>
-    ''' <param name="sender"></param>
-    ''' <param name="e"></param>
-    ''' <remarks></remarks>
-    Private Sub ToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem2.Click
-        If panelEnFoco = 0 Then
-            total.CambiarRutaEntera("izquierda", Environment.GetFolderPath(Environment.SpecialFolder.Desktop))
-            Me.refrescarFormulario()
-        ElseIf panelEnFoco = 1 Then
-            total.CambiarRutaEntera("derecha", Environment.GetFolderPath(Environment.SpecialFolder.Desktop))
-            Me.refrescarFormulario()
-        End If
-    End Sub
-
-    ''' <summary>
-    ''' Carga la ruta de "mis favoritos" a Archivos de programax86
-    ''' </summary>
-    ''' <param name="sender"></param>
-    ''' <param name="e"></param>
-    ''' <remarks></remarks>
-    Private Sub ArchivosDeProgramaToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ArchivosDeProgramaToolStripMenuItem.Click
-        If panelEnFoco = 0 Then
-            total.CambiarRutaEntera("izquierda", Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))
-            Me.refrescarFormulario()
-        ElseIf panelEnFoco = 1 Then
-            total.CambiarRutaEntera("derecha", Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))
-            Me.refrescarFormulario()
-        End If
-    End Sub
-
-    ''' <summary>
-    ''' Carga la ruta de "mis favoritos" a Mis documentos
-    ''' </summary>
-    ''' <param name="sender"></param>
-    ''' <param name="e"></param>
-    ''' <remarks></remarks>
-    Private Sub ToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem3.Click
-        If panelEnFoco = 0 Then
-            total.CambiarRutaEntera("izquierda", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments))
-            Me.refrescarFormulario()
-        ElseIf panelEnFoco = 1 Then
-            total.CambiarRutaEntera("derecha", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments))
-            Me.refrescarFormulario()
-        End If
     End Sub
 
     ''' <summary>
@@ -801,15 +798,35 @@ Public Class Form_Principal
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
+        Descomprimir()
+
+    End Sub
+
+    ''' <summary>
+    ''' Accion de descomprimir una carpeta
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Sub Descomprimir()
+
+        Dim correcto As Boolean = False
 
         If panelEnFoco = 0 Then
-            total.Descomprimir("izquierda", Ltb_izquierda.SelectedItem.ToString)
+            correcto = total.Descomprimir("izquierda", Ltb_izquierda.SelectedItem.ToString)
             Me.refrescarFormulario()
         ElseIf panelEnFoco = 1 Then
-            total.Descomprimir("derecha", Ltb_derecha.SelectedItem.ToString)
+            correcto = total.Descomprimir("derecha", Ltb_derecha.SelectedItem.ToString)
             Me.refrescarFormulario()
         End If
 
+        If correcto Then
+            Ntf_Icon.BalloonTipTitle = "Descomprimir"
+            Ntf_Icon.BalloonTipText = "Archivo Descomprimido correctamente"
+            Ntf_Icon.ShowBalloonTip(10)
+        Else
+            Ntf_Icon.BalloonTipTitle = "Descomprimir"
+            Ntf_Icon.BalloonTipText = "Algo no funciono bien, vuelva a intentarlo"
+            Ntf_Icon.ShowBalloonTip(10)
+        End If
 
     End Sub
 
@@ -909,6 +926,10 @@ Public Class Form_Principal
         TamanyoPequenyo()
     End Sub
 
+    ''' <summary>
+    ''' Actualiza el tamaño de la letra poniendolo pequeño
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub TamanyoPequenyo()
         Lbl_izquierda.Font = New Font("Microsoft Sans Serif", 8.25)
         Ltb_izquierda.Font = New Font("Microsoft Sans Serif", 8.25)
@@ -938,6 +959,10 @@ Public Class Form_Principal
         TamanyoMediano()
     End Sub
 
+    ''' <summary>
+    ''' Actualiza el tamaño de la letra poniendo el mediano
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub TamanyoMediano()
         Lbl_izquierda.Font = New Font("Microsoft Sans Serif", 10)
         Ltb_izquierda.Font = New Font("Microsoft Sans Serif", 10)
@@ -965,10 +990,14 @@ Public Class Form_Principal
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub GrandeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GrandeToolStripMenuItem.Click
-        tamanyoGrande()
+        TamanyoGrande()
 
     End Sub
 
+    ''' <summary>
+    ''' Actualiza el tamaño de la letra poniendolo grande
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub TamanyoGrande()
         Lbl_izquierda.Font = New Font("Microsoft Sans Serif", 12)
         Ltb_izquierda.Font = New Font("Microsoft Sans Serif", 12)
@@ -987,10 +1016,26 @@ Public Class Form_Principal
         tamanyoFuente = 12
     End Sub
 
-
+    ''' <summary>
+    ''' Recarga la barra de favoritos añadiendo los nuevos
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub CargarFavoritos()
 
         Dim anyadir As Boolean
+
+
+        Ts_favoritos.DropDownItems.Clear()
+
+        Ts_favoritos.DropDownItems.Add("Mis documentos")
+        Ts_favoritos.DropDownItems(Ts_favoritos.DropDownItems.Count - 1).Tag = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+
+        Ts_favoritos.DropDownItems.Add("Escritorio")
+        Ts_favoritos.DropDownItems(Ts_favoritos.DropDownItems.Count - 1).Tag = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+
+        Ts_favoritos.DropDownItems.Add("Archivos de programa(x86)")
+        Ts_favoritos.DropDownItems(Ts_favoritos.DropDownItems.Count - 1).Tag = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
+
 
         For Each elemento As String In total.CargarFavoritos(Environment.UserName)
             anyadir = True
@@ -1014,29 +1059,26 @@ Public Class Form_Principal
     End Sub
 
 
+    ''' <summary>
+    ''' Boton para guardar favoritos
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub ToolStripButton4_Click(sender As Object, e As EventArgs) Handles ToolStripButton4.Click
 
-        Dim respuesta As String
-        Dim mensaje As String = "Nombre: "
+        GuardarFavoritos()
 
-        respuesta = InputBox(mensaje, "Nuevo nombre: ")
-
-        If panelEnFoco = 0 Then
-            total.GuardarFavoritos(Environment.UserName, "izquierda", respuesta)
-
-        Else
-            total.GuardarFavoritos(Environment.UserName, "derecha", respuesta)
-        End If
-        CargarFavoritos()
 
     End Sub
 
+    ''' <summary>
+    ''' Selecciona un elemento de la lista favoritos y carga su ruta
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub Ts_favoritos_DropDownItemClicked(sender As Object, e As ToolStripItemClickedEventArgs) Handles Ts_favoritos.DropDownItemClicked
-
-
-        If e.ClickedItem.Text = "Mis documentos" Or e.ClickedItem.Text = "Escritorio" Or e.ClickedItem.Text = "Archivos de programa(x86)" Then
-            Return
-        End If
 
         If panelEnFoco = 0 Then
             total.CambiarRutaEntera("izquierda", e.ClickedItem.Tag.ToString)
@@ -1048,11 +1090,20 @@ Public Class Form_Principal
 
     End Sub
 
+    ''' <summary>
+    ''' Boton de crear carpeta
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub ToolStripButton5_Click(sender As Object, e As EventArgs) Handles ToolStripButton5.Click
         CrearCarpeta()
     End Sub
 
-
+    ''' <summary>
+    ''' Accion de crear una carpeta
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub CrearCarpeta()
         Dim respuesta As String
         Dim mensaje As String = "Nombre: "
@@ -1071,7 +1122,10 @@ Public Class Form_Principal
 
     End Sub
 
-
+    ''' <summary>
+    ''' Accion de crear un fichero vacio
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub CrearFichero()
         Dim respuesta As String
         Dim mensaje As String = "Nombre: "
@@ -1089,27 +1143,52 @@ Public Class Form_Principal
         refrescarFormulario()
     End Sub
 
-
+    ''' <summary>
+    ''' Boton de crear un fichero vacio
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub ToolStripButton6_Click(sender As Object, e As EventArgs) Handles ToolStripButton6.Click
         CrearFichero()
     End Sub
 
-    Private Sub CarpetaToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles CarpetaToolStripMenuItem1.Click
-        CrearCarpeta()
-    End Sub
-
+    ''' <summary>
+    ''' Boton del menu de crear una carpeta
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub CarpetaToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CarpetaToolStripMenuItem.Click
         CrearCarpeta()
     End Sub
 
+    ''' <summary>
+    ''' Boton del menu de crear un fichero
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub DocumentoDeTextotxtToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DocumentoDeTextotxtToolStripMenuItem.Click
         CrearFichero()
     End Sub
 
+    ''' <summary>
+    ''' Boton del context menu para crear ficheros
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub DocumentoDeTextotxtToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles DocumentoDeTextotxtToolStripMenuItem1.Click
         CrearFichero()
     End Sub
 
+    ''' <summary>
+    ''' Boton para obtener la informacion del PC
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub InformaciónDelPCToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InformaciónDelPCToolStripMenuItem.Click
         infoPc = New InformacionPc()
         infoPc.obtenerParametros(total.obtenerInformacionPc, tamanyoFuente)
@@ -1118,10 +1197,22 @@ Public Class Form_Principal
 
     End Sub
 
+    ''' <summary>
+    ''' Boton del menu para copiar
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub CopiarToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles CopiarToolStripMenuItem1.Click
-        Copiar()
+        background = New Thread(AddressOf Me.Copiar)
+
+        background.Start()
     End Sub
 
+    ''' <summary>
+    ''' Accion de copiar
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub Copiar()
         If panelEnFoco = 0 Then
             If Ltb_izquierda.SelectedIndex = -1 Then
@@ -1137,6 +1228,212 @@ Public Class Form_Principal
             End If
         End If
         refrescarFormulario()
+        background.Abort()
     End Sub
 
+
+    Public Sub mover()
+        If panelEnFoco = 0 Then
+            If Ltb_izquierda.SelectedIndex = -1 Then
+                MsgBox("Selecciona un archivo")
+            Else
+                total.mover("izquierda", Ltb_izquierda.SelectedItems)
+            End If
+        ElseIf panelEnFoco = 1 Then
+            If Ltb_derecha.SelectedIndex = -1 Then
+                MsgBox("Selecciona un archivo")
+            Else
+                total.mover("derecha", Ltb_derecha.SelectedItems)
+            End If
+        End If
+        refrescarFormulario()
+    End Sub
+
+
+    ''' <summary>
+    ''' boton de cambiar extension
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub CambiarExtensiónToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CambiarExtensiónToolStripMenuItem.Click
+
+        Dim respuesta As String
+        Dim mensaje As String = "Extensión: "
+
+
+        If panelEnFoco = 0 And Ltb_izquierda.SelectedIndex <> -1 Then
+
+            respuesta = InputBox(mensaje, "Nueva extensión: ", ".txt")
+
+            If respuesta <> "" Then
+                total.cambiarExtension("izquierda", Ltb_izquierda.SelectedItem.ToString, respuesta)
+            End If
+
+        ElseIf panelEnFoco = 1 And Ltb_derecha.SelectedIndex <> -1 Then
+            respuesta = InputBox(mensaje, "Nueva extensión: ", ".txt")
+            If respuesta <> "" Then
+                total.cambiarExtension("derecha", Ltb_derecha.SelectedItem.ToString, respuesta)
+            End If
+
+        Else
+            MsgBox("Seleccione un archivo")
+        End If
+        refrescarFormulario()
+
+    End Sub
+
+    ''' <summary>
+    ''' Boton para mostrar el tutorial
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub TutorialToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TutorialToolStripMenuItem.Click
+        Tutorial1.ShowDialog()
+    End Sub
+
+    ''' <summary>
+    ''' Menu para refrescar los paneles
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub RefrescarPanelesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RefrescarPanelesToolStripMenuItem.Click
+        refrescarFormulario()
+    End Sub
+
+    ''' <summary>
+    ''' Menu para añadir a favoritos
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub AñadirFavoritosToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AñadirFavoritosToolStripMenuItem.Click
+        GuardarFavoritos()
+    End Sub
+
+    ''' <summary>
+    ''' Accion de guardar en favoritos
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Sub GuardarFavoritos()
+        Dim respuesta As String
+        Dim mensaje As String = "Nombre: "
+
+        respuesta = InputBox(mensaje, "Nuevo nombre: ")
+
+        If panelEnFoco = 0 Then
+            total.GuardarFavoritos(Environment.UserName, "izquierda", respuesta)
+
+        Else
+            total.GuardarFavoritos(Environment.UserName, "derecha", respuesta)
+        End If
+        CargarFavoritos()
+
+    End Sub
+
+    ''' <summary>
+    ''' Menu de comprimir
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub ComprimirToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ComprimirToolStripMenuItem.Click
+        Comprimir()
+    End Sub
+
+    ''' <summary>
+    ''' Menu de descomprimir
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub DescomprimirToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DescomprimirToolStripMenuItem.Click
+        Descomprimir()
+    End Sub
+
+    ''' <summary>
+    ''' opcion del menu contextual para crear carpetas
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub CarpetaToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles CarpetaToolStripMenuItem1.Click
+        CrearCarpeta()
+    End Sub
+
+    Private Sub EliminarFavoritosToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EliminarFavoritosToolStripMenuItem.Click
+        total.EliminarFavorito("izquierda")
+        CargarFavoritos()
+    End Sub
+
+    Private Sub ToolStripTextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles Tb_buscar.KeyDown
+        'Ltb_izquierda.Items.Clear()
+
+        'For Each elemento As String In total.filtrar("izquierda", Tb_buscar.Text)
+        '    Ltb_izquierda.Items.Add(elemento)
+        'Next
+
+    End Sub
+
+    Private Sub MoverToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MoverToolStripMenuItem.Click
+        mover()
+    End Sub
+
+    Private Sub MoverToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles MoverToolStripMenuItem2.Click
+        mover()
+    End Sub
+
+    Private Sub Ltb_izquierda_KeyDown(sender As Object, e As KeyEventArgs) Handles Ltb_izquierda.KeyDown
+
+    End Sub
+
+    Private Sub Ltb_izquierda_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Ltb_izquierda.KeyPress
+        If e.KeyChar = CChar(vbCrLf) Then
+
+            If panelEnFoco = 0 Then
+                If Ltb_izquierda.SelectedIndex >= 0 Then
+                    If My.Computer.FileSystem.DirectoryExists(total.obtenerRuta("izquierda") & "\" & Ltb_izquierda.SelectedItem.ToString) Then
+                        total.CambiarRuta("izquierda", Ltb_izquierda.SelectedItem.ToString)
+                        refrescarFormulario()
+                    Else
+                        total.ejecutarFichero("izquierda", Ltb_izquierda.SelectedItem.ToString)
+                    End If
+
+                End If
+            End If
+        End If
+
+        If e.KeyChar = vbBack Then
+            total.RutaAnterior("izquierda")
+            refrescarFormulario()
+        End If
+
+    End Sub
+
+    Private Sub Ltb_derecha_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Ltb_derecha.KeyPress
+        If e.KeyChar = CChar(vbCrLf) Then
+
+            If panelEnFoco = 1 Then
+                If Ltb_derecha.SelectedIndex >= 0 Then
+                    If My.Computer.FileSystem.DirectoryExists(total.obtenerRuta("derecha") & "\" & Ltb_derecha.SelectedItem.ToString) Then
+                        total.CambiarRuta("derecha", Ltb_derecha.SelectedItem.ToString)
+                        refrescarFormulario()
+                    Else
+                        total.ejecutarFichero("derecha", Ltb_derecha.SelectedItem.ToString)
+                    End If
+
+                End If
+            End If
+        End If
+
+
+        If e.KeyChar = vbBack Then
+            total.RutaAnterior("derecha")
+            refrescarFormulario()
+        End If
+
+
+    End Sub
 End Class
