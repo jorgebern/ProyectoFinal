@@ -49,8 +49,6 @@ Public Class Form_Principal
 
         End If
 
-
-
         If pref(1) = "0" Then
             pintarVerde()
         ElseIf pref(1) = "1" Then
@@ -606,7 +604,6 @@ Public Class Form_Principal
     ''' </summary>
     ''' <remarks></remarks>
     Public Sub Borrar()
-
         Dim mensaje As String = "¿Está seguro de que desea eliminar el/los archivos?: "
 
 
@@ -735,8 +732,9 @@ Public Class Form_Principal
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
-        Comprimir()
+        background = New Thread(AddressOf Me.Comprimir)
 
+        background.Start()
 
     End Sub
 
@@ -771,6 +769,7 @@ Public Class Form_Principal
 
         End If
 
+        background.Abort()
 
     End Sub
 
@@ -798,8 +797,9 @@ Public Class Form_Principal
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
-        Descomprimir()
+        background = New Thread(AddressOf Me.Descomprimir)
 
+        background.Start()
     End Sub
 
     ''' <summary>
@@ -811,23 +811,46 @@ Public Class Form_Principal
         Dim correcto As Boolean = False
 
         If panelEnFoco = 0 Then
-            correcto = total.Descomprimir("izquierda", Ltb_izquierda.SelectedItem.ToString)
-            Me.refrescarFormulario()
+            If Ltb_izquierda.SelectedIndex <> -1 Then
+                correcto = total.Descomprimir("izquierda", Ltb_izquierda.SelectedItem.ToString)
+
+
+                Me.refrescarFormulario()
+                If correcto Then
+                    Ntf_Icon.BalloonTipTitle = "Descomprimir"
+                    Ntf_Icon.BalloonTipText = "Archivo Descomprimido correctamente"
+                    Ntf_Icon.ShowBalloonTip(10)
+                Else
+                    Ntf_Icon.BalloonTipTitle = "Descomprimir"
+                    Ntf_Icon.BalloonTipText = "Algo no funciono bien, vuelva a intentarlo"
+                    Ntf_Icon.ShowBalloonTip(10)
+                End If
+            Else
+                MsgBox("Seleccione un archivo")
+            End If
+
         ElseIf panelEnFoco = 1 Then
-            correcto = total.Descomprimir("derecha", Ltb_derecha.SelectedItem.ToString)
-            Me.refrescarFormulario()
+            If Ltb_derecha.SelectedIndex <> -1 Then
+                correcto = total.Descomprimir("derecha", Ltb_derecha.SelectedItem.ToString)
+
+                Me.refrescarFormulario()
+                If correcto Then
+                    Ntf_Icon.BalloonTipTitle = "Descomprimir"
+                    Ntf_Icon.BalloonTipText = "Archivo Descomprimido correctamente"
+                    Ntf_Icon.ShowBalloonTip(10)
+                Else
+                    Ntf_Icon.BalloonTipTitle = "Descomprimir"
+                    Ntf_Icon.BalloonTipText = "Algo no funciono bien, vuelva a intentarlo"
+                    Ntf_Icon.ShowBalloonTip(10)
+                End If
+            Else
+                MsgBox("Seleccione un archivo")
+            End If
         End If
 
-        If correcto Then
-            Ntf_Icon.BalloonTipTitle = "Descomprimir"
-            Ntf_Icon.BalloonTipText = "Archivo Descomprimido correctamente"
-            Ntf_Icon.ShowBalloonTip(10)
-        Else
-            Ntf_Icon.BalloonTipTitle = "Descomprimir"
-            Ntf_Icon.BalloonTipText = "Algo no funciono bien, vuelva a intentarlo"
-            Ntf_Icon.ShowBalloonTip(10)
-        End If
 
+
+        background.Abort()
     End Sub
 
     ''' <summary>
@@ -1079,7 +1102,6 @@ Public Class Form_Principal
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub Ts_favoritos_DropDownItemClicked(sender As Object, e As ToolStripItemClickedEventArgs) Handles Ts_favoritos.DropDownItemClicked
-
         If panelEnFoco = 0 Then
             total.CambiarRutaEntera("izquierda", e.ClickedItem.Tag.ToString)
         Else
@@ -1214,39 +1236,84 @@ Public Class Form_Principal
     ''' </summary>
     ''' <remarks></remarks>
     Public Sub Copiar()
+        Dim correcto As Boolean
+
         If panelEnFoco = 0 Then
             If Ltb_izquierda.SelectedIndex = -1 Then
                 MsgBox("Selecciona un archivo")
             Else
-                total.Copiar("izquierda", Ltb_izquierda.SelectedItems)
+                correcto = total.Copiar("izquierda", Ltb_izquierda.SelectedItems)
+                If correcto Then
+                    Ntf_Icon.BalloonTipTitle = "Copiar"
+                    Ntf_Icon.BalloonTipText = "Archivo copiado correctamente"
+                    Ntf_Icon.ShowBalloonTip(10)
+                Else
+                    Ntf_Icon.BalloonTipTitle = "Copiar"
+                    Ntf_Icon.BalloonTipText = "Algo no funciono bien, vuelva a intentarlo"
+                    Ntf_Icon.ShowBalloonTip(10)
+                End If
             End If
         ElseIf panelEnFoco = 1 Then
             If Ltb_derecha.SelectedIndex = -1 Then
                 MsgBox("Selecciona un archivo")
             Else
-                total.Copiar("derecha", Ltb_derecha.SelectedItems)
+                correcto = total.Copiar("derecha", Ltb_derecha.SelectedItems)
+                If correcto Then
+                    Ntf_Icon.BalloonTipTitle = "Copiar"
+                    Ntf_Icon.BalloonTipText = "Archivo copiado correctamente"
+                    Ntf_Icon.ShowBalloonTip(10)
+                Else
+                    Ntf_Icon.BalloonTipTitle = "Copiar"
+                    Ntf_Icon.BalloonTipText = "Algo no funciono bien, vuelva a intentarlo"
+                    Ntf_Icon.ShowBalloonTip(10)
+                End If
             End If
         End If
+
+       
         refrescarFormulario()
         background.Abort()
     End Sub
 
 
     Public Sub mover()
+        Dim correcto As Boolean
         If panelEnFoco = 0 Then
             If Ltb_izquierda.SelectedIndex = -1 Then
                 MsgBox("Selecciona un archivo")
             Else
                 total.mover("izquierda", Ltb_izquierda.SelectedItems)
+                If correcto Then
+                    Ntf_Icon.BalloonTipTitle = "Copiar"
+                    Ntf_Icon.BalloonTipText = "Archivo copiado correctamente"
+                    Ntf_Icon.ShowBalloonTip(10)
+                Else
+                    Ntf_Icon.BalloonTipTitle = "Copiar"
+                    Ntf_Icon.BalloonTipText = "Algo no funciono bien, vuelva a intentarlo"
+                    Ntf_Icon.ShowBalloonTip(10)
+                End If
             End If
         ElseIf panelEnFoco = 1 Then
             If Ltb_derecha.SelectedIndex = -1 Then
                 MsgBox("Selecciona un archivo")
             Else
                 total.mover("derecha", Ltb_derecha.SelectedItems)
+                If correcto Then
+                    Ntf_Icon.BalloonTipTitle = "Copiar"
+                    Ntf_Icon.BalloonTipText = "Archivo copiado correctamente"
+                    Ntf_Icon.ShowBalloonTip(10)
+                Else
+                    Ntf_Icon.BalloonTipTitle = "Copiar"
+                    Ntf_Icon.BalloonTipText = "Algo no funciono bien, vuelva a intentarlo"
+                    Ntf_Icon.ShowBalloonTip(10)
+                End If
             End If
         End If
+
+       
+
         refrescarFormulario()
+        background.Abort()
     End Sub
 
 
@@ -1340,7 +1407,9 @@ Public Class Form_Principal
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub ComprimirToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ComprimirToolStripMenuItem.Click
-        Comprimir()
+        background = New Thread(AddressOf Me.Comprimir)
+
+        background.Start()
     End Sub
 
     ''' <summary>
@@ -1350,7 +1419,9 @@ Public Class Form_Principal
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub DescomprimirToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DescomprimirToolStripMenuItem.Click
-        Descomprimir()
+        background = New Thread(AddressOf Me.Descomprimir)
+
+        background.Start()
     End Sub
 
     ''' <summary>
@@ -1363,32 +1434,58 @@ Public Class Form_Principal
         CrearCarpeta()
     End Sub
 
+    ''' <summary>
+    ''' Elimina los favoritos de la lista y los vuelve a cargar
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub EliminarFavoritosToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EliminarFavoritosToolStripMenuItem.Click
-        total.EliminarFavorito("izquierda")
+        If panelEnFoco = 0 Then
+            total.EliminarFavorito("izquierda")
+        ElseIf panelEnFoco = 1 Then
+            total.EliminarFavorito("derecha")
+        End If
+
         CargarFavoritos()
     End Sub
 
     Private Sub ToolStripTextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles Tb_buscar.KeyDown
-        'Ltb_izquierda.Items.Clear()
 
-        'For Each elemento As String In total.filtrar("izquierda", Tb_buscar.Text)
-        '    Ltb_izquierda.Items.Add(elemento)
-        'Next
-
+        
     End Sub
 
+    ''' <summary>
+    ''' Boton mover del menu
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub MoverToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MoverToolStripMenuItem.Click
-        mover()
+        background = New Thread(AddressOf Me.mover)
+
+        background.Start()
     End Sub
 
+    ''' <summary>
+    ''' Boton mover del menu
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub MoverToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles MoverToolStripMenuItem2.Click
-        mover()
+        background = New Thread(AddressOf Me.mover)
+
+        background.Start()
     End Sub
 
-    Private Sub Ltb_izquierda_KeyDown(sender As Object, e As KeyEventArgs) Handles Ltb_izquierda.KeyDown
 
-    End Sub
-
+    ''' <summary>
+    ''' Navegacion mediante teclas en izquierda
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub Ltb_izquierda_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Ltb_izquierda.KeyPress
         If e.KeyChar = CChar(vbCrLf) Then
 
@@ -1412,6 +1509,12 @@ Public Class Form_Principal
 
     End Sub
 
+    ''' <summary>
+    ''' Navegacion mediante teclas derecha
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub Ltb_derecha_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Ltb_derecha.KeyPress
         If e.KeyChar = CChar(vbCrLf) Then
 
@@ -1435,5 +1538,27 @@ Public Class Form_Principal
         End If
 
 
+    End Sub
+
+    Private Sub Tb_buscar_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Tb_buscar.KeyPress
+
+        If e.KeyChar = CChar(vbBack) Then
+            If Tb_buscar.Text.Length = 3 Then
+                refrescarFormulario()
+                Tb_buscar.Focus()
+            End If
+        End If
+
+
+    End Sub
+
+    Private Sub Tb_buscar_KeyUp(sender As Object, e As KeyEventArgs) Handles Tb_buscar.KeyUp
+        If Tb_buscar.Text.Length >= 3 Then
+            Ltb_izquierda.Items.Clear()
+
+            For Each elemento As String In total.filtrar("izquierda", Tb_buscar.Text)
+                Ltb_izquierda.Items.Add(elemento)
+            Next
+        End If
     End Sub
 End Class

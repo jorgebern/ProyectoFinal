@@ -46,7 +46,13 @@ Public Class Preferencias
     End Function
 
 
-
+    ''' <summary>
+    ''' Escribe en el fichero de favoritos el favorito añadido recientemente
+    ''' </summary>
+    ''' <param name="usuario"></param>
+    ''' <param name="ruta"></param>
+    ''' <param name="nombre"></param>
+    ''' <remarks></remarks>
     Public Sub EscribirFavoritos(usuario As String, ruta As String, nombre As String)
 
         Dim swEscritor As StreamWriter
@@ -59,6 +65,12 @@ Public Class Preferencias
     End Sub
 
 
+    ''' <summary>
+    ''' Obtiene una lista de favoritos del usuario activo
+    ''' </summary>
+    ''' <param name="usuario"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Function ObtenerFavoritos(usuario As String) As String()
 
         Dim ContadorLin As Integer = 1
@@ -96,6 +108,12 @@ Public Class Preferencias
 
     End Function
 
+    ''' <summary>
+    ''' Elimina un favorito de la lista
+    ''' </summary>
+    ''' <param name="usuario"></param>
+    ''' <param name="favoritos"></param>
+    ''' <remarks></remarks>
     Public Sub eliminarFavoritos(usuario As String, favoritos As String)
         Dim ContadorLin As Integer = 1
         Dim srLector As StreamReader

@@ -234,11 +234,11 @@ Public Class TotalComander
 
         If panel = "izquierda" Then
 
-            izquierda.Copiar(f, derecha.Ruta)
+            correcto = izquierda.Copiar(f, derecha.Ruta)
 
         Else
 
-            derecha.Copiar(f, izquierda.Ruta)
+            correcto = derecha.Copiar(f, izquierda.Ruta)
 
         End If
         Return correcto
@@ -286,17 +286,38 @@ Public Class TotalComander
         Return preferencias.ObtenerPreferencias
     End Function
 
-
+    ''' <summary>
+    ''' Elimina de favoritos la ruta del actual panel
+    ''' </summary>
+    ''' <param name="panel"></param>
+    ''' <remarks></remarks>
     Public Sub EliminarFavorito(panel As String)
-        preferencias.eliminarFavoritos(Environment.UserName, izquierda.Ruta)
+        If panel = "izquierda" Then
+            preferencias.eliminarFavoritos(Environment.UserName, izquierda.Ruta)
+        Else
+            preferencias.eliminarFavoritos(Environment.UserName, derecha.Ruta)
+        End If
+
     End Sub
 
+    ''' <summary>
+    ''' Carga los favoritos existentes en fichero
+    ''' </summary>
+    ''' <param name="usuario"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Function CargarFavoritos(usuario As String) As String()
 
         Return preferencias.ObtenerFavoritos(usuario)
     End Function
 
-
+    ''' <summary>
+    ''' Guarda los favoritos 
+    ''' </summary>
+    ''' <param name="usuario"></param>
+    ''' <param name="panel"></param>
+    ''' <param name="nombre"></param>
+    ''' <remarks></remarks>
     Public Sub GuardarFavoritos(usuario As String, panel As String, nombre As String)
 
         If panel = "izquierda" Then
@@ -313,6 +334,12 @@ Public Class TotalComander
     End Sub
 
 
+    ''' <summary>
+    ''' Crea una carpta vacia
+    ''' </summary>
+    ''' <param name="panel"></param>
+    ''' <param name="nombre"></param>
+    ''' <remarks></remarks>
     Public Sub crearCarpeta(panel As String, nombre As String)
 
         If panel = "izquierda" Then
@@ -323,6 +350,12 @@ Public Class TotalComander
 
     End Sub
 
+    ''' <summary>
+    ''' Crea un fichero vacio
+    ''' </summary>
+    ''' <param name="panel"></param>
+    ''' <param name="nombre"></param>
+    ''' <remarks></remarks>
     Public Sub crearfichero(panel As String, nombre As String)
 
 
@@ -334,7 +367,11 @@ Public Class TotalComander
 
     End Sub
 
-
+    ''' <summary>
+    ''' Obtiene la informacion de el archivo seleccionado
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Function obtenerInformacionPc() As String()
 
         Dim datos As List(Of String) = New List(Of String)
@@ -356,6 +393,14 @@ Public Class TotalComander
 
     End Function
 
+
+    ''' <summary>
+    ''' Cambia la extension de un fichero
+    ''' </summary>
+    ''' <param name="panel"></param>
+    ''' <param name="nombre"></param>
+    ''' <param name="extension"></param>
+    ''' <remarks></remarks>
     Public Sub cambiarExtension(panel As String, nombre As String, extension As String)
 
 
@@ -379,19 +424,21 @@ Public Class TotalComander
         Return ficheros
     End Function
 
-
+    ''' <summary>
+    ''' Mueve los ficheros seleccionados a una nueva ubicacion
+    ''' </summary>
+    ''' <param name="panel"></param>
+    ''' <param name="f"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Function mover(panel As String, f As System.Windows.Forms.ListBox.SelectedObjectCollection) As Boolean
 
         Dim correcto As Boolean
 
         If panel = "izquierda" Then
-
             izquierda.mover(f, derecha.Ruta)
-
         Else
-
             derecha.mover(f, izquierda.Ruta)
-
         End If
         Return correcto
 

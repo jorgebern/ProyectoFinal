@@ -67,7 +67,7 @@ Partial Class Form_Principal
         Me.TutorialToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.Lbl_izquierda = New System.Windows.Forms.Label()
         Me.Ltb_izquierda = New System.Windows.Forms.ListBox()
-        Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.Ctm_paneles = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.CopiarToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.MoverToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.BorrarToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
@@ -91,11 +91,14 @@ Partial Class Form_Principal
         Me.ToolStripButton5 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton6 = New System.Windows.Forms.ToolStripButton()
         Me.Tb_buscar = New System.Windows.Forms.ToolStripTextBox()
-        Me.ToolStripButton7 = New System.Windows.Forms.ToolStripButton()
+        Me.Ctm_Favoritos = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.EliminarToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator8 = New System.Windows.Forms.ToolStripSeparator()
         Me.Sts_Bar.SuspendLayout()
         Me.Mns_menu.SuspendLayout()
-        Me.ContextMenuStrip1.SuspendLayout()
+        Me.Ctm_paneles.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
+        Me.Ctm_Favoritos.SuspendLayout()
         Me.SuspendLayout()
         '
         'Ntf_Icon
@@ -395,7 +398,7 @@ Partial Class Form_Principal
         '
         Me.Ltb_izquierda.AllowDrop = True
         Me.Ltb_izquierda.BackColor = System.Drawing.SystemColors.Window
-        Me.Ltb_izquierda.ContextMenuStrip = Me.ContextMenuStrip1
+        Me.Ltb_izquierda.ContextMenuStrip = Me.Ctm_paneles
         Me.Ltb_izquierda.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
         Me.Ltb_izquierda.FormattingEnabled = True
         Me.Ltb_izquierda.Location = New System.Drawing.Point(12, 80)
@@ -404,11 +407,11 @@ Partial Class Form_Principal
         Me.Ltb_izquierda.Size = New System.Drawing.Size(267, 251)
         Me.Ltb_izquierda.TabIndex = 0
         '
-        'ContextMenuStrip1
+        'Ctm_paneles
         '
-        Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CopiarToolStripMenuItem1, Me.MoverToolStripMenuItem, Me.BorrarToolStripMenuItem1, Me.ToolStripSeparator7, Me.RenombrarToolStripMenuItem, Me.NuevoToolStripMenuItem})
-        Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
-        Me.ContextMenuStrip1.Size = New System.Drawing.Size(134, 120)
+        Me.Ctm_paneles.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CopiarToolStripMenuItem1, Me.MoverToolStripMenuItem, Me.BorrarToolStripMenuItem1, Me.ToolStripSeparator7, Me.RenombrarToolStripMenuItem, Me.NuevoToolStripMenuItem})
+        Me.Ctm_paneles.Name = "ContextMenuStrip1"
+        Me.Ctm_paneles.Size = New System.Drawing.Size(134, 120)
         '
         'CopiarToolStripMenuItem1
         '
@@ -462,7 +465,7 @@ Partial Class Form_Principal
         '
         Me.Ltb_derecha.AllowDrop = True
         Me.Ltb_derecha.BackColor = System.Drawing.SystemColors.Window
-        Me.Ltb_derecha.ContextMenuStrip = Me.ContextMenuStrip1
+        Me.Ltb_derecha.ContextMenuStrip = Me.Ctm_paneles
         Me.Ltb_derecha.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
         Me.Ltb_derecha.Location = New System.Drawing.Point(287, 80)
         Me.Ltb_derecha.Name = "Ltb_derecha"
@@ -486,7 +489,7 @@ Partial Class Form_Principal
         '
         'ToolStrip1
         '
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton2, Me.Ts_recargar, Me.ToolStripSeparator3, Me.ToolStripButton1, Me.ToolStripButton3, Me.ToolStripSeparator1, Me.ToolStripButton4, Me.ToolStripSeparator6, Me.ToolStripButton5, Me.ToolStripButton6, Me.Tb_buscar, Me.ToolStripButton7})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton2, Me.Ts_recargar, Me.ToolStripSeparator3, Me.ToolStripButton1, Me.ToolStripButton3, Me.ToolStripSeparator1, Me.ToolStripButton4, Me.ToolStripSeparator6, Me.ToolStripButton5, Me.ToolStripButton6, Me.ToolStripSeparator8, Me.Tb_buscar})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 24)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(566, 25)
@@ -577,14 +580,22 @@ Partial Class Form_Principal
         Me.Tb_buscar.Name = "Tb_buscar"
         Me.Tb_buscar.Size = New System.Drawing.Size(100, 25)
         '
-        'ToolStripButton7
+        'Ctm_Favoritos
         '
-        Me.ToolStripButton7.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton7.Image = CType(resources.GetObject("ToolStripButton7.Image"), System.Drawing.Image)
-        Me.ToolStripButton7.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton7.Name = "ToolStripButton7"
-        Me.ToolStripButton7.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton7.Text = "ToolStripButton7"
+        Me.Ctm_Favoritos.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EliminarToolStripMenuItem})
+        Me.Ctm_Favoritos.Name = "Ctm_Favoritos"
+        Me.Ctm_Favoritos.Size = New System.Drawing.Size(118, 26)
+        '
+        'EliminarToolStripMenuItem
+        '
+        Me.EliminarToolStripMenuItem.Name = "EliminarToolStripMenuItem"
+        Me.EliminarToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.EliminarToolStripMenuItem.Text = "Eliminar"
+        '
+        'ToolStripSeparator8
+        '
+        Me.ToolStripSeparator8.Name = "ToolStripSeparator8"
+        Me.ToolStripSeparator8.Size = New System.Drawing.Size(6, 25)
         '
         'Form_Principal
         '
@@ -611,9 +622,10 @@ Partial Class Form_Principal
         Me.Sts_Bar.PerformLayout()
         Me.Mns_menu.ResumeLayout(False)
         Me.Mns_menu.PerformLayout()
-        Me.ContextMenuStrip1.ResumeLayout(False)
+        Me.Ctm_paneles.ResumeLayout(False)
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
+        Me.Ctm_Favoritos.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -640,7 +652,7 @@ Partial Class Form_Principal
     Friend WithEvents Ts_recargar As System.Windows.Forms.ToolStripButton
     Friend WithEvents InformaciónToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents CopiarToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ContextMenuStrip1 As System.Windows.Forms.ContextMenuStrip
+    Friend WithEvents Ctm_paneles As System.Windows.Forms.ContextMenuStrip
     Friend WithEvents CopiarToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MoverToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents BorrarToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
@@ -681,10 +693,12 @@ Partial Class Form_Principal
     Friend WithEvents FavoritosToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents AñadirFavoritosToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents EliminarFavoritosToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripButton7 As System.Windows.Forms.ToolStripButton
     Friend WithEvents Tb_buscar As System.Windows.Forms.ToolStripTextBox
     Friend WithEvents MoverToolStripMenuItem2 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator4 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripSeparator7 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents Ctm_Favoritos As System.Windows.Forms.ContextMenuStrip
+    Friend WithEvents EliminarToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator8 As System.Windows.Forms.ToolStripSeparator
 
 End Class

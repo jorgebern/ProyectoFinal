@@ -274,7 +274,7 @@ Public Class Panel
             End If
 
             If repeticiones = 0 Then
-                ZipFile.CreateFromDirectory(_ruta & "\" & fichero, _ruta & "\" & nombre & ".zip")
+                ZipFile.CreateFromDirectory(_ruta & "\" & fichero, _ruta & "\" & nombre & ".zip", CompressionLevel.Optimal, True)
                 correcto = True
             Else
                 While (My.Computer.FileSystem.FileExists(_ruta & "\" & nombre & "(" & repeticiones & ").zip"))
@@ -327,6 +327,11 @@ Public Class Panel
     End Function
 
 
+    ''' <summary>
+    ''' Crea una carpeta con el nombre pasado por parametro
+    ''' </summary>
+    ''' <param name="nombre">Nombre de la carpeta</param>
+    ''' <remarks></remarks>
     Public Sub CrearCarpeta(nombre As String)
 
         Dim repeticiones As Integer = 1
@@ -343,6 +348,11 @@ Public Class Panel
 
     End Sub
 
+    ''' <summary>
+    ''' Crea un fichero vacio con el nombre pasado por parametro
+    ''' </summary>
+    ''' <param name="nombre"></param>
+    ''' <remarks></remarks>
     Public Sub CrearFichero(nombre As String)
 
         Dim repeticiones As Integer = 1
@@ -367,6 +377,12 @@ Public Class Panel
         swEscritor.Close()
     End Sub
 
+    ''' <summary>
+    ''' Cambia la extension a un fichero pasado por parametro
+    ''' </summary>
+    ''' <param name="fichero"></param>
+    ''' <param name="extension"></param>
+    ''' <remarks></remarks>
     Public Sub CambiarExtension(fichero As String, extension As String)
 
         If My.Computer.FileSystem.FileExists(_ruta & "\" & fichero) Then
@@ -395,11 +411,18 @@ Public Class Panel
         For Each elemento As String In Directory.GetFiles(_ruta & "\", "*" & palabra & "*", SearchOption.TopDirectoryOnly)
             ficheros.Add(elemento)
         Next
+
         Return ficheros.ToArray
 
     End Function
 
-
+    ''' <summary>
+    ''' Mueve los archivos pasados por parametro a la ubicacion pasada por parametro
+    ''' </summary>
+    ''' <param name="ficheros"></param>
+    ''' <param name="destino"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Function mover(ficheros As System.Windows.Forms.ListBox.SelectedObjectCollection, destino As String) As Boolean
         Dim correcto As Boolean = False
         Dim repeticiones As Integer = 0
