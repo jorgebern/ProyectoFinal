@@ -38,7 +38,7 @@ Public Class Form_Principal
 
         Dim pref As String() = total.CargarPreferencias
 
-        tutorial = CBool(pref(0))
+        tutorial = CBool(pref(1))
 
         If tutorial Then
 
@@ -49,21 +49,21 @@ Public Class Form_Principal
 
         End If
 
-        If pref(1) = "0" Then
+        If pref(2) = "0" Then
             pintarVerde()
-        ElseIf pref(1) = "1" Then
+        ElseIf pref(2) = "1" Then
             pintarAzul()
-        ElseIf pref(1) = "2" Then
+        ElseIf pref(2) = "2" Then
             pintarRosa()
-        ElseIf pref(1) = "3" Then
+        ElseIf pref(2) = "3" Then
             pintarPlata()
         End If
 
-        If pref(2) = "8.25" Then
+        If pref(3) = "8.25" Then
             TamanyoPequenyo()
-        ElseIf pref(2) = "10" Then
+        ElseIf pref(3) = "10" Then
             TamanyoMediano()
-        ElseIf pref(2) = "12" Then
+        ElseIf pref(3) = "12" Then
             TamanyoGrande()
         End If
 
@@ -1588,10 +1588,28 @@ Public Class Form_Principal
     End Sub
 
     Private Sub ToolStripButton7_Click(sender As Object, e As EventArgs) Handles ToolStripButton7.Click
-        Ltb_izquierda.Items.Clear()
 
-        For Each elemento As String In total.comparar("izquierda")
-            Ltb_izquierda.Items.Add(elemento)
-        Next
+        If panelEnFoco = 0 Then
+            Ltb_izquierda.Items.Clear()
+
+            For Each elemento As String In total.comparar("izquierda")
+                Ltb_izquierda.Items.Add(elemento)
+            Next
+        ElseIf panelEnFoco = 1 Then
+            Ltb_derecha.Items.Clear()
+
+            For Each elemento As String In total.comparar("derecha")
+                Ltb_derecha.Items.Add(elemento)
+            Next
+        End If
+
+    End Sub
+
+    Private Sub ToolStripButton8_Click(sender As Object, e As EventArgs) Handles ToolStripButton8.Click
+        total.encriptar(Ltb_izquierda.SelectedItem.ToString)
+    End Sub
+
+    Private Sub ToolStripButton9_Click(sender As Object, e As EventArgs) Handles ToolStripButton9.Click
+        total.desencriptar(Ltb_izquierda.SelectedItem.ToString)
     End Sub
 End Class

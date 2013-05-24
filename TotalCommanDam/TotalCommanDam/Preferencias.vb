@@ -9,13 +9,42 @@ Public Class Preferencias
     ''' <param name="color"></param>
     ''' <param name="tamanyo"></param>
     ''' <remarks></remarks>
-    Public Sub EscribirPreferencias(tutorial As Boolean, color As Integer, tamanyo As Single)
+    Public Sub EscribirPreferencias(usuario As String, tutorial As Boolean, color As Integer, tamanyo As Single)
+
+        Dim linea As String
+        Dim listas As List(Of String) = New List(Of String)
+
+
+        Try
+            Dim srLector As StreamReader = New StreamReader("pref.pre")
+
+            Linea = srLector.ReadLine()
+
+            Do While Not (Linea Is Nothing)
+
+                Dim datos As String() = Linea.Split(CChar("Ä"))
+
+                If datos(0) <> usuario Then
+                    listas.Add(linea)
+                End If
+
+                Linea = srLector.ReadLine()
+
+            Loop
+
+            srLector.Close()
+        Catch ex As Exception
+
+        End Try
 
         Dim swEscritor As StreamWriter
 
         swEscritor = New StreamWriter("pref.pre")
 
-        swEscritor.WriteLine(tutorial & "Ä" & color & "Ä" & tamanyo)
+        For Each elemento As String In listas
+            swEscritor.WriteLine(elemento)
+        Next
+        swEscritor.WriteLine(usuario & "Ä" & tutorial & "Ä" & color & "Ä" & tamanyo)
 
         swEscritor.Close()
     End Sub
@@ -25,23 +54,37 @@ Public Class Preferencias
     ''' </summary>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Function ObtenerPreferencias() As String()
+    Public Function ObtenerPreferencias(usuario As String) As String()
 
         Dim Linea As String
         Dim ContadorLin As Integer = 1
+        Dim lista As List(Of String) = New List(Of String)
+        Dim datosUsuario As String = ""
 
         Try
-
-        
-        Dim srLector As StreamReader = New StreamReader("pref.pre")
+            Dim srLector As StreamReader = New StreamReader("pref.pre")
 
             Linea = srLector.ReadLine()
+
+            Do While Not (Linea Is Nothing)
+
+                Dim datos As String() = Linea.Split(CChar("Ä"))
+
+                If datos(0) = usuario Then
+                    datosUsuario = Linea
+                End If
+
+                Linea = srLector.ReadLine()
+
+            Loop
+
             srLector.Close()
         Catch ex As Exception
-            Linea = "trueÄ1Ä8.25"
+            datosUsuario = usuario & "ÄtrueÄ1Ä8.25"
+
         End Try
 
-        Return Linea.Split(CChar("Ä"))
+        Return datosUsuario.Split(CChar("Ä"))
 
     End Function
 
@@ -124,8 +167,6 @@ Public Class Preferencias
             srLector = New StreamReader("favoritos.fav")
 
             Dim Linea As String
-
-
 
             Linea = srLector.ReadLine()
 

@@ -92,9 +92,11 @@ Partial Class Form_Principal
         Me.ToolStripButton6 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator8 = New System.Windows.Forms.ToolStripSeparator()
         Me.Tb_buscar = New System.Windows.Forms.ToolStripTextBox()
+        Me.ToolStripButton7 = New System.Windows.Forms.ToolStripButton()
         Me.Ctm_Favoritos = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.EliminarToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripButton7 = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripButton8 = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripButton9 = New System.Windows.Forms.ToolStripButton()
         Me.Sts_Bar.SuspendLayout()
         Me.Mns_menu.SuspendLayout()
         Me.Ctm_paneles.SuspendLayout()
@@ -490,7 +492,7 @@ Partial Class Form_Principal
         '
         'ToolStrip1
         '
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton2, Me.Ts_recargar, Me.ToolStripSeparator3, Me.ToolStripButton1, Me.ToolStripButton3, Me.ToolStripSeparator1, Me.ToolStripButton4, Me.ToolStripSeparator6, Me.ToolStripButton5, Me.ToolStripButton6, Me.ToolStripSeparator8, Me.Tb_buscar, Me.ToolStripButton7})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton2, Me.Ts_recargar, Me.ToolStripSeparator3, Me.ToolStripButton1, Me.ToolStripButton3, Me.ToolStripSeparator1, Me.ToolStripButton4, Me.ToolStripSeparator6, Me.ToolStripButton5, Me.ToolStripButton6, Me.ToolStripSeparator8, Me.Tb_buscar, Me.ToolStripButton7, Me.ToolStripButton8, Me.ToolStripButton9})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 24)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(566, 25)
@@ -586,6 +588,15 @@ Partial Class Form_Principal
         Me.Tb_buscar.Name = "Tb_buscar"
         Me.Tb_buscar.Size = New System.Drawing.Size(100, 25)
         '
+        'ToolStripButton7
+        '
+        Me.ToolStripButton7.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripButton7.Image = CType(resources.GetObject("ToolStripButton7.Image"), System.Drawing.Image)
+        Me.ToolStripButton7.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton7.Name = "ToolStripButton7"
+        Me.ToolStripButton7.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripButton7.Text = "ToolStripButton7"
+        '
         'Ctm_Favoritos
         '
         Me.Ctm_Favoritos.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EliminarToolStripMenuItem})
@@ -598,14 +609,23 @@ Partial Class Form_Principal
         Me.EliminarToolStripMenuItem.Size = New System.Drawing.Size(117, 22)
         Me.EliminarToolStripMenuItem.Text = "Eliminar"
         '
-        'ToolStripButton7
+        'ToolStripButton8
         '
-        Me.ToolStripButton7.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton7.Image = CType(resources.GetObject("ToolStripButton7.Image"), System.Drawing.Image)
-        Me.ToolStripButton7.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton7.Name = "ToolStripButton7"
-        Me.ToolStripButton7.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton7.Text = "ToolStripButton7"
+        Me.ToolStripButton8.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripButton8.Image = CType(resources.GetObject("ToolStripButton8.Image"), System.Drawing.Image)
+        Me.ToolStripButton8.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton8.Name = "ToolStripButton8"
+        Me.ToolStripButton8.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripButton8.Text = "ToolStripButton8"
+        '
+        'ToolStripButton9
+        '
+        Me.ToolStripButton9.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripButton9.Image = CType(resources.GetObject("ToolStripButton9.Image"), System.Drawing.Image)
+        Me.ToolStripButton9.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton9.Name = "ToolStripButton9"
+        Me.ToolStripButton9.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripButton9.Text = "ToolStripButton9"
         '
         'Form_Principal
         '
@@ -711,5 +731,7 @@ Partial Class Form_Principal
     Friend WithEvents EliminarToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator8 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripButton7 As System.Windows.Forms.ToolStripButton
+    Friend WithEvents ToolStripButton8 As System.Windows.Forms.ToolStripButton
+    Friend WithEvents ToolStripButton9 As System.Windows.Forms.ToolStripButton
 
 End Class

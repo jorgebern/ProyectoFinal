@@ -272,7 +272,7 @@ Public Class TotalComander
     ''' <remarks></remarks>
     Public Sub GuardarPreferencias(tutorial As Boolean, color As Integer, tamanyo As Single)
 
-        preferencias.EscribirPreferencias(tutorial, color, tamanyo)
+        preferencias.EscribirPreferencias(Environment.UserName, tutorial, color, tamanyo)
 
     End Sub
 
@@ -283,7 +283,7 @@ Public Class TotalComander
     ''' <remarks></remarks>
     Public Function CargarPreferencias() As String()
 
-        Return preferencias.ObtenerPreferencias
+        Return preferencias.ObtenerPreferencias(Environment.UserName)
     End Function
 
     ''' <summary>
@@ -455,6 +455,16 @@ Public Class TotalComander
 
         Return faltan
     End Function
+
+
+    Public Sub encriptar(fichero As String)
+        izquierda.EncryptFile(fichero, "Password")
+    End Sub
+
+    Public Sub desencriptar(fichero As String)
+        izquierda.DecryptFile(fichero, "Password")
+
+    End Sub
 
 
 End Class
