@@ -404,12 +404,18 @@ Public Class Panel
 
     Public Function filtrar(palabra As String) As String()
 
-        'TODO
-        Dim ficheros As List(Of String)
+        Dim ficheros As List(Of String) = New List(Of String)
 
-        ficheros = Directory.GetDirectories(_ruta & "\", "*" & palabra & "*", SearchOption.TopDirectoryOnly).ToList
+        For Each elemento As String In Directory.GetDirectories(_ruta & "\", "*" & palabra & "*", SearchOption.TopDirectoryOnly).ToList
+            Dim partido As String() = elemento.Split(CChar("\"))
+            ficheros.Add(partido(partido.Length - 1))
+        Next
+
+
+
         For Each elemento As String In Directory.GetFiles(_ruta & "\", "*" & palabra & "*", SearchOption.TopDirectoryOnly)
-            ficheros.Add(elemento)
+            Dim partido As String() = elemento.Split(CChar("\"))
+            ficheros.Add(partido(partido.Length - 1))
         Next
 
         Return ficheros.ToArray
@@ -469,6 +475,35 @@ Public Class Panel
 
         Return correcto
     End Function
+
+
+    Public Function Comparar(destino As String) As String()
+        Dim faltan As List(Of String) = New List(Of String)
+        Dim existe As Boolean = False
+
+        For Each elemento As String In My.Computer.FileSystem.GetDirectories(_ruta & "\")
+            existe = False
+            Dim partido As String() = elemento.Split(CChar("\"))
+
+            For Each comparado As String In My.Computer.FileSystem.GetDirectories(destino & "\")
+                Dim compPart As String() = comparado.Split(CChar("\"))
+
+                If compPart(compPart.Length - 1) = partido(partido.Length - 1) Then
+                    existe = True
+                End If
+
+            Next
+            If Not existe Then
+
+                faltan.Add(partido(partido.Length - 1))
+            End If
+
+        Next
+
+        Return faltan.ToArray
+
+    End Function
+
 
 
     ''' <summary>

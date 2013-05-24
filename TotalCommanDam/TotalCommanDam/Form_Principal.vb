@@ -110,6 +110,13 @@ Public Class Form_Principal
 
         Me.BackColor = color_fondo
 
+        RefrescarIzquierda()
+        refrescarDerecha()
+        
+        
+    End Sub
+
+    Public Sub RefrescarIzquierda()
         'Limpiar listbox
         Ltb_izquierda.Items.Clear()
 
@@ -127,13 +134,18 @@ Public Class Form_Principal
             End If
             Ltb_izquierda.Items.Add(elemento)
         Next
-        Ltb_derecha.Items.Clear()
+
 
         'Labels
         Lbl_izquierda.Text = total.obtenerRuta("izquierda")
+    End Sub
+
+    Public Sub refrescarDerecha()
+        Dim lista As List(Of String)
         Lbl_derecha.Text = total.obtenerRuta("derecha")
 
         'Derecha
+        Ltb_derecha.Items.Clear()
 
         lista = total.obtenerArchivos("derecha")
         For Each elemento As String In lista
@@ -155,7 +167,6 @@ Public Class Form_Principal
 
 
     End Sub
-
 
 
     '---------------------------------------------------------------------------------------------
@@ -1282,13 +1293,15 @@ Public Class Form_Principal
             If Ltb_izquierda.SelectedIndex = -1 Then
                 MsgBox("Selecciona un archivo")
             Else
-                total.mover("izquierda", Ltb_izquierda.SelectedItems)
+                correcto = total.mover("izquierda", Ltb_izquierda.SelectedItems)
+
                 If correcto Then
-                    Ntf_Icon.BalloonTipTitle = "Copiar"
-                    Ntf_Icon.BalloonTipText = "Archivo copiado correctamente"
+                    Ntf_Icon.BalloonTipTitle = "Mover"
+                    Ntf_Icon.BalloonTipText = "Archivo Movido correctamente"
                     Ntf_Icon.ShowBalloonTip(10)
                 Else
-                    Ntf_Icon.BalloonTipTitle = "Copiar"
+                    Ntf_Icon.BalloonTipTitle = "Mover"
+                    Ntf_Icon.BalloonTipIcon = ToolTipIcon.Warning
                     Ntf_Icon.BalloonTipText = "Algo no funciono bien, vuelva a intentarlo"
                     Ntf_Icon.ShowBalloonTip(10)
                 End If
@@ -1297,13 +1310,14 @@ Public Class Form_Principal
             If Ltb_derecha.SelectedIndex = -1 Then
                 MsgBox("Selecciona un archivo")
             Else
-                total.mover("derecha", Ltb_derecha.SelectedItems)
+                correcto = total.mover("derecha", Ltb_derecha.SelectedItems)
                 If correcto Then
-                    Ntf_Icon.BalloonTipTitle = "Copiar"
-                    Ntf_Icon.BalloonTipText = "Archivo copiado correctamente"
+                    Ntf_Icon.BalloonTipTitle = "Mover"
+                    Ntf_Icon.BalloonTipText = "Archivo Movido correctamente"
                     Ntf_Icon.ShowBalloonTip(10)
                 Else
-                    Ntf_Icon.BalloonTipTitle = "Copiar"
+                    Ntf_Icon.BalloonTipTitle = "Mover"
+                    Ntf_Icon.BalloonTipIcon = ToolTipIcon.Warning
                     Ntf_Icon.BalloonTipText = "Algo no funciono bien, vuelva a intentarlo"
                     Ntf_Icon.ShowBalloonTip(10)
                 End If
@@ -1450,11 +1464,6 @@ Public Class Form_Principal
         CargarFavoritos()
     End Sub
 
-    Private Sub ToolStripTextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles Tb_buscar.KeyDown
-
-        
-    End Sub
-
     ''' <summary>
     ''' Boton mover del menu
     ''' </summary>
@@ -1544,8 +1553,14 @@ Public Class Form_Principal
 
         If e.KeyChar = CChar(vbBack) Then
             If Tb_buscar.Text.Length = 3 Then
-                refrescarFormulario()
-                Tb_buscar.Focus()
+                If panelEnFoco = 0 Then
+                    RefrescarIzquierda()
+                    Tb_buscar.Focus()
+                ElseIf panelEnFoco = 1 Then
+                    refrescarDerecha()
+                    Tb_buscar.Focus()
+                End If
+                
             End If
         End If
 
@@ -1554,11 +1569,29 @@ Public Class Form_Principal
 
     Private Sub Tb_buscar_KeyUp(sender As Object, e As KeyEventArgs) Handles Tb_buscar.KeyUp
         If Tb_buscar.Text.Length >= 3 Then
-            Ltb_izquierda.Items.Clear()
+            If panelEnFoco = 0 Then
+                Ltb_izquierda.Items.Clear()
 
-            For Each elemento As String In total.filtrar("izquierda", Tb_buscar.Text)
-                Ltb_izquierda.Items.Add(elemento)
-            Next
+                For Each elemento As String In total.filtrar("izquierda", Tb_buscar.Text)
+                    Ltb_izquierda.Items.Add(elemento)
+                Next
+            ElseIf panelEnFoco = 1 Then
+                Ltb_derecha.Items.Clear()
+
+                For Each elemento As String In total.filtrar("derecha", Tb_buscar.Text)
+                    Ltb_derecha.Items.Add(elemento)
+                Next
+
+            End If
+            
         End If
+    End Sub
+
+    Private Sub ToolStripButton7_Click(sender As Object, e As EventArgs) Handles ToolStripButton7.Click
+        Ltb_izquierda.Items.Clear()
+
+        For Each elemento As String In total.comparar("izquierda")
+            Ltb_izquierda.Items.Add(elemento)
+        Next
     End Sub
 End Class

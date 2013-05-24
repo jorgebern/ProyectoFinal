@@ -436,14 +436,24 @@ Public Class TotalComander
         Dim correcto As Boolean
 
         If panel = "izquierda" Then
-            izquierda.mover(f, derecha.Ruta)
+            correcto = izquierda.mover(f, derecha.Ruta)
         Else
-            derecha.mover(f, izquierda.Ruta)
+            correcto = derecha.mover(f, izquierda.Ruta)
         End If
         Return correcto
+    End Function
 
 
+    Public Function comparar(panel As String) As String()
+        Dim faltan As String()
 
+        If panel = "izquierda" Then
+            faltan = izquierda.Comparar(derecha.Ruta)
+        Else
+            faltan = derecha.Comparar(izquierda.Ruta)
+        End If
+
+        Return faltan
     End Function
 
 
