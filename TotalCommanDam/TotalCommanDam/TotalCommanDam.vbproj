@@ -114,6 +114,18 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="buscando.Designer.vb">
+      <DependentUpon>buscando.vb</DependentUpon>
+    </Compile>
+    <Compile Include="buscando.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Favoritos.Designer.vb">
+      <DependentUpon>Favoritos.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Favoritos.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="informacion.Designer.vb">
       <DependentUpon>informacion.vb</DependentUpon>
     </Compile>
@@ -186,6 +198,12 @@
     <EmbeddedResource Include="acercaDe.resx">
       <DependentUpon>acercaDe.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="buscando.resx">
+      <DependentUpon>buscando.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Favoritos.resx">
+      <DependentUpon>Favoritos.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="informacion.resx">
       <DependentUpon>informacion.vb</DependentUpon>
     </EmbeddedResource>
@@ -251,6 +269,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="H002.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Scripting">
+      <Guid>{420B2830-E718-11CF-893D-00A0C9054228}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

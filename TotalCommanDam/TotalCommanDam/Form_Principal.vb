@@ -9,9 +9,11 @@ Public Class Form_Principal
     Dim total As TotalComander = New TotalComander()
     Dim informacio As informacion
     Dim infoPc As InformacionPc
+    Dim formBuscar As buscando
+    Dim favoritos As Favoritos
 
     Dim background As Thread
-    Delegate Sub Set_ListBox(ByVal [valor] As Integer)
+    ' Delegate Sub Set_ListBox(ByVal [valor] As Integer)
 
     '0 = izquierda
     '1 = derecha
@@ -33,6 +35,7 @@ Public Class Form_Principal
     Private Sub Form_Principal_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         'hilos
+        'Un objeto no puede ser invocado por varios hilos al mismo tiempo
         CheckForIllegalCrossThreadCalls = False
 
 
@@ -57,6 +60,8 @@ Public Class Form_Principal
             pintarRosa()
         ElseIf pref(2) = "3" Then
             pintarPlata()
+        ElseIf pref(2) = "4" Then
+            pintarOscuro()
         End If
 
         If pref(3) = "8.25" Then
@@ -116,6 +121,10 @@ Public Class Form_Principal
         
     End Sub
 
+    ''' <summary>
+    ''' Refresca el formulario de la izquierda
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub RefrescarIzquierda()
         'Limpiar listbox
         Ltb_izquierda.Items.Clear()
@@ -140,6 +149,10 @@ Public Class Form_Principal
         Lbl_izquierda.Text = total.obtenerRuta("izquierda")
     End Sub
 
+    ''' <summary>
+    ''' Refresca el formulario de la derecha
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub refrescarDerecha()
         Dim lista As List(Of String)
         Lbl_derecha.Text = total.obtenerRuta("derecha")
@@ -266,7 +279,6 @@ Public Class Form_Principal
             Ntf_Icon.BalloonTipText = "Archivo copiado correctamente"
             Ntf_Icon.ShowBalloonTip(10)
             Tmr_Limpiar.Start()
-            total.Copiar("derecha", Ltb_derecha.SelectedItems)
             refrescarFormulario()
         End If
     End Sub
@@ -280,12 +292,8 @@ Public Class Form_Principal
     Private Sub Ltb_izquierda_GotFocus(sender As Object, e As EventArgs) Handles Ltb_izquierda.GotFocus
         panelEnFoco = 0
         Lbl_derecha.BackColor = color_fondo
-        Lbl_derecha.ForeColor = Color.Black
-        Ltb_derecha.BackColor = Color.WhiteSmoke
 
-        Lbl_izquierda.ForeColor = Color.White
         Lbl_izquierda.BackColor = SystemColors.Highlight
-        Ltb_izquierda.BackColor = Color.White
 
     End Sub
 
@@ -417,12 +425,8 @@ Public Class Form_Principal
 
         panelEnFoco = 1
         Lbl_izquierda.BackColor = color_fondo
-        Lbl_izquierda.ForeColor = Color.Black
-        Ltb_izquierda.BackColor = Color.WhiteSmoke
 
-        Lbl_derecha.ForeColor = Color.White
         Lbl_derecha.BackColor = SystemColors.Highlight
-        Ltb_derecha.BackColor = Color.White
 
 
     End Sub
@@ -756,29 +760,55 @@ Public Class Form_Principal
     Public Sub Comprimir()
         Dim correcto As Boolean
         Dim respuesta As String
+
+
         Dim mensaje As String = "Comprimiendo carpeta: "
 
-        respuesta = InputBox(mensaje, "Nuevo nombre: ")
-        If respuesta <> "" Then
+
+
+
             If panelEnFoco = 0 Then
-                correcto = total.Comprimir("izquierda", Ltb_izquierda.SelectedItem.ToString, respuesta)
-                refrescarFormulario()
+                If Ltb_izquierda.SelectedIndex <> -1 Then
+                respuesta = InputBox(mensaje, "Nombre: ")
+                If respuesta <> "" Then
+                    correcto = total.Comprimir("izquierda", Ltb_izquierda.SelectedItem.ToString, respuesta)
+                    refrescarFormulario()
+                    If correcto Then
+                        Ntf_Icon.BalloonTipTitle = "Comprimir"
+                        Ntf_Icon.BalloonTipText = "Carpeta comprimida correctamente"
+                        Ntf_Icon.ShowBalloonTip(10)
+                    Else
+                        Ntf_Icon.BalloonTipTitle = "Comprimir"
+                        Ntf_Icon.BalloonTipText = "Algo no funciono bien, vuelva a intentarlo. Recuerda que solo puedes comprimir carpetas"
+                        Ntf_Icon.ShowBalloonTip(10)
+                    End If
+                End If
+                Else
+                    MsgBox("Seleccione una carpeta")
+                End If
             ElseIf panelEnFoco = 1 Then
-                correcto = total.Comprimir("derecha", Ltb_derecha.SelectedItem.ToString, respuesta)
-                refrescarFormulario()
+                If Ltb_derecha.SelectedIndex <> -1 Then
+                respuesta = InputBox(mensaje, "Nombre: ")
+                If respuesta <> "" Then
+                    correcto = total.Comprimir("derecha", Ltb_derecha.SelectedItem.ToString, respuesta)
+                    refrescarFormulario()
+                    If correcto Then
+                        Ntf_Icon.BalloonTipTitle = "Comprimir"
+                        Ntf_Icon.BalloonTipText = "Carpeta comprimida correctamente"
+                        Ntf_Icon.ShowBalloonTip(10)
+                    Else
+                        Ntf_Icon.BalloonTipTitle = "Comprimir"
+                        Ntf_Icon.BalloonTipText = "Algo no funciono bien, vuelva a intentarlo.Recuerda que solo puedes comprimir carpetas"
+                        Ntf_Icon.ShowBalloonTip(10)
+                    End If
+                End If
+                    
+                Else
+                    MsgBox("Seleccione una carpeta")
+                End If
             End If
 
-            If correcto Then
-                Ntf_Icon.BalloonTipTitle = "Comprimir"
-                Ntf_Icon.BalloonTipText = "Archivo comprimido correctamente"
-                Ntf_Icon.ShowBalloonTip(10)
-            Else
-                Ntf_Icon.BalloonTipTitle = "Comprimir"
-                Ntf_Icon.BalloonTipText = "Algo no funciono bien, vuelva a intentarlo"
-                Ntf_Icon.ShowBalloonTip(10)
-            End If
-
-        End If
+            
 
         background.Abort()
 
@@ -824,9 +854,6 @@ Public Class Form_Principal
         If panelEnFoco = 0 Then
             If Ltb_izquierda.SelectedIndex <> -1 Then
                 correcto = total.Descomprimir("izquierda", Ltb_izquierda.SelectedItem.ToString)
-
-
-                Me.refrescarFormulario()
                 If correcto Then
                     Ntf_Icon.BalloonTipTitle = "Descomprimir"
                     Ntf_Icon.BalloonTipText = "Archivo Descomprimido correctamente"
@@ -836,6 +863,9 @@ Public Class Form_Principal
                     Ntf_Icon.BalloonTipText = "Algo no funciono bien, vuelva a intentarlo"
                     Ntf_Icon.ShowBalloonTip(10)
                 End If
+
+                Me.refrescarFormulario()
+                
             Else
                 MsgBox("Seleccione un archivo")
             End If
@@ -843,8 +873,6 @@ Public Class Form_Principal
         ElseIf panelEnFoco = 1 Then
             If Ltb_derecha.SelectedIndex <> -1 Then
                 correcto = total.Descomprimir("derecha", Ltb_derecha.SelectedItem.ToString)
-
-                Me.refrescarFormulario()
                 If correcto Then
                     Ntf_Icon.BalloonTipTitle = "Descomprimir"
                     Ntf_Icon.BalloonTipText = "Archivo Descomprimido correctamente"
@@ -854,11 +882,13 @@ Public Class Form_Principal
                     Ntf_Icon.BalloonTipText = "Algo no funciono bien, vuelva a intentarlo"
                     Ntf_Icon.ShowBalloonTip(10)
                 End If
+                Me.refrescarFormulario()
             Else
                 MsgBox("Seleccione un archivo")
             End If
         End If
 
+        
 
 
         background.Abort()
@@ -882,6 +912,8 @@ Public Class Form_Principal
             color = 2
         ElseIf DarkToolStripMenuItem.Checked Then
             color = 3
+        ElseIf DarkToolStripMenuItem1.Checked Then
+            color = 4
         End If
 
         total.GuardarPreferencias(tutorial, color, tamanyoFuente)
@@ -901,6 +933,15 @@ Public Class Form_Principal
         Me.color_fondo = Color.PowderBlue
         Me.color_Items = Brushes.LightBlue
         Me.color_Selected = Brushes.CadetBlue
+
+        Lbl_izquierda.ForeColor = DefaultForeColor
+        Lbl_derecha.ForeColor = DefaultForeColor
+        Me.ForeColor = DefaultForeColor
+
+        Ltb_izquierda.BackColor = DefaultBackColor
+        Ltb_derecha.BackColor = DefaultBackColor
+        Ltb_izquierda.ForeColor = DefaultForeColor
+        Ltb_derecha.ForeColor = DefaultForeColor
     End Sub
 
     ''' <summary>
@@ -913,10 +954,20 @@ Public Class Form_Principal
         AzulToolStripMenuItem.Checked = False
         FlowersToolStripMenuItem.Checked = False
         DarkToolStripMenuItem.Checked = False
+        DarkToolStripMenuItem1.Checked = False
 
         Me.color_fondo = Color.LimeGreen
         Me.color_Items = Brushes.LightGreen
         Me.color_Selected = Brushes.Chocolate
+
+        Lbl_izquierda.ForeColor = DefaultForeColor
+        Lbl_derecha.ForeColor = DefaultForeColor
+        Me.ForeColor = DefaultForeColor
+
+        Ltb_izquierda.BackColor = DefaultBackColor
+        Ltb_derecha.BackColor = DefaultBackColor
+        Ltb_izquierda.ForeColor = DefaultForeColor
+        Ltb_derecha.ForeColor = DefaultForeColor
     End Sub
 
     ''' <summary>
@@ -928,10 +979,20 @@ Public Class Form_Principal
         AzulToolStripMenuItem.Checked = False
         FlowersToolStripMenuItem.Checked = True
         DarkToolStripMenuItem.Checked = False
+        DarkToolStripMenuItem1.Checked = False
 
         Me.color_fondo = Color.Plum
         Me.color_Items = Brushes.LightPink
         Me.color_Selected = Brushes.Violet
+
+        Lbl_izquierda.ForeColor = DefaultForeColor
+        Lbl_derecha.ForeColor = DefaultForeColor
+        Me.ForeColor = DefaultForeColor
+
+        Ltb_izquierda.BackColor = DefaultBackColor
+        Ltb_derecha.BackColor = DefaultBackColor
+        Ltb_izquierda.ForeColor = DefaultForeColor
+        Ltb_derecha.ForeColor = DefaultForeColor
     End Sub
 
     ''' <summary>
@@ -944,11 +1005,45 @@ Public Class Form_Principal
         AzulToolStripMenuItem.Checked = False
         FlowersToolStripMenuItem.Checked = False
         DarkToolStripMenuItem.Checked = True
+        DarkToolStripMenuItem1.Checked = False
 
         Me.color_fondo = Color.Silver
         Me.color_Items = Brushes.LightGray
         Me.color_Selected = Brushes.Indigo
+
+        Lbl_izquierda.ForeColor = DefaultForeColor
+        Lbl_derecha.ForeColor = DefaultForeColor
+        Me.ForeColor = DefaultForeColor
+
+        Ltb_izquierda.BackColor = DefaultBackColor
+        Ltb_derecha.BackColor = DefaultBackColor
+        Ltb_izquierda.ForeColor = DefaultForeColor
+        Ltb_derecha.ForeColor = DefaultForeColor
     End Sub
+
+    Public Sub pintarOscuro()
+        GrassToolStripMenuItem.Checked = False
+        AzulToolStripMenuItem.Checked = False
+        FlowersToolStripMenuItem.Checked = False
+        DarkToolStripMenuItem.Checked = False
+        DarkToolStripMenuItem1.Checked = True
+
+        Me.color_fondo = Color.Black
+
+        Me.color_Items = Brushes.DimGray
+        Me.color_Selected = Brushes.SandyBrown
+
+
+        Lbl_izquierda.ForeColor = Color.White
+        Lbl_derecha.ForeColor = Color.White
+        Me.ForeColor = Color.White
+
+        Ltb_izquierda.BackColor = Color.FromArgb(0, 0, 66)
+        Ltb_derecha.BackColor = Color.FromArgb(0, 0, 66)
+        Ltb_izquierda.ForeColor = Color.White
+        Ltb_derecha.ForeColor = Color.White
+    End Sub
+
 
     ''' <summary>
     ''' Controla el tamaño de la letra pequeña
@@ -1150,8 +1245,9 @@ Public Class Form_Principal
             Else
                 total.crearCarpeta("derecha", respuesta)
             End If
+             refrescarFormulario()
         End If
-        refrescarFormulario()
+
 
     End Sub
 
@@ -1172,8 +1268,9 @@ Public Class Form_Principal
             Else
                 total.crearfichero("derecha", respuesta)
             End If
+            refrescarFormulario()
         End If
-        refrescarFormulario()
+
     End Sub
 
     ''' <summary>
@@ -1286,7 +1383,10 @@ Public Class Form_Principal
         background.Abort()
     End Sub
 
-
+    ''' <summary>
+    ''' Mueve un archivo a fichero a una nueva posicion
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub mover()
         Dim correcto As Boolean
         If panelEnFoco = 0 Then
@@ -1415,30 +1515,6 @@ Public Class Form_Principal
     End Sub
 
     ''' <summary>
-    ''' Menu de comprimir
-    ''' </summary>
-    ''' <param name="sender"></param>
-    ''' <param name="e"></param>
-    ''' <remarks></remarks>
-    Private Sub ComprimirToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ComprimirToolStripMenuItem.Click
-        background = New Thread(AddressOf Me.Comprimir)
-
-        background.Start()
-    End Sub
-
-    ''' <summary>
-    ''' Menu de descomprimir
-    ''' </summary>
-    ''' <param name="sender"></param>
-    ''' <param name="e"></param>
-    ''' <remarks></remarks>
-    Private Sub DescomprimirToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DescomprimirToolStripMenuItem.Click
-        background = New Thread(AddressOf Me.Descomprimir)
-
-        background.Start()
-    End Sub
-
-    ''' <summary>
     ''' opcion del menu contextual para crear carpetas
     ''' </summary>
     ''' <param name="sender"></param>
@@ -1549,6 +1625,12 @@ Public Class Form_Principal
 
     End Sub
 
+    ''' <summary>
+    ''' Busca un archivo con el nombre indicado en cada pulso del Textbox
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub Tb_buscar_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Tb_buscar.KeyPress
 
         If e.KeyChar = CChar(vbBack) Then
@@ -1567,6 +1649,12 @@ Public Class Form_Principal
 
     End Sub
 
+    ''' <summary>
+    ''' Busca un archivo con el nombre indicado en cada pulso del Textbox
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub Tb_buscar_KeyUp(sender As Object, e As KeyEventArgs) Handles Tb_buscar.KeyUp
         If Tb_buscar.Text.Length >= 3 Then
             If panelEnFoco = 0 Then
@@ -1587,8 +1675,23 @@ Public Class Form_Principal
         End If
     End Sub
 
+    ''' <summary>
+    ''' Boton de comparar 2 paneles
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub ToolStripButton7_Click(sender As Object, e As EventArgs) Handles ToolStripButton7.Click
 
+        Comparar()
+
+    End Sub
+
+    ''' <summary>
+    ''' Accion de comparar 2 paneles
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Sub Comparar()
         If panelEnFoco = 0 Then
             Ltb_izquierda.Items.Clear()
 
@@ -1602,14 +1705,200 @@ Public Class Form_Principal
                 Ltb_derecha.Items.Add(elemento)
             Next
         End If
-
     End Sub
 
+
     Private Sub ToolStripButton8_Click(sender As Object, e As EventArgs) Handles ToolStripButton8.Click
-        total.encriptar(Ltb_izquierda.SelectedItem.ToString)
+
+        If panelEnFoco = 0 Then
+            total.CambiarRutaEntera("izquierda", total.ArchivosRecientes("izquierda"))
+        ElseIf panelEnFoco = 1 Then
+            total.CambiarRutaEntera("derecha", total.ArchivosRecientes("derecha"))
+
+        End If
+
+        refrescarFormulario()
+
     End Sub
 
     Private Sub ToolStripButton9_Click(sender As Object, e As EventArgs) Handles ToolStripButton9.Click
-        total.desencriptar(Ltb_izquierda.SelectedItem.ToString)
+        OrdenarAlfabeticamente()
+    End Sub
+
+    ''' <summary>
+    ''' Boton de comparar 2 paneles
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub CompararToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CompararToolStripMenuItem.Click
+        Comparar()
+    End Sub
+
+    ''' <summary>
+    ''' Ejecuta la compresion en un hilo de fondo
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub ComprimirToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ComprimirToolStripMenuItem1.Click
+        background = New Thread(AddressOf Me.Comprimir)
+
+        background.Start()
+    End Sub
+
+    ''' <summary>
+    ''' ejecuta la descompresion en un hilo de fondo
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub DescomprimirToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles DescomprimirToolStripMenuItem1.Click
+        background = New Thread(AddressOf Me.Descomprimir)
+
+        background.Start()
+    End Sub
+
+    ''' <summary>
+    ''' Pinta el color oscuro 
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub DarkToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles DarkToolStripMenuItem1.Click
+        pintarOscuro()
+        refrescarFormulario()
+    End Sub
+
+    ''' <summary>
+    ''' Ordena alfabeticamente el panel
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub AlfabéticamenteToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AlfabéticamenteToolStripMenuItem.Click
+        OrdenarAlfabeticamente()
+    End Sub
+
+    ''' <summary>
+    ''' Accion de ordenar el panel seleccionado
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Sub OrdenarAlfabeticamente()
+        Dim archivos As List(Of String) = New List(Of String)
+        If panelEnFoco = 0 Then
+
+            For Each elemento As String In Ltb_izquierda.Items
+                archivos.Add(elemento)
+            Next
+
+            Ltb_izquierda.Items.Clear()
+            For Each elemento As String In total.Ordenar("izquierda", archivos.ToArray)
+                Ltb_izquierda.Items.Add(elemento)
+            Next
+        ElseIf panelEnFoco = 1 Then
+
+            For Each elemento As String In Ltb_derecha.Items
+                archivos.Add(elemento)
+            Next
+
+            Ltb_derecha.Items.Clear()
+            For Each elemento As String In total.Ordenar("derecha", archivos.ToArray)
+                Ltb_derecha.Items.Add(elemento)
+            Next
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Ordena el panel seleccionado segun la fecha de creacion
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub FechaToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FechaToolStripMenuItem.Click
+        Dim archivos As List(Of String) = New List(Of String)
+        If panelEnFoco = 0 Then
+            For Each elemento As String In Ltb_izquierda.Items
+                archivos.Add(elemento)
+            Next
+
+            Ltb_izquierda.Items.Clear()
+            For Each elemento As String In total.OrdenarPorFecha("izquierda", archivos.ToArray)
+                Ltb_izquierda.Items.Add(elemento)
+            Next
+        ElseIf panelEnFoco = 1 Then
+
+            For Each elemento As String In Ltb_derecha.Items
+                archivos.Add(elemento)
+            Next
+
+            Ltb_derecha.Items.Clear()
+            For Each elemento As String In total.OrdenarPorFecha("derecha", archivos.ToArray)
+                Ltb_derecha.Items.Add(elemento)
+            Next
+
+        End If
+        
+    End Sub
+
+    ''' <summary>
+    ''' Ejecuta el formulario de buscar y otro hilo para ejecutar la busqueda
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub BuscarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BuscarToolStripMenuItem.Click
+
+        formBuscar = New buscando()
+        formBuscar.Show()
+
+        background = New Thread(AddressOf Me.buscar)
+        background.Start()
+    End Sub
+
+    ''' <summary>
+    ''' Accion de buscar que se ejecuta en segundo plano
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Sub buscar()
+        Dim respuesta As String
+        Dim mensaje As String = "Nombre: "
+
+        respuesta = InputBox(mensaje, "Archivo a buscar: ")
+
+        If panelEnFoco = 0 Then
+
+            Ltb_izquierda.Items.Clear()
+            For Each elemento As String In total.buscar("izquierda", respuesta)
+                Ltb_izquierda.Items.Add(elemento)
+            Next
+            For i As Integer = 0 To 100
+                formBuscar.LlenarBarra(1)
+            Next
+        Else
+            ' total.GuardarFavoritos(Environment.UserName, "derecha", respuesta)
+        End If
+        background.Abort()
+    End Sub
+
+    ''' <summary>
+    ''' Muestra el formulario de favoritos para administrarlos con mejor facilidad
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub PreferenciasToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PreferenciasToolStripMenuItem.Click
+
+        favoritos = New Favoritos()
+        Dim lista As List(Of String) = New List(Of String)
+
+        For i As Integer = 0 To Ts_favoritos.DropDownItems.Count - 1
+            lista.Add(Ts_favoritos.DropDownItems(i).Text & "Ä" & Ts_favoritos.DropDownItems(i).Tag.ToString)
+        Next
+
+        favoritos.anyadirFavoritos(lista.ToArray)
+        favoritos.Show()
+
+
     End Sub
 End Class

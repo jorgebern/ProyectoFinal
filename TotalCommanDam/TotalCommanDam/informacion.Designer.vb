@@ -274,7 +274,7 @@ Partial Class informacion
         Me.MinimumSize = New System.Drawing.Size(372, 443)
         Me.Name = "informacion"
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
-        Me.Text = "Form1"
+        Me.Text = "Información"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

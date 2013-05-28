@@ -412,6 +412,13 @@ Public Class TotalComander
 
     End Sub
 
+    ''' <summary>
+    ''' Filtra el contenido del panel segun el panel seleccionado
+    ''' </summary>
+    ''' <param name="panel"></param>
+    ''' <param name="palabra"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Function filtrar(panel As String, palabra As String) As String()
         Dim ficheros As String()
 
@@ -443,7 +450,12 @@ Public Class TotalComander
         Return correcto
     End Function
 
-
+    ''' <summary>
+    ''' Compara los 2 paneles mostrando en el panel activo los archivos que no tiene el otro panel
+    ''' </summary>
+    ''' <param name="panel"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Function comparar(panel As String) As String()
         Dim faltan As String()
 
@@ -458,13 +470,93 @@ Public Class TotalComander
 
 
     Public Sub encriptar(fichero As String)
-        izquierda.EncryptFile(fichero, "Password")
+        'izquierda.EncryptFile(fichero, "Password")
     End Sub
 
     Public Sub desencriptar(fichero As String)
-        izquierda.DecryptFile(fichero, "Password")
+        'izquierda.DecryptFile(fichero, "Password")
 
     End Sub
+
+    ''' <summary>
+    ''' Busca en las subcarpetas los archivos con la cadena escrita
+    ''' </summary>
+    ''' <param name="panel"></param>
+    ''' <param name="palabra"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Function buscar(panel As String, palabra As String) As String()
+        Dim archivos As String() = Nothing
+        If panel = "izquierda" Then
+
+            archivos = izquierda.buscar(palabra)
+        ElseIf panel = "derecha" Then
+            archivos = derecha.buscar(palabra)
+        End If
+
+        Return archivos
+    End Function
+
+
+    ''' <summary>
+    ''' Manda la ruta de los archivos recientes para mostrarla
+    ''' </summary>
+    ''' <param name="panel"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Function ArchivosRecientes(panel As String) As String
+        Dim ruta As String = ""
+
+        If panel = "izquierda" Then
+            ruta = izquierda.ArchivosRecientes
+
+        ElseIf panel = "derecha" Then
+            ruta = derecha.ArchivosRecientes
+        End If
+
+
+        Return ruta
+    End Function
+
+    ''' <summary>
+    ''' Ordena los archivos alfabeticamente
+    ''' </summary>
+    ''' <param name="panel"></param>
+    ''' <param name="archivos"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Function Ordenar(panel As String, archivos As String()) As String()
+        Dim ordenados As String() = Nothing
+
+        If Panel = "izquierda" Then
+            ordenados = izquierda.OrdenarAlfabeticamente(archivos)
+
+        ElseIf Panel = "derecha" Then
+            ordenados = derecha.OrdenarAlfabeticamente(archivos)
+        End If
+
+        Return ordenados
+    End Function
+
+    ''' <summary>
+    ''' Ordena la lista de archivos por fecha de creacion
+    ''' </summary>
+    ''' <param name="archvos"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Function OrdenarPorFecha(panel As String, archvos As String()) As String()
+
+        Dim ordenados As String() = Nothing
+
+        If panel = "izquierda" Then
+            ordenados = izquierda.OrdenarPorFecha(archvos)
+
+        ElseIf panel = "derecha" Then
+            ordenados = derecha.OrdenarPorFecha(archvos)
+        End If
+
+        Return ordenados
+    End Function
 
 
 End Class
