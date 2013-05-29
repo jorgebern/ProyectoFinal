@@ -18,6 +18,7 @@ Public Class Form_Principal
     '0 = izquierda
     '1 = derecha
     Dim panelEnFoco As Integer
+    Dim predeterminada As String
 
     Dim tutorial As Boolean = False
     Dim tamanyoFuente As Single = 8.25
@@ -72,9 +73,11 @@ Public Class Form_Principal
             TamanyoGrande()
         End If
 
+        predeterminada = pref(4)
+        total.CambiarRutaEntera("izquierda", predeterminada)
+        total.CambiarRutaEntera("derecha", predeterminada)
 
         CargarFavoritos()
-
 
         Ltb_derecha.AllowDrop = True
         Ltb_izquierda.AllowDrop = True
@@ -916,7 +919,7 @@ Public Class Form_Principal
             color = 4
         End If
 
-        total.GuardarPreferencias(tutorial, color, tamanyoFuente)
+        total.GuardarPreferencias(tutorial, color, tamanyoFuente, predeterminada)
     End Sub
 
     ''' <summary>
@@ -1180,10 +1183,15 @@ Public Class Form_Principal
             If anyadir Then
                 Ts_favoritos.DropDownItems.Add(datos(1))
                 Ts_favoritos.DropDownItems(Ts_favoritos.DropDownItems.Count - 1).Tag = datos(0)
+
+                'If CBool(datos(2)) = True Then
+                '    predeterminada = datos(0)
+
+                'End If
+
             End If
-
-
         Next
+        marcarPredeterminado()
 
     End Sub
 
@@ -1208,6 +1216,7 @@ Public Class Form_Principal
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub Ts_favoritos_DropDownItemClicked(sender As Object, e As ToolStripItemClickedEventArgs) Handles Ts_favoritos.DropDownItemClicked
+
         If panelEnFoco = 0 Then
             total.CambiarRutaEntera("izquierda", e.ClickedItem.Tag.ToString)
         Else
@@ -1893,12 +1902,35 @@ Public Class Form_Principal
         Dim lista As List(Of String) = New List(Of String)
 
         For i As Integer = 0 To Ts_favoritos.DropDownItems.Count - 1
-            lista.Add(Ts_favoritos.DropDownItems(i).Text & "Ä" & Ts_favoritos.DropDownItems(i).Tag.ToString)
+            If Ts_favoritos.DropDownItems(i).Tag.ToString = predeterminada Then
+                lista.Add(Ts_favoritos.DropDownItems(i).Text & "Ä" & Ts_favoritos.DropDownItems(i).Tag.ToString & "Ä" & True)
+            Else
+                lista.Add(Ts_favoritos.DropDownItems(i).Text & "Ä" & Ts_favoritos.DropDownItems(i).Tag.ToString & "Ä" & False)
+            End If
+
         Next
 
-        favoritos.anyadirFavoritos(lista.ToArray)
-        favoritos.Show()
+        favoritos.FavoritosProp = lista.ToArray
+        favoritos.Predeterminado = predeterminada
+        favoritos.ShowDialog()
+        If favoritos.Aceptar Then
+            total.GuardarFavoritos(favoritos.FavoritosProp)
+            predeterminada = favoritos.Predeterminado
 
+            CargarFavoritos()
+        End If
+   
+    End Sub
+
+    Public Sub marcarPredeterminado()
+
+        For i As Integer = 0 To Ts_favoritos.DropDownItems.Count - 1
+            If Ts_favoritos.DropDownItems(i).Tag.ToString = predeterminada Then
+                Ts_favoritos.DropDownItems(i).ForeColor = Color.Red
+            End If
+        Next
 
     End Sub
+
+
 End Class

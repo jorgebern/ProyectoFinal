@@ -270,9 +270,9 @@ Public Class TotalComander
     ''' <param name="color"></param>
     ''' <param name="tamanyo"></param>
     ''' <remarks></remarks>
-    Public Sub GuardarPreferencias(tutorial As Boolean, color As Integer, tamanyo As Single)
+    Public Sub GuardarPreferencias(tutorial As Boolean, color As Integer, tamanyo As Single, predeterminada As String)
 
-        preferencias.EscribirPreferencias(Environment.UserName, tutorial, color, tamanyo)
+        preferencias.EscribirPreferencias(Environment.UserName, tutorial, color, tamanyo, predeterminada)
 
     End Sub
 
@@ -324,12 +324,12 @@ Public Class TotalComander
             If nombre = "" Then
                 nombre = izquierda.Ruta
             End If
-            preferencias.EscribirFavoritos(usuario, izquierda.Ruta, nombre)
+            preferencias.EscribirFavoritos(usuario, izquierda.Ruta, nombre, False)
         Else
             If nombre = "" Then
                 nombre = derecha.Ruta
             End If
-            preferencias.EscribirFavoritos(usuario, derecha.Ruta, nombre)
+            preferencias.EscribirFavoritos(usuario, derecha.Ruta, nombre, False)
         End If
     End Sub
 
@@ -558,5 +558,14 @@ Public Class TotalComander
         Return ordenados
     End Function
 
+    ''' <summary>
+    ''' Guarda nuestros favoritos despues de editarlos
+    ''' </summary>
+    ''' <param name="ficheros"></param>
+    ''' <remarks></remarks>
+    Public Sub guardarFavoritos(ficheros As String())
+        preferencias.GuardarFavoritos(ficheros)
+
+    End Sub
 
 End Class
