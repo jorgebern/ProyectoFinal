@@ -608,6 +608,87 @@ Public Class Panel
         Return archivos
     End Function
 
+
+    Public Function enviarArchivo(email As String, contrasenya As String, nombre As String, destino As String, Asunto As String, mensaje As String, archivos As String()) As Integer
+
+        Dim err As Integer = 0
+
+        '25Mb --> Gmail
+        '25Mb --> Hotmail
+        '25Mb --> Yahoo
+        If tamanyoFicheros(archivos) < 25 Then
+
+            Dim _Message As New System.Net.Mail.MailMessage()
+            Dim _SMTP As New System.Net.Mail.SmtpClient
+
+            _SMTP.Credentials = New System.Net.NetworkCredential(email, contrasenya)
+
+            Dim direccion As String() = email.Split(CChar("@"))
+
+            If direccion(direccion.Length - 1).Substring(0, direccion(direccion.Length - 1).LastIndexOf(".")) = "hotmail" Then
+                _SMTP.Host = "smtp.live.com"
+                _SMTP.Port = 25
+            ElseIf direccion(direccion.Length - 1).Substring(0, direccion(direccion.Length - 1).LastIndexOf(".")) = "gmail" Then
+                _SMTP.Host = "smtp.gmail.com"
+                _SMTP.Port = 587
+            ElseIf direccion(direccion.Length - 1).Substring(0, direccion(direccion.Length - 1).LastIndexOf(".")) = "yahoo" Then
+                _SMTP.Host = "smtp.mail.yahoo.com"
+                _SMTP.Port = 465
+            End If
+
+            _SMTP.EnableSsl = True
+            _SMTP.Timeout = 300000
+
+            _Message.[To].Add(destino) 'Cuenta de Correo al que se le quiere enviar el e-mail
+            _Message.From = New System.Net.Mail.MailAddress(email, nombre, System.Text.Encoding.UTF8) 'Quien lo envía
+            _Message.Subject = Asunto 'Sujeto del e-mail
+            _Message.SubjectEncoding = System.Text.Encoding.UTF8 'Codificacion
+            _Message.Body = mensaje 'contenido del mail
+            For Each elemento As String In archivos
+                _Message.Attachments.Add(New Net.Mail.Attachment(_ruta & "\" & elemento))
+            Next
+
+            _Message.BodyEncoding = System.Text.Encoding.UTF8
+            _Message.Priority = System.Net.Mail.MailPriority.Normal
+            _Message.IsBodyHtml = False
+
+            Try
+                _SMTP.Send(_Message)
+                err = 0
+            Catch ex As System.Net.Mail.SmtpException
+
+                err = 1
+            End Try
+        Else
+            err = 2
+        End If
+
+
+
+        Return err
+    End Function
+
+
+    Public Function tamanyoFicheros(ficheros As String()) As Long
+        Dim tamanyo As Long = 0
+        Dim info As FileInfo
+
+        For Each elemento As String In ficheros
+            info = My.Computer.FileSystem.GetFileInfo(_ruta & "\" & elemento)
+
+            tamanyo += info.Length
+        Next
+
+
+        tamanyo = CLng(tamanyo / 1048576)
+
+        Return tamanyo
+    End Function
+
+
+
+
+
     
     ''' <summary>
     ''' Propiedad que devuelve y asigna la ruta del panel

@@ -260,7 +260,4 @@ Public Class Preferencias
 
     End Sub
 
-
-
-
 End Class

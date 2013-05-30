@@ -53,6 +53,7 @@ Partial Class Form_Principal
         Me.OrdenarToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.FechaToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AlfabéticamenteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MandarArchivosToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.FavoritosToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AñadirFavoritosToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.EliminarFavoritosToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -104,6 +105,7 @@ Partial Class Form_Principal
         Me.ToolStripButton7 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton8 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton9 = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripButton10 = New System.Windows.Forms.ToolStripButton()
         Me.Sts_Bar.SuspendLayout()
         Me.Mns_menu.SuspendLayout()
         Me.Ctm_paneles.SuspendLayout()
@@ -253,7 +255,7 @@ Partial Class Form_Principal
         '
         'HerramientasToolStripMenuItem
         '
-        Me.HerramientasToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CompararToolStripMenuItem, Me.BuscarToolStripMenuItem, Me.ToolStripSeparator5, Me.ComprimirToolStripMenuItem1, Me.DescomprimirToolStripMenuItem1, Me.ToolStripSeparator9, Me.OrdenarToolStripMenuItem})
+        Me.HerramientasToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CompararToolStripMenuItem, Me.BuscarToolStripMenuItem, Me.ToolStripSeparator5, Me.ComprimirToolStripMenuItem1, Me.DescomprimirToolStripMenuItem1, Me.ToolStripSeparator9, Me.OrdenarToolStripMenuItem, Me.MandarArchivosToolStripMenuItem})
         Me.HerramientasToolStripMenuItem.Name = "HerramientasToolStripMenuItem"
         Me.HerramientasToolStripMenuItem.Size = New System.Drawing.Size(94, 20)
         Me.HerramientasToolStripMenuItem.Text = "Herramientas"
@@ -261,42 +263,42 @@ Partial Class Form_Principal
         'CompararToolStripMenuItem
         '
         Me.CompararToolStripMenuItem.Name = "CompararToolStripMenuItem"
-        Me.CompararToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.CompararToolStripMenuItem.Size = New System.Drawing.Size(165, 22)
         Me.CompararToolStripMenuItem.Text = "Comparar"
         '
         'BuscarToolStripMenuItem
         '
         Me.BuscarToolStripMenuItem.Name = "BuscarToolStripMenuItem"
-        Me.BuscarToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.BuscarToolStripMenuItem.Size = New System.Drawing.Size(165, 22)
         Me.BuscarToolStripMenuItem.Text = "Buscar"
         '
         'ToolStripSeparator5
         '
         Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
-        Me.ToolStripSeparator5.Size = New System.Drawing.Size(149, 6)
+        Me.ToolStripSeparator5.Size = New System.Drawing.Size(162, 6)
         '
         'ComprimirToolStripMenuItem1
         '
         Me.ComprimirToolStripMenuItem1.Name = "ComprimirToolStripMenuItem1"
-        Me.ComprimirToolStripMenuItem1.Size = New System.Drawing.Size(152, 22)
+        Me.ComprimirToolStripMenuItem1.Size = New System.Drawing.Size(165, 22)
         Me.ComprimirToolStripMenuItem1.Text = "Comprimir"
         '
         'DescomprimirToolStripMenuItem1
         '
         Me.DescomprimirToolStripMenuItem1.Name = "DescomprimirToolStripMenuItem1"
-        Me.DescomprimirToolStripMenuItem1.Size = New System.Drawing.Size(152, 22)
+        Me.DescomprimirToolStripMenuItem1.Size = New System.Drawing.Size(165, 22)
         Me.DescomprimirToolStripMenuItem1.Text = "Descomprimir"
         '
         'ToolStripSeparator9
         '
         Me.ToolStripSeparator9.Name = "ToolStripSeparator9"
-        Me.ToolStripSeparator9.Size = New System.Drawing.Size(149, 6)
+        Me.ToolStripSeparator9.Size = New System.Drawing.Size(162, 6)
         '
         'OrdenarToolStripMenuItem
         '
         Me.OrdenarToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FechaToolStripMenuItem, Me.AlfabéticamenteToolStripMenuItem})
         Me.OrdenarToolStripMenuItem.Name = "OrdenarToolStripMenuItem"
-        Me.OrdenarToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.OrdenarToolStripMenuItem.Size = New System.Drawing.Size(165, 22)
         Me.OrdenarToolStripMenuItem.Text = "Ordenar por"
         '
         'FechaToolStripMenuItem
@@ -310,6 +312,12 @@ Partial Class Form_Principal
         Me.AlfabéticamenteToolStripMenuItem.Name = "AlfabéticamenteToolStripMenuItem"
         Me.AlfabéticamenteToolStripMenuItem.Size = New System.Drawing.Size(162, 22)
         Me.AlfabéticamenteToolStripMenuItem.Text = "alfabéticamente"
+        '
+        'MandarArchivosToolStripMenuItem
+        '
+        Me.MandarArchivosToolStripMenuItem.Name = "MandarArchivosToolStripMenuItem"
+        Me.MandarArchivosToolStripMenuItem.Size = New System.Drawing.Size(165, 22)
+        Me.MandarArchivosToolStripMenuItem.Text = "Mandar archivos"
         '
         'FavoritosToolStripMenuItem
         '
@@ -552,7 +560,7 @@ Partial Class Form_Principal
         '
         'ToolStrip1
         '
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton2, Me.Ts_recargar, Me.ToolStripSeparator3, Me.ToolStripButton1, Me.ToolStripButton3, Me.ToolStripSeparator1, Me.ToolStripButton4, Me.ToolStripSeparator6, Me.ToolStripButton5, Me.ToolStripButton6, Me.ToolStripSeparator8, Me.Tb_buscar, Me.ToolStripButton7, Me.ToolStripButton8, Me.ToolStripButton9})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton2, Me.Ts_recargar, Me.ToolStripSeparator3, Me.ToolStripButton1, Me.ToolStripButton3, Me.ToolStripSeparator1, Me.ToolStripButton4, Me.ToolStripButton8, Me.ToolStripSeparator6, Me.ToolStripButton5, Me.ToolStripButton6, Me.ToolStripSeparator8, Me.Tb_buscar, Me.ToolStripButton7, Me.ToolStripButton9, Me.ToolStripButton10})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 24)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(566, 25)
@@ -676,6 +684,15 @@ Partial Class Form_Principal
         Me.ToolStripButton9.Size = New System.Drawing.Size(23, 22)
         Me.ToolStripButton9.Text = "Ordenar"
         '
+        'ToolStripButton10
+        '
+        Me.ToolStripButton10.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripButton10.Image = CType(resources.GetObject("ToolStripButton10.Image"), System.Drawing.Image)
+        Me.ToolStripButton10.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton10.Name = "ToolStripButton10"
+        Me.ToolStripButton10.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripButton10.Text = "Mandar archivo por correo"
+        '
         'Form_Principal
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -788,5 +805,7 @@ Partial Class Form_Principal
     Friend WithEvents BuscarToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents PreferenciasToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator9 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents ToolStripButton10 As System.Windows.Forms.ToolStripButton
+    Friend WithEvents MandarArchivosToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

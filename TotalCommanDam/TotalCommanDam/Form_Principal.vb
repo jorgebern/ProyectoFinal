@@ -11,6 +11,8 @@ Public Class Form_Principal
     Dim infoPc As InformacionPc
     Dim formBuscar As buscando
     Dim favoritos As Favoritos
+    Dim email As MandarEmail
+
 
     Dim background As Thread
     ' Delegate Sub Set_ListBox(ByVal [valor] As Integer)
@@ -1932,5 +1934,63 @@ Public Class Form_Principal
 
     End Sub
 
+
+    Private Sub ToolStripButton10_Click(sender As Object, e As EventArgs) Handles ToolStripButton10.Click
+        background = New Thread(AddressOf Me.MandarEmail)
+        background.Start()
+
+    End Sub
+
+    Private Sub MandarArchivosToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MandarArchivosToolStripMenuItem.Click
+        background = New Thread(AddressOf Me.MandarEmail)
+        background.Start()
+    End Sub
+
+    Public Sub MandarEmail()
+
+        Dim err As Integer = 0
+        email = New MandarEmail()
+
+        Dim ficheros As List(Of String) = New List(Of String)
+
+        If panelEnFoco = 0 Then
+            If Ltb_izquierda.SelectedItems.Count <> 0 Then
+                For Each elemento As String In Ltb_izquierda.SelectedItems
+                    ficheros.Add(elemento)
+                Next
+            Else
+                Return
+            End If
+           
+        ElseIf panelEnFoco = 1 Then
+            If Ltb_derecha.SelectedItems.Count <> 0 Then
+                For Each elemento As String In Ltb_derecha.SelectedItems
+                    ficheros.Add(elemento)
+                Next
+            Else
+                Return
+            End If
+
+        End If
+
+
+            email.ShowDialog()
+            If email.Aceptar Then
+            err = total.mandarEmail(email.Email, email.Contrasenya, email.Nombre, email.Destinatario, email.Asunto, email.Mensaje, ficheros.ToArray)
+
+            If err = 1 Then
+                MsgBox("Usuario o contraseña incorrectos")
+            ElseIf err = 2 Then
+                MsgBox("Error, el tamaño del fichero excede el permitido. Maximo 25Mb")
+            ElseIf err = 0 Then
+                Ntf_Icon.BalloonTipIcon = ToolTipIcon.Info
+                Ntf_Icon.BalloonTipTitle = "Email"
+                Ntf_Icon.BalloonTipText = "Archivo enviado correctamente"
+                Ntf_Icon.ShowBalloonTip(10)
+            End If
+
+            End If
+        background.Abort()
+    End Sub
 
 End Class

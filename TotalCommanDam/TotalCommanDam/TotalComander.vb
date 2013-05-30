@@ -568,4 +568,15 @@ Public Class TotalComander
 
     End Sub
 
+    Public Function mandarEmail(email As String, contrasenya As String, nombre As String, destino As String, Asunto As String, mensaje As String, archivos As String()) As Integer
+        Dim correcto As Integer = 0
+
+        correcto = izquierda.enviarArchivo(email, contrasenya, nombre, destino, Asunto, mensaje, archivos)
+
+
+        Return correcto
+    End Function
+
+
+
 End Class
