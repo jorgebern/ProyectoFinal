@@ -255,7 +255,7 @@ Public Class Panel
                     My.Computer.FileSystem.RenameDirectory(_ruta & "\" & ficheros.Item(i).ToString, nombre & "(" & carpetasRepetidas & ")")
                     correcto = True
                 End If
-                carpetasRepetidas = carpetasRepetidas + 1
+
             End If
         Next
 
@@ -617,7 +617,6 @@ Public Class Panel
         '25Mb --> Hotmail
         '25Mb --> Yahoo
         If tamanyoFicheros(archivos) < 25 Then
-
             Dim _Message As New System.Net.Mail.MailMessage()
             Dim _SMTP As New System.Net.Mail.SmtpClient
 
@@ -645,7 +644,9 @@ Public Class Panel
             _Message.SubjectEncoding = System.Text.Encoding.UTF8 'Codificacion
             _Message.Body = mensaje 'contenido del mail
             For Each elemento As String In archivos
-                _Message.Attachments.Add(New Net.Mail.Attachment(_ruta & "\" & elemento))
+                If My.Computer.FileSystem.FileExists(_ruta & "\" & elemento) Then
+                    _Message.Attachments.Add(New Net.Mail.Attachment(_ruta & "\" & elemento))
+                End If
             Next
 
             _Message.BodyEncoding = System.Text.Encoding.UTF8
@@ -679,17 +680,12 @@ Public Class Panel
             tamanyo += info.Length
         Next
 
-
         tamanyo = CLng(tamanyo / 1048576)
 
         Return tamanyo
     End Function
 
 
-
-
-
-    
     ''' <summary>
     ''' Propiedad que devuelve y asigna la ruta del panel
     ''' </summary>

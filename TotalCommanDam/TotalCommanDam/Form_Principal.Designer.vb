@@ -106,6 +106,7 @@ Partial Class Form_Principal
         Me.ToolStripButton8 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton9 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton10 = New System.Windows.Forms.ToolStripButton()
+        Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.Sts_Bar.SuspendLayout()
         Me.Mns_menu.SuspendLayout()
         Me.Ctm_paneles.SuspendLayout()
@@ -152,7 +153,7 @@ Partial Class Form_Principal
         Me.Mns_menu.BackColor = System.Drawing.SystemColors.InactiveCaption
         Me.Mns_menu.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Mns_menu.GripStyle = System.Windows.Forms.ToolStripGripStyle.Visible
-        Me.Mns_menu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ArchivosToolStripMenuItem, Me.EditarToolStripMenuItem, Me.HerramientasToolStripMenuItem, Me.FavoritosToolStripMenuItem, Me.VerToolStripMenuItem, Me.AyudaToolStripMenuItem})
+        Me.Mns_menu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ArchivosToolStripMenuItem, Me.EditarToolStripMenuItem, Me.VerToolStripMenuItem, Me.HerramientasToolStripMenuItem, Me.FavoritosToolStripMenuItem, Me.AyudaToolStripMenuItem})
         Me.Mns_menu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow
         Me.Mns_menu.Location = New System.Drawing.Point(0, 0)
         Me.Mns_menu.Name = "Mns_menu"
@@ -167,7 +168,7 @@ Partial Class Form_Principal
         Me.ArchivosToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.Menu1ToolStripMenuItem, Me.RefrescarPanelesToolStripMenuItem, Me.SalirToolStripMenuItem})
         Me.ArchivosToolStripMenuItem.Name = "ArchivosToolStripMenuItem"
         Me.ArchivosToolStripMenuItem.Size = New System.Drawing.Size(64, 20)
-        Me.ArchivosToolStripMenuItem.Text = "Archivos"
+        Me.ArchivosToolStripMenuItem.Text = "&Archivos"
         '
         'Menu1ToolStripMenuItem
         '
@@ -188,7 +189,7 @@ Partial Class Form_Principal
         '
         Me.DocumentoDeTextotxtToolStripMenuItem.Image = CType(resources.GetObject("DocumentoDeTextotxtToolStripMenuItem.Image"), System.Drawing.Image)
         Me.DocumentoDeTextotxtToolStripMenuItem.Name = "DocumentoDeTextotxtToolStripMenuItem"
-        Me.DocumentoDeTextotxtToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
+        Me.DocumentoDeTextotxtToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.T), System.Windows.Forms.Keys)
         Me.DocumentoDeTextotxtToolStripMenuItem.Size = New System.Drawing.Size(241, 22)
         Me.DocumentoDeTextotxtToolStripMenuItem.Text = "Documento de texto(.txt)"
         '
@@ -213,7 +214,7 @@ Partial Class Form_Principal
         Me.EditarToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CopiarToolStripMenuItem, Me.BorrarToolStripMenuItem, Me.MoverToolStripMenuItem2, Me.ToolStripSeparator4, Me.RenombrarToolStripMenuItem1, Me.CambiarExtensiónToolStripMenuItem})
         Me.EditarToolStripMenuItem.Name = "EditarToolStripMenuItem"
         Me.EditarToolStripMenuItem.Size = New System.Drawing.Size(51, 20)
-        Me.EditarToolStripMenuItem.Text = "Editar"
+        Me.EditarToolStripMenuItem.Text = "&Editar"
         '
         'CopiarToolStripMenuItem
         '
@@ -258,7 +259,7 @@ Partial Class Form_Principal
         Me.HerramientasToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CompararToolStripMenuItem, Me.BuscarToolStripMenuItem, Me.ToolStripSeparator5, Me.ComprimirToolStripMenuItem1, Me.DescomprimirToolStripMenuItem1, Me.ToolStripSeparator9, Me.OrdenarToolStripMenuItem, Me.MandarArchivosToolStripMenuItem})
         Me.HerramientasToolStripMenuItem.Name = "HerramientasToolStripMenuItem"
         Me.HerramientasToolStripMenuItem.Size = New System.Drawing.Size(94, 20)
-        Me.HerramientasToolStripMenuItem.Text = "Herramientas"
+        Me.HerramientasToolStripMenuItem.Text = "&Herramientas"
         '
         'CompararToolStripMenuItem
         '
@@ -304,13 +305,17 @@ Partial Class Form_Principal
         'FechaToolStripMenuItem
         '
         Me.FechaToolStripMenuItem.Name = "FechaToolStripMenuItem"
-        Me.FechaToolStripMenuItem.Size = New System.Drawing.Size(162, 22)
+        Me.FechaToolStripMenuItem.ShortcutKeys = CType(((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.Shift) _
+            Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
+        Me.FechaToolStripMenuItem.Size = New System.Drawing.Size(238, 22)
         Me.FechaToolStripMenuItem.Text = "Fecha creación"
         '
         'AlfabéticamenteToolStripMenuItem
         '
         Me.AlfabéticamenteToolStripMenuItem.Name = "AlfabéticamenteToolStripMenuItem"
-        Me.AlfabéticamenteToolStripMenuItem.Size = New System.Drawing.Size(162, 22)
+        Me.AlfabéticamenteToolStripMenuItem.ShortcutKeys = CType(((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.Shift) _
+            Or System.Windows.Forms.Keys.O), System.Windows.Forms.Keys)
+        Me.AlfabéticamenteToolStripMenuItem.Size = New System.Drawing.Size(244, 22)
         Me.AlfabéticamenteToolStripMenuItem.Text = "alfabéticamente"
         '
         'MandarArchivosToolStripMenuItem
@@ -324,13 +329,14 @@ Partial Class Form_Principal
         Me.FavoritosToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AñadirFavoritosToolStripMenuItem, Me.EliminarFavoritosToolStripMenuItem, Me.PreferenciasToolStripMenuItem})
         Me.FavoritosToolStripMenuItem.Name = "FavoritosToolStripMenuItem"
         Me.FavoritosToolStripMenuItem.Size = New System.Drawing.Size(68, 20)
-        Me.FavoritosToolStripMenuItem.Text = "Favoritos"
+        Me.FavoritosToolStripMenuItem.Text = "&Favoritos"
         '
         'AñadirFavoritosToolStripMenuItem
         '
         Me.AñadirFavoritosToolStripMenuItem.Name = "AñadirFavoritosToolStripMenuItem"
-        Me.AñadirFavoritosToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.A), System.Windows.Forms.Keys)
-        Me.AñadirFavoritosToolStripMenuItem.Size = New System.Drawing.Size(191, 22)
+        Me.AñadirFavoritosToolStripMenuItem.ShortcutKeys = CType(((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.Shift) _
+            Or System.Windows.Forms.Keys.A), System.Windows.Forms.Keys)
+        Me.AñadirFavoritosToolStripMenuItem.Size = New System.Drawing.Size(237, 22)
         Me.AñadirFavoritosToolStripMenuItem.Text = "Añadir favoritos"
         '
         'EliminarFavoritosToolStripMenuItem
@@ -342,7 +348,9 @@ Partial Class Form_Principal
         'PreferenciasToolStripMenuItem
         '
         Me.PreferenciasToolStripMenuItem.Name = "PreferenciasToolStripMenuItem"
-        Me.PreferenciasToolStripMenuItem.Size = New System.Drawing.Size(191, 22)
+        Me.PreferenciasToolStripMenuItem.ShortcutKeys = CType(((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Alt) _
+            Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
+        Me.PreferenciasToolStripMenuItem.Size = New System.Drawing.Size(202, 22)
         Me.PreferenciasToolStripMenuItem.Text = "Preferencias"
         '
         'VerToolStripMenuItem
@@ -350,7 +358,7 @@ Partial Class Form_Principal
         Me.VerToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.InformaciónToolStripMenuItem, Me.InformaciónDelPCToolStripMenuItem, Me.ToolStripSeparator2, Me.ColorToolStripMenuItem, Me.TamañoLetraToolStripMenuItem})
         Me.VerToolStripMenuItem.Name = "VerToolStripMenuItem"
         Me.VerToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
-        Me.VerToolStripMenuItem.Text = "Ver"
+        Me.VerToolStripMenuItem.Text = "&Ver"
         '
         'InformaciónToolStripMenuItem
         '
@@ -441,7 +449,7 @@ Partial Class Form_Principal
         Me.AyudaToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AcercaDeTotalComanDamToolStripMenuItem, Me.TutorialToolStripMenuItem})
         Me.AyudaToolStripMenuItem.Name = "AyudaToolStripMenuItem"
         Me.AyudaToolStripMenuItem.Size = New System.Drawing.Size(52, 20)
-        Me.AyudaToolStripMenuItem.Text = "Ayuda"
+        Me.AyudaToolStripMenuItem.Text = "Ay&uda"
         '
         'AcercaDeTotalComanDamToolStripMenuItem
         '
@@ -693,6 +701,12 @@ Partial Class Form_Principal
         Me.ToolStripButton10.Size = New System.Drawing.Size(23, 22)
         Me.ToolStripButton10.Text = "Mandar archivo por correo"
         '
+        'ImageList1
+        '
+        Me.ImageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit
+        Me.ImageList1.ImageSize = New System.Drawing.Size(16, 16)
+        Me.ImageList1.TransparentColor = System.Drawing.Color.Transparent
+        '
         'Form_Principal
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -807,5 +821,6 @@ Partial Class Form_Principal
     Friend WithEvents ToolStripSeparator9 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripButton10 As System.Windows.Forms.ToolStripButton
     Friend WithEvents MandarArchivosToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ImageList1 As System.Windows.Forms.ImageList
 
 End Class
