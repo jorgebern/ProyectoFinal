@@ -568,11 +568,47 @@ Public Class TotalComander
 
     End Sub
 
-    Public Function mandarEmail(email As String, contrasenya As String, nombre As String, destino As String, Asunto As String, mensaje As String, archivos As String()) As Integer
+    ''' <summary>
+    ''' Se encarga de mandar los datos a la capa inferior para mandar un Email con los ficheros seleccionados
+    ''' </summary>
+    ''' <param name="email">Email del emisor</param>
+    ''' <param name="contrasenya">contraseña del emisor</param>
+    ''' <param name="nombre">nombre del emisor</param>
+    ''' <param name="destino">Email del receptor</param>
+    ''' <param name="Asunto">asunto del mensaje</param>
+    ''' <param name="mensaje">mensaje</param>
+    ''' <param name="archivos">ficheros que se adjuntaran al email</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Function mandarEmail(panel As String, email As String, contrasenya As String, nombre As String, destino As String, Asunto As String, mensaje As String, archivos As String()) As Integer
         Dim correcto As Integer = 0
 
-        correcto = izquierda.enviarArchivo(email, contrasenya, nombre, destino, Asunto, mensaje, archivos)
+        If panel = "izquierda" Then
+            correcto = izquierda.enviarArchivo(email, contrasenya, nombre, destino, Asunto, mensaje, archivos)
+        Else
+            correcto = derecha.enviarArchivo(email, contrasenya, nombre, destino, Asunto, mensaje, archivos)
 
+        End If
+
+        Return correcto
+    End Function
+
+    ''' <summary>
+    ''' manda a los paneles los archivos a imprimir
+    ''' </summary>
+    ''' <param name="panel"></param>
+    ''' <param name="archivos"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Function imprimir(panel As String, archivos As String()) As Boolean
+        Dim correcto As Boolean = False
+
+        If panel = "izquierda" Then
+            correcto = izquierda.Imprimir(archivos)
+
+        Else
+            correcto = derecha.Imprimir(archivos)
+        End If
 
         Return correcto
     End Function

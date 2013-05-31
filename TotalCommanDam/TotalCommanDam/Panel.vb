@@ -5,8 +5,8 @@ Imports System.IO.Compression
 Imports System
 Imports System.Security.Cryptography
 Imports System.Text
-Imports Scripting
 Imports System.Security.AccessControl
+Imports Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6
 
 ''' <summary>
 ''' Clase que se encarga de controlar cada panel, cogiendo, moviendo y definiendo rutas, ficheros y directorios
@@ -608,7 +608,18 @@ Public Class Panel
         Return archivos
     End Function
 
-
+    ''' <summary>
+    ''' Permite mandar un Email con el archivo indicado
+    ''' </summary>
+    ''' <param name="email">direccion del emisor</param>
+    ''' <param name="contrasenya">contraseña</param>
+    ''' <param name="nombre">nombre del emisor</param>
+    ''' <param name="destino">Direccion del receptor</param>
+    ''' <param name="Asunto">asunto del correo</param>
+    ''' <param name="mensaje">mensaje del correo</param>
+    ''' <param name="archivos">archivos adjuntos al mensaje</param>
+    ''' <returns>devuelve el codigo de error o en caso de funcionar bien 0</returns>
+    ''' <remarks></remarks>
     Public Function enviarArchivo(email As String, contrasenya As String, nombre As String, destino As String, Asunto As String, mensaje As String, archivos As String()) As Integer
 
         Dim err As Integer = 0
@@ -653,7 +664,9 @@ Public Class Panel
             _Message.Priority = System.Net.Mail.MailPriority.Normal
             _Message.IsBodyHtml = False
 
+
             Try
+                _SMTP.EnableSsl = True
                 _SMTP.Send(_Message)
                 err = 0
             Catch ex As System.Net.Mail.SmtpException
@@ -664,12 +677,15 @@ Public Class Panel
             err = 2
         End If
 
-
-
         Return err
     End Function
 
-
+    ''' <summary>
+    ''' Calcula el tamaño del fichero para comprobar si el emisor del correo lo admitira
+    ''' </summary>
+    ''' <param name="ficheros">ficheros a analizar</param>
+    ''' <returns>tamaño en Mb</returns>
+    ''' <remarks></remarks>
     Public Function tamanyoFicheros(ficheros As String()) As Long
         Dim tamanyo As Long = 0
         Dim info As FileInfo
@@ -684,6 +700,95 @@ Public Class Panel
 
         Return tamanyo
     End Function
+
+    ''' <summary>
+    ''' Imprime un documento con una programa asociado a su impresion
+    ''' </summary>
+    ''' <param name="archivos"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Function Imprimir(archivos As String()) As Boolean
+        Dim correcto As Boolean = False
+
+        Dim MyProcess As New Process
+
+        For Each elemento As String In archivos
+            If My.Computer.FileSystem.FileExists(_ruta & "\" & elemento) Then
+                MyProcess.StartInfo.FileName = _ruta & "\" & elemento
+                MyProcess.StartInfo.Verb = "Print"
+                MyProcess.StartInfo.CreateNoWindow = False
+                Try
+                    MyProcess.Start()
+                Catch ex As Exception
+                    ImprimirPlano(elemento)
+                End Try
+
+            End If
+            
+        Next
+
+        correcto = True
+
+        Return correcto
+    End Function
+
+    ''' <summary>
+    ''' Imprime documentos sin programas asociados a su impresion(.txt, .exe....)
+    ''' </summary>
+    ''' <param name="fichero"></param>
+    ''' <remarks></remarks>
+    Public Sub ImprimirPlano(fichero As String)
+        Dim impresora As Printer = New Printer
+        impresora.DocumentName = fichero
+        Dim sangrado As Boolean = True
+        impresora.CurrentX = 700
+        impresora.CurrentY = 500
+
+        Dim Linea As String
+
+        Try
+            Dim srLector As StreamReader = New StreamReader(_ruta & "\" & fichero)
+
+            Linea = srLector.ReadLine()
+
+            Do While Not (Linea Is Nothing)
+                If sangrado Then
+                    impresora.CurrentX = 700
+                    sangrado = False
+                Else
+                    impresora.CurrentX = 300
+                End If
+                If Linea.Length >= 80 Then
+
+                    While Linea.Length > 80
+                        impresora.Print(Linea.Substring(0, 80))
+                        Linea = Linea.Remove(0, 80)
+                        impresora.CurrentX = 300
+                    End While
+
+                    impresora.Print(Linea)
+                Else
+                    impresora.Print(Linea)
+                End If
+
+                If Linea.LastIndexOf(".") = Linea.Length - 1 Then
+                    sangrado = True
+                End If
+
+
+                Linea = srLector.ReadLine()
+
+            Loop
+
+            srLector.Close()
+        Catch ex As Exception
+
+        End Try
+
+        impresora.EndDoc()
+
+    End Sub
+
 
 
     ''' <summary>

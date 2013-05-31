@@ -1,9 +1,19 @@
-﻿Public Class InformacionPc
+﻿''' <summary>
+''' Formulario que se encarga de mostrar la informacion del Pc por pantalla
+''' </summary>
+''' <remarks></remarks>
+Public Class InformacionPc
 
 
     Dim datos As String()
     Dim tamanyo As Single
 
+    ''' <summary>
+    ''' Metodo Load, carga los parametros en los diferentes Label
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub InformacionPc_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Font = New Font("Microsoft Sans Serif", tamanyo)
 
@@ -32,7 +42,12 @@
 
     End Sub
 
-
+    ''' <summary>
+    ''' Obtiene los parametros y los asigna a las variables
+    ''' </summary>
+    ''' <param name="informacion"></param>
+    ''' <param name="tamanyo"></param>
+    ''' <remarks></remarks>
     Public Sub obtenerParametros(informacion As String(), tamanyo As Single)
         datos = informacion
         Me.tamanyo = tamanyo

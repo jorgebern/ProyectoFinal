@@ -3,7 +3,12 @@
 Module Validar
 
 
-
+    ''' <summary>
+    ''' Valida el correo electronico
+    ''' </summary>
+    ''' <param name="email"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Function ValidarEmail(email As String) As Boolean
 
         If email = String.Empty Then Return False

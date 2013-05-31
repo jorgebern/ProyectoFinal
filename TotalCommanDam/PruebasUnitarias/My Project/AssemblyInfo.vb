@@ -8,17 +8,17 @@ Imports System.Runtime.InteropServices
 
 ' Revisar los valores de los atributos del ensamblado
 
-<Assembly: AssemblyTitle("TotalComman-Dam")> 
-<Assembly: AssemblyDescription("Aplicación de final de curso de Jorge Bernabeu Mira")> 
-<Assembly: AssemblyCompany("JorgeBern")> 
-<Assembly: AssemblyProduct("TotalCommanDam")> 
+<Assembly: AssemblyTitle("PruebasUnitarias")> 
+<Assembly: AssemblyDescription("")> 
+<Assembly: AssemblyCompany("")> 
+<Assembly: AssemblyProduct("PruebasUnitarias")> 
 <Assembly: AssemblyCopyright("Copyright ©  2013")> 
-<Assembly: AssemblyTrademark("www.JorgeBern.com")> 
+<Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>
 
 'El siguiente GUID sirve como identificador de typelib si este proyecto se expone a COM
-<Assembly: Guid("997823bc-6d09-43a4-b723-315836fac4fc")> 
+<Assembly: Guid("c03bfe57-4412-4b9c-ab81-64a3b31edefb")> 
 
 ' La información de versión de un ensamblado consta de los cuatro valores siguientes:
 '
@@ -27,9 +27,9 @@ Imports System.Runtime.InteropServices
 '      Número de compilación
 '      Revisión
 '
-' Puede especificar todos los valores o usar los valores predeterminados de número de compilación y de revisión 
-' mediante el asterisco ('*'), como se muestra a continuación:
-' <Assembly: AssemblyVersion("1.0.*")> 
+' Puede especificar todos los valores o establecer como predeterminados los números de compilación y de revisión 
+' mediante el carácter '*', como se muestra a continuación:
+' <Ensamblado: AssemblyVersion("1.0.*")> 
 
 <Assembly: AssemblyVersion("1.0.0.0")> 
 <Assembly: AssemblyFileVersion("1.0.0.0")> 

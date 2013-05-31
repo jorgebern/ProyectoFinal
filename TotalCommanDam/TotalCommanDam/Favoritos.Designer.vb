@@ -22,16 +22,22 @@ Partial Class Favoritos
     'No lo modifique con el editor de código.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Favoritos))
         Me.ListView1 = New System.Windows.Forms.ListView()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Btn_elegir = New System.Windows.Forms.Button()
+        Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.EliminarToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RenombrarToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ContextMenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'ListView1
         '
         Me.ListView1.CausesValidation = False
+        Me.ListView1.ContextMenuStrip = Me.ContextMenuStrip1
         Me.ListView1.FullRowSelect = True
         Me.ListView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable
         Me.ListView1.LabelEdit = True
@@ -70,6 +76,24 @@ Partial Class Favoritos
         Me.Btn_elegir.Text = "Elegir predeterminada"
         Me.Btn_elegir.UseVisualStyleBackColor = True
         '
+        'ContextMenuStrip1
+        '
+        Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EliminarToolStripMenuItem, Me.RenombrarToolStripMenuItem})
+        Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
+        Me.ContextMenuStrip1.Size = New System.Drawing.Size(134, 48)
+        '
+        'EliminarToolStripMenuItem
+        '
+        Me.EliminarToolStripMenuItem.Name = "EliminarToolStripMenuItem"
+        Me.EliminarToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
+        Me.EliminarToolStripMenuItem.Text = "Eliminar"
+        '
+        'RenombrarToolStripMenuItem
+        '
+        Me.RenombrarToolStripMenuItem.Name = "RenombrarToolStripMenuItem"
+        Me.RenombrarToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
+        Me.RenombrarToolStripMenuItem.Text = "Renombrar"
+        '
         'Favoritos
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -84,6 +108,7 @@ Partial Class Favoritos
         Me.MaximizeBox = False
         Me.Name = "Favoritos"
         Me.Text = "Favoritos"
+        Me.ContextMenuStrip1.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -91,4 +116,7 @@ Partial Class Favoritos
     Friend WithEvents Button1 As System.Windows.Forms.Button
     Friend WithEvents Button2 As System.Windows.Forms.Button
     Friend WithEvents Btn_elegir As System.Windows.Forms.Button
+    Friend WithEvents ContextMenuStrip1 As System.Windows.Forms.ContextMenuStrip
+    Friend WithEvents EliminarToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents RenombrarToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 End Class

@@ -245,4 +245,27 @@
         End Set
     End Property
 
+    Private Sub EliminarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EliminarToolStripMenuItem.Click
+        Dim cuenta As Integer = 0
+        For Each elemento As Integer In ListView1.SelectedIndices
+
+            If ListView1.Items(elemento).SubItems(1).Text = _predeterminado Then
+                _predeterminado = My.Computer.FileSystem.SpecialDirectories.Desktop
+            End If
+
+            favoritos.RemoveAt(elemento - cuenta)
+            cuenta += 1
+        Next
+
+        For i As Integer = 0 To ListView1.SelectedItems.Count - 1
+            ListView1.SelectedItems(0).Remove()
+
+        Next
+
+        ListView1.Update()
+    End Sub
+
+    Private Sub RenombrarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RenombrarToolStripMenuItem.Click
+        ListView1.SelectedItems(0).BeginEdit()
+    End Sub
 End Class

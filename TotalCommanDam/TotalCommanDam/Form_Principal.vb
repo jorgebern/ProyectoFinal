@@ -1,7 +1,7 @@
 ﻿Imports System.Threading
 
 ''' <summary>
-''' 
+''' Formulario principal que se encarga de manejar la mayoria de la opciones y acciones del proyecto
 ''' </summary>
 ''' <remarks></remarks>
 Public Class Form_Principal
@@ -1924,6 +1924,10 @@ Public Class Form_Principal
    
     End Sub
 
+    ''' <summary>
+    ''' Marca la ruta predeterminada de rojo en el Ts_favoritos
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub marcarPredeterminado()
 
         For i As Integer = 0 To Ts_favoritos.DropDownItems.Count - 1
@@ -1934,18 +1938,33 @@ Public Class Form_Principal
 
     End Sub
 
-
+    ''' <summary>
+    ''' Boton mandar un Email de la barra de herramientas
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub ToolStripButton10_Click(sender As Object, e As EventArgs) Handles ToolStripButton10.Click
         background = New Thread(AddressOf Me.MandarEmail)
         background.Start()
 
     End Sub
 
+    ''' <summary>
+    ''' boton de mandar email de la barra de edicion
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub MandarArchivosToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MandarArchivosToolStripMenuItem.Click
         background = New Thread(AddressOf Me.MandarEmail)
         background.Start()
     End Sub
 
+    ''' <summary>
+    ''' Accion de mandar un email
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub MandarEmail()
 
         Dim err As Integer = 0
@@ -1975,8 +1994,12 @@ Public Class Form_Principal
 
 
             email.ShowDialog()
-            If email.Aceptar Then
-            err = total.mandarEmail(email.Email, email.Contrasenya, email.Nombre, email.Destinatario, email.Asunto, email.Mensaje, ficheros.ToArray)
+        If email.Aceptar Then
+            If panelEnFoco = 0 Then
+                err = total.mandarEmail("izquierda", email.Email, email.Contrasenya, email.Nombre, email.Destinatario, email.Asunto, email.Mensaje, ficheros.ToArray)
+            ElseIf panelEnFoco = 1 Then
+                err = total.mandarEmail("derecha", email.Email, email.Contrasenya, email.Nombre, email.Destinatario, email.Asunto, email.Mensaje, ficheros.ToArray)
+            End If
 
             If err = 1 Then
                 MsgBox("Usuario o contraseña incorrectos")
@@ -1989,8 +2012,72 @@ Public Class Form_Principal
                 Ntf_Icon.ShowBalloonTip(10)
             End If
 
-            End If
+        End If
         background.Abort()
+    End Sub
+
+    ''' <summary>
+    ''' Boton imprimir de la barra de herramientas
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub ToolStripButton11_Click(sender As Object, e As EventArgs) Handles ToolStripButton11.Click
+        background = New Thread(AddressOf Me.imprimir)
+        background.Start()
+    End Sub
+
+    ''' <summary>
+    ''' Accion de imprimir
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Sub imprimir()
+
+        Dim archivos As List(Of String) = New List(Of String)
+
+        If panelEnFoco = 0 And Ltb_izquierda.SelectedIndex <> -1 Then
+
+            For Each elemento As String In Ltb_izquierda.SelectedItems
+                archivos.Add(elemento)
+            Next
+
+
+            total.imprimir("izquierda", archivos.ToArray)
+        ElseIf panelEnFoco = 1 And Ltb_derecha.SelectedIndex <> -1 Then
+
+            For Each elemento As String In Ltb_derecha.SelectedItems
+                archivos.Add(elemento)
+            Next
+
+
+            total.imprimir("derecha", archivos.ToArray)
+        Else
+            MsgBox("Seleccione un archivo")
+        End If
+
+        background.Abort()
+    End Sub
+
+    ''' <summary>
+    ''' Boton de imprimir del menu Archivos
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub ImprimirToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ImprimirToolStripMenuItem.Click
+        background = New Thread(AddressOf Me.imprimir)
+        background.Start()
+    End Sub
+
+    ''' <summary>
+    ''' Boton de imprimir del menu contextual
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub ImprimirToolStripMenuItem1_Click_1(sender As Object, e As EventArgs) Handles ImprimirToolStripMenuItem1.Click
+        background = New Thread(AddressOf Me.imprimir)
+        background.Start()
     End Sub
 
 End Class

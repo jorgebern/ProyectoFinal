@@ -1,4 +1,9 @@
-﻿Public Class informacion
+﻿
+''' <summary>
+''' Formulario que se encarga de mostrar la informacion de un archivo por pantalla.
+''' </summary>
+''' <remarks></remarks>
+Public Class informacion
 
     Dim nombre As String
     Dim extension As String
@@ -8,6 +13,12 @@
     Dim modificado As String
     Dim tamanyoLetra As Single
 
+    ''' <summary>
+    ''' Metodo Load, donde se cargan los datos en los respectivos Label
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Me.Font = New Font("Microsoft Sans Serif", tamanyoLetra)
@@ -20,6 +31,12 @@
 
     End Sub
 
+    ''' <summary>
+    ''' Asigna los parametros de informacion al formulairo
+    ''' </summary>
+    ''' <param name="informacion"></param>
+    ''' <param name="tamanyo"></param>
+    ''' <remarks></remarks>
     Public Sub obtenerParametros(informacion As String(), tamanyo As Single)
         nombre = informacion(0)
         extension = informacion(1)
@@ -34,19 +51,11 @@
         Btn_aplicar.Enabled = True
     End Sub
 
-    Private Sub Txb_nombre_TextChanged(sender As Object, e As EventArgs)
-
-    End Sub
-
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Btn_cancelar.Click
         Me.Close()
     End Sub
 
     Private Sub Btn_aceptar_Click(sender As Object, e As EventArgs) Handles Btn_aceptar.Click
         Me.Close()
-    End Sub
-
-    Private Sub Btn_aplicar_Click(sender As Object, e As EventArgs) Handles Btn_aplicar.Click
-
     End Sub
 End Class
