@@ -284,6 +284,7 @@ Public Class Form_Principal
             Ntf_Icon.BalloonTipText = "Archivo copiado correctamente"
             Ntf_Icon.ShowBalloonTip(10)
             Tmr_Limpiar.Start()
+            total.Copiar("derecha", Ltb_derecha.SelectedItems)
             refrescarFormulario()
         End If
     End Sub
@@ -392,7 +393,7 @@ Public Class Form_Principal
 
         If index >= 0 Then
 
-            Dim dde1 As DragDropEffects = Ltb_derecha.DoDragDrop(Ltb_derecha.SelectedItems, DragDropEffects.All)
+            Dim dde1 As DragDropEffects = Ltb_derecha.DoDragDrop(Ltb_derecha.Items(index).ToString, DragDropEffects.All)
 
         End If
     End Sub
