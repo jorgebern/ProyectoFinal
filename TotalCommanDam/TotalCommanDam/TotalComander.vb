@@ -51,7 +51,6 @@ Public Class TotalComander
                 archivos.Add(partido(partido.Length - 1))
             Next
 
-
             For Each elemento As String In derecha.obtenerArchivos()
                 Dim partido As String() = elemento.Split(CChar("\"))
                 archivos.Add(partido(partido.Length - 1))

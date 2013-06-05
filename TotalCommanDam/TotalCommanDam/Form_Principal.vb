@@ -595,7 +595,14 @@ Public Class Form_Principal
 
                 If respuesta <> "" Then
                     For Each elemento As String In Ltb_izquierda.SelectedItems
-                        ficheros.Add(elemento)
+                        If elemento.LastIndexOf("\") >= 1 Then
+                            Dim datos As String() = elemento.Split(CChar("\"))
+                            ficheros.Add(datos(datos.Length - 1))
+                            total.CambiarRutaEntera("izquierda", elemento.Substring(0, elemento.LastIndexOf("\")))
+                        Else
+                            ficheros.Add(elemento)
+                        End If
+
                     Next
                     total.Renombrar("izquierda", ficheros, respuesta)
                 End If
@@ -613,7 +620,14 @@ Public Class Form_Principal
 
                 If respuesta <> "" Then
                     For Each elemento As String In Ltb_derecha.SelectedItems
-                        ficheros.Add(elemento)
+                        If elemento.LastIndexOf("\") >= 1 Then
+                            Dim datos As String() = elemento.Split(CChar("\"))
+                            ficheros.Add(datos(datos.Length - 1))
+                            total.CambiarRutaEntera("derecha", elemento.Substring(0, elemento.LastIndexOf("\")))
+                        Else
+                            ficheros.Add(elemento)
+                        End If
+
                     Next
                     total.Renombrar("derecha", ficheros, respuesta)
                 End If
@@ -670,7 +684,13 @@ Public Class Form_Principal
 
                 If MsgBox(mensaje, MsgBoxStyle.YesNo, "Borrar") = MsgBoxResult.Yes Then
                     For Each elemento As String In Ltb_izquierda.SelectedItems
-                        ficheros.Add(elemento)
+                        If elemento.LastIndexOf("\") >= 1 Then
+                            Dim datos As String() = elemento.Split(CChar("\"))
+                            ficheros.Add(datos(datos.Length - 1))
+                            total.CambiarRutaEntera("izquierda", elemento.Substring(0, elemento.LastIndexOf("\")))
+                        Else
+                            ficheros.Add(elemento)
+                        End If
                     Next
                     total.Borrar("izquierda", ficheros)
                     Me.refrescarFormulario()
@@ -687,7 +707,13 @@ Public Class Form_Principal
 
                 If MsgBox(mensaje, MsgBoxStyle.YesNo, "Borrar") = MsgBoxResult.Yes Then
                     For Each elemento As String In Ltb_derecha.SelectedItems
-                        ficheros.Add(elemento)
+                        If elemento.LastIndexOf("\") >= 1 Then
+                            Dim datos As String() = elemento.Split(CChar("\"))
+                            ficheros.Add(datos(datos.Length - 1))
+                            total.CambiarRutaEntera("derecha", elemento.Substring(0, elemento.LastIndexOf("\")))
+                        Else
+                            ficheros.Add(elemento)
+                        End If
                     Next
                     total.Borrar("derecha", ficheros)
                     Me.refrescarFormulario()
@@ -808,9 +834,6 @@ Public Class Form_Principal
 
         Dim mensaje As String = "Comprimiendo carpeta: "
 
-
-
-
             If panelEnFoco = 0 Then
                 If Ltb_izquierda.SelectedIndex <> -1 Then
                 respuesta = InputBox(mensaje, "Nombre: ")
@@ -851,8 +874,6 @@ Public Class Form_Principal
                     MsgBox("Seleccione una carpeta")
                 End If
             End If
-
-            
 
         background.Abort()
 
@@ -931,9 +952,6 @@ Public Class Form_Principal
                 MsgBox("Seleccione un archivo")
             End If
         End If
-
-        
-
 
         background.Abort()
     End Sub
@@ -1225,11 +1243,6 @@ Public Class Form_Principal
                 Ts_favoritos.DropDownItems.Add(datos(1))
                 Ts_favoritos.DropDownItems(Ts_favoritos.DropDownItems.Count - 1).Tag = datos(0)
 
-                'If CBool(datos(2)) = True Then
-                '    predeterminada = datos(0)
-
-                'End If
-
             End If
         Next
         marcarPredeterminado()
@@ -1246,7 +1259,6 @@ Public Class Form_Principal
     Private Sub ToolStripButton4_Click(sender As Object, e As EventArgs) Handles ToolStripButton4.Click
 
         GuardarFavoritos()
-
 
     End Sub
 
@@ -1397,7 +1409,6 @@ Public Class Form_Principal
         Dim correcto As Boolean
         Dim ficheros As List(Of String) = New List(Of String)
 
-
         If panelEnFoco = 0 Then
             If Ltb_izquierda.SelectedIndex = -1 Then
                 MsgBox("Selecciona un archivo")
@@ -1438,7 +1449,6 @@ Public Class Form_Principal
             End If
         End If
 
-       
         refrescarFormulario()
         background.Abort()
     End Sub
@@ -1491,8 +1501,6 @@ Public Class Form_Principal
                 End If
             End If
         End If
-
-       
 
         refrescarFormulario()
         background.Abort()
@@ -1775,7 +1783,12 @@ Public Class Form_Principal
         End If
     End Sub
 
-
+    ''' <summary> 
+    ''' Muestra los archivos recientes
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub ToolStripButton8_Click(sender As Object, e As EventArgs) Handles ToolStripButton8.Click
 
         If panelEnFoco = 0 Then
@@ -1789,6 +1802,12 @@ Public Class Form_Principal
 
     End Sub
 
+    ''' <summary>
+    ''' Ordena el panel en foco en orden alfabetico
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Private Sub ToolStripButton9_Click(sender As Object, e As EventArgs) Handles ToolStripButton9.Click
         OrdenarAlfabeticamente()
     End Sub
@@ -2049,7 +2068,6 @@ Public Class Form_Principal
             End If
 
         End If
-
 
             email.ShowDialog()
         If email.Aceptar Then
