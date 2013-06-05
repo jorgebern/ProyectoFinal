@@ -80,20 +80,35 @@ Public Class Panel
     ''' <param name="archivo">Ruta donde se encuentra el Archivo</param>
     ''' <remarks></remarks>
     Public Sub ejecutarArchivo(archivo As String)
-        If My.Computer.FileSystem.FileExists(_ruta & "\" & archivo) Then
-            Try
-                Dim p As New System.Diagnostics.Process
-                Dim s As New System.Diagnostics.ProcessStartInfo(_ruta & "\" & archivo)
-                s.UseShellExecute = True
-                s.WindowStyle = ProcessWindowStyle.Normal
-                p.StartInfo = s
-                p.Start()
-            Catch ex As Exception
-                Return
-            End Try
+        If archivo.LastIndexOf("\") >= 1 Then
+            If My.Computer.FileSystem.FileExists(archivo) Then
+                Try
+                    Dim p As New System.Diagnostics.Process
+                    Dim s As New System.Diagnostics.ProcessStartInfo(archivo)
+                    s.UseShellExecute = True
+                    s.WindowStyle = ProcessWindowStyle.Normal
+                    p.StartInfo = s
+                    p.Start()
+                Catch ex As Exception
+                    Return
+                End Try
 
+            End If
+        Else
+            If My.Computer.FileSystem.FileExists(_ruta & "\" & archivo) Then
+                Try
+                    Dim p As New System.Diagnostics.Process
+                    Dim s As New System.Diagnostics.ProcessStartInfo(_ruta & "\" & archivo)
+                    s.UseShellExecute = True
+                    s.WindowStyle = ProcessWindowStyle.Normal
+                    p.StartInfo = s
+                    p.Start()
+                Catch ex As Exception
+                    Return
+                End Try
+
+            End If
         End If
-
     End Sub
 
 
@@ -127,7 +142,7 @@ Public Class Panel
     ''' <param name="destino">Ruta de destino del fichero</param>
     ''' <returns>Devuelve True si se copia bien, False si salta una excepcion</returns>
     ''' <remarks></remarks>
-    Public Function Copiar(ficheros As System.Windows.Forms.ListBox.SelectedObjectCollection, destino As String) As Boolean
+    Public Function Copiar(ficheros As List(Of String), destino As String) As Boolean
 
         Dim correcto As Boolean = False
         Dim repeticiones As Integer = 0
@@ -180,11 +195,11 @@ Public Class Panel
     ''' </summary>
     ''' <param name="ficheros"></param>
     ''' <remarks></remarks>
-    Public Sub Borrar(ficheros As System.Windows.Forms.ListBox.SelectedObjectCollection)
+    Public Sub Borrar(ficheros As List(Of String))
 
         For i As Integer = 0 To ficheros.Count - 1
             If My.Computer.FileSystem.FileExists(_ruta & "\" & ficheros.Item(i).ToString) Then
-                My.Computer.FileSystem.DeleteFile(_ruta & "\" & ficheros.Item(i).ToString)
+                My.Computer.FileSystem.DeleteFile(_ruta & "\" & ficheros.Item(i).ToString, FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.SendToRecycleBin, FileIO.UICancelOption.DoNothing)
             End If
 
             If My.Computer.FileSystem.DirectoryExists(_ruta & "\" & ficheros.Item(i).ToString) Then
@@ -201,7 +216,7 @@ Public Class Panel
     ''' <param name="ficheros"></param>
     ''' <param name="nuevoNombre"></param>
     ''' <remarks></remarks>
-    Public Function RenombrarVarios(ficheros As System.Windows.Forms.ListBox.SelectedObjectCollection, nuevoNombre As String) As Boolean
+    Public Function Renombrar(ficheros As List(Of String), nuevoNombre As String) As Boolean
         Dim correcto As Boolean = False
 
         Dim nombre As String
@@ -211,10 +226,8 @@ Public Class Panel
 
         If nuevoNombre.LastIndexOf(".") >= 0 Then
             nombre = nuevoNombre.Substring(0, nuevoNombre.LastIndexOf("."))
-
         Else
             nombre = nuevoNombre
-
         End If
 
         For i As Integer = 0 To ficheros.Count - 1
@@ -327,9 +340,7 @@ Public Class Panel
                     End While
                     ZipFile.ExtractToDirectory(_ruta & "\" & fichero, _ruta & "\" & fichero.Substring(0, fichero.LastIndexOf(".")) & "(" & repeticiones & ")")
                     correcto = True
-
                 End If
-
             End If
         End If
 
@@ -443,7 +454,7 @@ Public Class Panel
     ''' <param name="destino"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Function mover(ficheros As System.Windows.Forms.ListBox.SelectedObjectCollection, destino As String) As Boolean
+    Public Function mover(ficheros As List(Of String), destino As String) As Boolean
         Dim correcto As Boolean = False
         Dim repeticiones As Integer = 0
 
@@ -713,10 +724,17 @@ Public Class Panel
         Dim MyProcess As New Process
 
         For Each elemento As String In archivos
-            If My.Computer.FileSystem.FileExists(_ruta & "\" & elemento) Then
-                MyProcess.StartInfo.FileName = _ruta & "\" & elemento
-                MyProcess.StartInfo.Verb = "Print"
+
+            If My.Computer.FileSystem.FileExists(_ruta & "\" & elemento) Or My.Computer.FileSystem.FileExists(elemento) Then
+                If elemento.LastIndexOf("\") >= 1 Then
+                    MyProcess.StartInfo.FileName = elemento
+                Else
+                    MyProcess.StartInfo.FileName = _ruta & "\" & elemento
+                End If
                 MyProcess.StartInfo.CreateNoWindow = False
+
+                MyProcess.StartInfo.Verb = "Print"
+
                 Try
                     MyProcess.Start()
                 Catch ex As Exception
@@ -724,7 +742,7 @@ Public Class Panel
                 End Try
 
             End If
-            
+
         Next
 
         correcto = True
@@ -775,9 +793,7 @@ Public Class Panel
                     sangrado = True
                 End If
 
-
                 Linea = srLector.ReadLine()
-
             Loop
 
             srLector.Close()

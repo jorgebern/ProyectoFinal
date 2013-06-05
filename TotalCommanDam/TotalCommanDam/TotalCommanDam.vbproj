@@ -101,12 +101,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ApplicationEvents.vb" />
-    <Compile Include="buscando.Designer.vb">
-      <DependentUpon>buscando.vb</DependentUpon>
-    </Compile>
-    <Compile Include="buscando.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Favoritos.Designer.vb">
       <DependentUpon>Favoritos.vb</DependentUpon>
     </Compile>
@@ -191,9 +185,6 @@
   <ItemGroup>
     <EmbeddedResource Include="acercaDe.resx">
       <DependentUpon>acercaDe.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="buscando.resx">
-      <DependentUpon>buscando.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Favoritos.resx">
       <DependentUpon>Favoritos.vb</DependentUpon>

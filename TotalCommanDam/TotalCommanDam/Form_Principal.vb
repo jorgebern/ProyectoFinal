@@ -6,16 +6,15 @@
 ''' <remarks></remarks>
 Public Class Form_Principal
 
+    'Formularios
     Dim total As TotalComander = New TotalComander()
     Dim informacio As informacion
     Dim infoPc As InformacionPc
-    Dim formBuscar As buscando
     Dim favoritos As Favoritos
     Dim email As MandarEmail
 
-
+    'Hilo que ejecuta las ordenes mas pesadas
     Dim background As Thread
-    ' Delegate Sub Set_ListBox(ByVal [valor] As Integer)
 
     '0 = izquierda
     '1 = derecha
@@ -152,6 +151,12 @@ Public Class Form_Principal
 
         'Labels
         Lbl_izquierda.Text = total.obtenerRuta("izquierda")
+
+        If Lbl_izquierda.Text.Length >= Ltb_izquierda.Width - 230 Then
+            Lbl_izquierda.Text = "..\" & Lbl_izquierda.Text.Substring(10, Lbl_izquierda.Text.Length - 10)
+
+        End If
+
     End Sub
 
     ''' <summary>
@@ -228,8 +233,15 @@ Public Class Form_Principal
     Private Sub Ltb_izquierda_DoubleClick(sender As Object, e As EventArgs) Handles Ltb_izquierda.DoubleClick
         If panelEnFoco = 0 Then
             If Ltb_izquierda.SelectedIndex >= 0 Then
-                If My.Computer.FileSystem.DirectoryExists(total.obtenerRuta("izquierda") & "\" & Ltb_izquierda.SelectedItem.ToString) Then
-                    total.CambiarRuta("izquierda", Ltb_izquierda.SelectedItem.ToString)
+                If My.Computer.FileSystem.DirectoryExists(total.obtenerRuta("izquierda") & "\" & Ltb_izquierda.SelectedItem.ToString) Or My.Computer.FileSystem.DirectoryExists(Ltb_izquierda.SelectedItem.ToString) Then
+
+                    If Ltb_izquierda.SelectedItem.ToString.LastIndexOf("\") >= 1 Then
+                        total.CambiarRutaEntera("izquierda", Ltb_izquierda.SelectedItem.ToString)
+                    Else
+                        total.CambiarRuta("izquierda", Ltb_izquierda.SelectedItem.ToString)
+                    End If
+
+
                     refrescarFormulario()
                 Else
                     total.ejecutarFichero("izquierda", Ltb_izquierda.SelectedItem.ToString)
@@ -278,13 +290,18 @@ Public Class Form_Principal
     ''' <remarks></remarks>
     Private Sub Ltb_izquierda_DragDrop(sender As Object, e As DragEventArgs) Handles Ltb_izquierda.DragDrop
         If e.Data.GetDataPresent(DataFormats.StringFormat) Then
+            Dim ficheros As List(Of String) = New List(Of String)
             Dim str As String = CStr(e.Data.GetData(DataFormats.StringFormat))
             ToolStripProgressBar1.Value = 100
             Ntf_Icon.BalloonTipTitle = "Copia"
             Ntf_Icon.BalloonTipText = "Archivo copiado correctamente"
             Ntf_Icon.ShowBalloonTip(10)
             Tmr_Limpiar.Start()
-            total.Copiar("derecha", Ltb_derecha.SelectedItems)
+
+            For Each elemento As String In Ltb_derecha.SelectedItems
+                ficheros.Add(elemento)
+            Next
+            total.Copiar("derecha", ficheros)
             refrescarFormulario()
         End If
     End Sub
@@ -358,8 +375,13 @@ Public Class Form_Principal
     Private Sub Ltb_derecha_DoubleClick(sender As Object, e As EventArgs) Handles Ltb_derecha.DoubleClick
         If panelEnFoco = 1 Then
             If Ltb_derecha.SelectedIndex >= 0 Then
-                If My.Computer.FileSystem.DirectoryExists(total.obtenerRuta("derecha") & "\" & Ltb_derecha.SelectedItem.ToString) Then
-                    total.CambiarRuta("derecha", Ltb_derecha.SelectedItem.ToString)
+                If My.Computer.FileSystem.DirectoryExists(total.obtenerRuta("derecha") & "\" & Ltb_derecha.SelectedItem.ToString) Or My.Computer.FileSystem.DirectoryExists(Ltb_derecha.SelectedItem.ToString) Then
+                    If Ltb_derecha.SelectedItem.ToString.LastIndexOf("\") >= 1 Then
+                        total.CambiarRutaEntera("derecha", Ltb_derecha.SelectedItem.ToString)
+                    Else
+                        total.CambiarRuta("derecha", Ltb_derecha.SelectedItem.ToString)
+                    End If
+
                     refrescarFormulario()
                 Else
                     total.ejecutarFichero("derecha", Ltb_derecha.SelectedItem.ToString)
@@ -410,13 +432,17 @@ Public Class Form_Principal
             If Ltb_derecha.Focused Then
                 Return
             End If
+            Dim ficheros As List(Of String) = New List(Of String)
             Dim str As String = CStr(e.Data.GetData(DataFormats.StringFormat))
             ToolStripProgressBar1.Value = 100
             Ntf_Icon.BalloonTipTitle = "Copia"
             Ntf_Icon.BalloonTipText = "Archivo copiado correctamente"
             Ntf_Icon.ShowBalloonTip(10)
             Tmr_Limpiar.Start()
-            total.Copiar("izquierda", Ltb_izquierda.SelectedItems)
+            For Each elemento As String In Ltb_izquierda.SelectedItems
+                ficheros.Add(elemento)
+            Next
+            total.Copiar("izquierda", ficheros)
             refrescarFormulario()
         End If
     End Sub
@@ -555,6 +581,7 @@ Public Class Form_Principal
     Public Sub Renombrar()
 
         Dim respuesta As String
+        Dim ficheros As List(Of String) = New List(Of String)
         Dim mensaje As String = "Usted va a renombrar los siguientes archivos: "
 
         If panelEnFoco = 0 Then
@@ -567,7 +594,10 @@ Public Class Form_Principal
                 respuesta = InputBox(mensaje, "Nuevo nombre: ")
 
                 If respuesta <> "" Then
-                    total.RenombrarVarios("izquierda", Ltb_izquierda.SelectedItems, respuesta)
+                    For Each elemento As String In Ltb_izquierda.SelectedItems
+                        ficheros.Add(elemento)
+                    Next
+                    total.Renombrar("izquierda", ficheros, respuesta)
                 End If
             End If
 
@@ -582,7 +612,10 @@ Public Class Form_Principal
                 respuesta = InputBox(mensaje, "Nuevo nombre: ")
 
                 If respuesta <> "" Then
-                    total.RenombrarVarios("derecha", Ltb_derecha.SelectedItems, respuesta)
+                    For Each elemento As String In Ltb_derecha.SelectedItems
+                        ficheros.Add(elemento)
+                    Next
+                    total.Renombrar("derecha", ficheros, respuesta)
                 End If
             End If
 
@@ -592,8 +625,6 @@ Public Class Form_Principal
 
 
     '----------------------------------------------------------------------------
-
-
     'BORRAR
     '---------------------------------------------------------------------------
     ''' <summary>
@@ -626,6 +657,7 @@ Public Class Form_Principal
     ''' <remarks></remarks>
     Public Sub Borrar()
         Dim mensaje As String = "¿Está seguro de que desea eliminar el/los archivos?: "
+        Dim ficheros As List(Of String) = New List(Of String)
 
 
         If panelEnFoco = 0 Then
@@ -637,7 +669,10 @@ Public Class Form_Principal
                 Next
 
                 If MsgBox(mensaje, MsgBoxStyle.YesNo, "Borrar") = MsgBoxResult.Yes Then
-                    total.Borrar("izquierda", Ltb_izquierda.SelectedItems)
+                    For Each elemento As String In Ltb_izquierda.SelectedItems
+                        ficheros.Add(elemento)
+                    Next
+                    total.Borrar("izquierda", ficheros)
                     Me.refrescarFormulario()
                 End If
             End If
@@ -651,7 +686,10 @@ Public Class Form_Principal
                 Next
 
                 If MsgBox(mensaje, MsgBoxStyle.YesNo, "Borrar") = MsgBoxResult.Yes Then
-                    total.Borrar("derecha", Ltb_derecha.SelectedItems)
+                    For Each elemento As String In Ltb_derecha.SelectedItems
+                        ficheros.Add(elemento)
+                    Next
+                    total.Borrar("derecha", ficheros)
                     Me.refrescarFormulario()
                 End If
             End If
@@ -1357,12 +1395,19 @@ Public Class Form_Principal
     ''' <remarks></remarks>
     Public Sub Copiar()
         Dim correcto As Boolean
+        Dim ficheros As List(Of String) = New List(Of String)
+
 
         If panelEnFoco = 0 Then
             If Ltb_izquierda.SelectedIndex = -1 Then
                 MsgBox("Selecciona un archivo")
             Else
-                correcto = total.Copiar("izquierda", Ltb_izquierda.SelectedItems)
+
+                For Each elemento As String In Ltb_izquierda.SelectedItems
+                    ficheros.Add(elemento)
+                Next
+
+                correcto = total.Copiar("izquierda", ficheros)
                 If correcto Then
                     Ntf_Icon.BalloonTipTitle = "Copiar"
                     Ntf_Icon.BalloonTipText = "Archivo copiado correctamente"
@@ -1377,7 +1422,10 @@ Public Class Form_Principal
             If Ltb_derecha.SelectedIndex = -1 Then
                 MsgBox("Selecciona un archivo")
             Else
-                correcto = total.Copiar("derecha", Ltb_derecha.SelectedItems)
+                For Each elemento As String In Ltb_derecha.SelectedItems
+                    ficheros.Add(elemento)
+                Next
+                correcto = total.Copiar("derecha", ficheros)
                 If correcto Then
                     Ntf_Icon.BalloonTipTitle = "Copiar"
                     Ntf_Icon.BalloonTipText = "Archivo copiado correctamente"
@@ -1401,11 +1449,16 @@ Public Class Form_Principal
     ''' <remarks></remarks>
     Public Sub mover()
         Dim correcto As Boolean
+        Dim ficheros As List(Of String) = New List(Of String)
+
         If panelEnFoco = 0 Then
             If Ltb_izquierda.SelectedIndex = -1 Then
                 MsgBox("Selecciona un archivo")
             Else
-                correcto = total.mover("izquierda", Ltb_izquierda.SelectedItems)
+                For Each elemento As String In Ltb_izquierda.SelectedItems
+                    ficheros.Add(elemento)
+                Next
+                correcto = total.mover("izquierda", ficheros)
 
                 If correcto Then
                     Ntf_Icon.BalloonTipTitle = "Mover"
@@ -1422,7 +1475,10 @@ Public Class Form_Principal
             If Ltb_derecha.SelectedIndex = -1 Then
                 MsgBox("Selecciona un archivo")
             Else
-                correcto = total.mover("derecha", Ltb_derecha.SelectedItems)
+                For Each elemento As String In Ltb_derecha.SelectedItems
+                    ficheros.Add(elemento)
+                Next
+                correcto = total.mover("derecha", ficheros)
                 If correcto Then
                     Ntf_Icon.BalloonTipTitle = "Mover"
                     Ntf_Icon.BalloonTipText = "Archivo Movido correctamente"
@@ -1861,9 +1917,6 @@ Public Class Form_Principal
     ''' <remarks></remarks>
     Private Sub BuscarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BuscarToolStripMenuItem.Click
 
-        formBuscar = New buscando()
-        formBuscar.Show()
-
         background = New Thread(AddressOf Me.buscar)
         background.Start()
     End Sub
@@ -1884,11 +1937,15 @@ Public Class Form_Principal
             For Each elemento As String In total.buscar("izquierda", respuesta)
                 Ltb_izquierda.Items.Add(elemento)
             Next
-            For i As Integer = 0 To 100
-                formBuscar.LlenarBarra(1)
+            
+        ElseIf panelEnFoco = 1 Then
+
+            Ltb_derecha.Items.Clear()
+            For Each elemento As String In total.buscar("derecha", respuesta)
+                Ltb_derecha.Items.Add(elemento)
             Next
-        Else
-            ' total.GuardarFavoritos(Environment.UserName, "derecha", respuesta)
+
+            
         End If
         background.Abort()
     End Sub
@@ -2041,7 +2098,6 @@ Public Class Form_Principal
             For Each elemento As String In Ltb_izquierda.SelectedItems
                 archivos.Add(elemento)
             Next
-
 
             total.imprimir("izquierda", archivos.ToArray)
         ElseIf panelEnFoco = 1 And Ltb_derecha.SelectedIndex <> -1 Then

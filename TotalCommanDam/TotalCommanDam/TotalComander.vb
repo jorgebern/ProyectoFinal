@@ -89,7 +89,7 @@ Public Class TotalComander
     ''' <param name="panel"></param>
     ''' <param name="fichero"></param>
     ''' <remarks></remarks>
-    Public Sub Borrar(panel As String, fichero As System.Windows.Forms.ListBox.SelectedObjectCollection)
+    Public Sub Borrar(panel As String, fichero As List(Of String))
 
         If panel = "izquierda" Then
             izquierda.Borrar(fichero)
@@ -107,12 +107,12 @@ Public Class TotalComander
     ''' <param name="panel"></param>
     ''' <param name="nuevoNombre"></param>
     ''' <remarks></remarks>
-    Public Sub RenombrarVarios(panel As String, ficheros As System.Windows.Forms.ListBox.SelectedObjectCollection, nuevoNombre As String)
+    Public Sub Renombrar(panel As String, ficheros As List(Of String), nuevoNombre As String)
 
         If panel = "izquierda" Then
-            izquierda.RenombrarVarios(ficheros, nuevoNombre)
+            izquierda.Renombrar(ficheros, nuevoNombre)
         Else
-            derecha.RenombrarVarios(ficheros, nuevoNombre)
+            derecha.Renombrar(ficheros, nuevoNombre)
         End If
 
     End Sub
@@ -228,7 +228,7 @@ Public Class TotalComander
     ''' <param name="f">Ficheor que va a copiarse</param>
     ''' <returns>Devuelve true si se copio bien, False si se copio mal</returns>
     ''' <remarks></remarks>
-    Public Function Copiar(panel As String, f As System.Windows.Forms.ListBox.SelectedObjectCollection) As Boolean
+    Public Function Copiar(panel As String, f As List(Of String)) As Boolean
 
         Dim correcto As Boolean
 
@@ -438,7 +438,7 @@ Public Class TotalComander
     ''' <param name="f"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Function mover(panel As String, f As System.Windows.Forms.ListBox.SelectedObjectCollection) As Boolean
+    Public Function mover(panel As String, f As List(Of String)) As Boolean
 
         Dim correcto As Boolean
 
@@ -612,7 +612,5 @@ Public Class TotalComander
 
         Return correcto
     End Function
-
-
 
 End Class
